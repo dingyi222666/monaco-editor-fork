@@ -39,6 +39,52 @@ global.window = {
 	}
 };
 
+const excludeLanguages = ['freemarker2'];
+
+const languages = [];
+// add to global
+global.callOnTest = (language, tests) => {
+	const mainLanguage = typeof language === 'string' ? language : language[0];
+	if (excludeLanguages.indexOf(mainLanguage) > -1) {
+		return;
+	}
+
+	languages.push(mainLanguage);
+
+	const outputDir = path.join(__dirname, '../..', 'language_packs', language);
+
+	if (!fs.existsSync(outputDir)) {
+		fs.mkdirSync(outputDir, { recursive: true });
+	}
+
+	fs.writeFileSync(
+		path.join(outputDir, `${language}.test.json`),
+		JSON.stringify(
+			{
+				tests,
+				languages: typeof language === 'string' ? [language] : language
+			},
+			null,
+			2
+		)
+	);
+
+	// kotlin
+	let buffer = `class MonarchFullTest {`;
+
+	for (let language of languages) {
+		buffer += `
+	@Test
+	fun \`tokenization${language}\`() {
+		runTests('${language}')
+	}\n\n`;
+	}
+
+	buffer += `}`;
+
+	fs.writeFileSync(path.join(__dirname, '../..', 'language_packs', `MonarchFullTest.kt`), buffer);
+};
+
 requirejs(
 	['test/unit/setup'],
 	function () {
@@ -98,7 +144,7 @@ requirejs(
 						}
 						fs.writeFileSync(
 							path.join(outputDir, outputFileName),
-							JSON.stringify(exports.language, null, 4)
+							JSON.stringify(exports.language, null, 2)
 						);
 					});
 				}

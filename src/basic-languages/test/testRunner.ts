@@ -36,6 +36,7 @@ export function testTokenization(_language: string | string[], tests: ITestItem[
 	test(mainLanguage + ' tokenization', async () => {
 		await Promise.all(languages.map((l) => loadLanguage(l)));
 		await timeout(0);
+		global['callOnTest']?.(mainLanguage, tests);
 		runTests(mainLanguage, tests);
 	});
 }
@@ -60,4 +61,8 @@ function runTest(languageId: string, test: ITestItem[]): void {
 	});
 
 	assert.deepStrictEqual(actual, test);
+}
+
+declare global {
+	var callOnTest: (language: string | string[], tests: ITestItem[][]) => void;
 }
