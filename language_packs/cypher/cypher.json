@@ -151,13 +151,13 @@
 		"-->",
 		"<--"
 	],
-	"escapes": {},
-	"digits": {},
-	"octaldigits": {},
-	"hexdigits": {},
+	"escapes": "\\\\(?:[tbnrf\\\\\"'`]|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
+	"digits": "\\d+",
+	"octaldigits": "[0-7]+",
+	"hexdigits": "[0-9a-fA-F]+",
 	"tokenizer": {
 		"root": [
-			[{}, "@brackets"],
+			["[{}[\\]()]", "@brackets"],
 			{
 				"include": "common"
 			}
@@ -172,9 +172,9 @@
 			{
 				"include": "@strings"
 			},
-			[{}, "type.identifier"],
+			[":[a-zA-Z_][\\w]*", "type.identifier"],
 			[
-				{},
+				"[a-zA-Z_][\\w]*(?=\\()",
 				{
 					"cases": {
 						"@builtinFunctions": "predefined.function"
@@ -182,7 +182,7 @@
 				}
 			],
 			[
-				{},
+				"[a-zA-Z_$][\\w$]*",
 				{
 					"cases": {
 						"@keywords": "keyword",
@@ -191,10 +191,10 @@
 					}
 				}
 			],
-			[{}, "identifier.escape", "@identifierBacktick"],
-			[{}, "delimiter"],
+			["`", "identifier.escape", "@identifierBacktick"],
+			["[;,.:|]", "delimiter"],
 			[
-				{},
+				"[<>=%+\\-*/^]+",
 				{
 					"cases": {
 						"@operators": "delimiter",
@@ -204,46 +204,46 @@
 			]
 		],
 		"numbers": [
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number.octal"],
-			[{}, "number"]
+			["-?(@digits)[eE](-?(@digits))?", "number.float"],
+			["-?(@digits)?\\.(@digits)([eE]-?(@digits))?", "number.float"],
+			["-?0x(@hexdigits)", "number.hex"],
+			["-?0(@octaldigits)", "number.octal"],
+			["-?(@digits)", "number"]
 		],
 		"strings": [
-			[{}, "string.invalid"],
-			[{}, "string.invalid"],
-			[{}, "string", "@stringDouble"],
-			[{}, "string", "@stringSingle"]
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
+			["'([^'\\\\]|\\\\.)*$", "string.invalid"],
+			["\"", "string", "@stringDouble"],
+			["'", "string", "@stringSingle"]
 		],
 		"whitespace": [
-			[{}, "white"],
-			[{}, "comment", "@comment"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", "white"],
+			["\\/\\*", "comment", "@comment"],
+			["\\/\\/.*$", "comment"]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["\\/\\/.*", "comment"],
+			["[^/*]+", "comment"],
+			["\\*\\/", "comment", "@pop"],
+			["[/*]", "comment"]
 		],
 		"stringDouble": [
-			[{}, "string"],
-			[{}, "string"],
-			[{}, "string.invalid"],
-			[{}, "string", "@pop"]
+			["[^\\\\\"]+", "string"],
+			["@escapes", "string"],
+			["\\\\.", "string.invalid"],
+			["\"", "string", "@pop"]
 		],
 		"stringSingle": [
-			[{}, "string"],
-			[{}, "string"],
-			[{}, "string.invalid"],
-			[{}, "string", "@pop"]
+			["[^\\\\']+", "string"],
+			["@escapes", "string"],
+			["\\\\.", "string.invalid"],
+			["'", "string", "@pop"]
 		],
 		"identifierBacktick": [
-			[{}, "identifier.escape"],
-			[{}, "identifier.escape"],
-			[{}, "identifier.escape.invalid"],
-			[{}, "identifier.escape", "@pop"]
+			["[^\\\\`]+", "identifier.escape"],
+			["@escapes", "identifier.escape"],
+			["\\\\.", "identifier.escape.invalid"],
+			["`", "identifier.escape", "@pop"]
 		]
 	}
 }

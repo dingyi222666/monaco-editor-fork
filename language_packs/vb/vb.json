@@ -335,34 +335,34 @@
 		"RaiseEvent",
 		"SyncLock"
 	],
-	"symbols": {},
-	"integersuffix": {},
-	"floatsuffix": {},
+	"symbols": "[=><!~?;\\.,:&|+\\-*\\/\\^%]+",
+	"integersuffix": "U?[DI%L&S@]?",
+	"floatsuffix": "[R#F!]?",
 	"tokenizer": {
 		"root": [
 			{
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"next(?!\\w)",
 				{
 					"token": "keyword.tag-for"
 				}
 			],
 			[
-				{},
+				"loop(?!\\w)",
 				{
 					"token": "keyword.tag-do"
 				}
 			],
 			[
-				{},
+				"end\\s+(?!for|do)(addhandler|class|enum|event|function|get|if|interface|module|namespace|operator|property|raiseevent|removehandler|select|set|structure|sub|synclock|try|while|with|using)",
 				{
 					"token": "keyword.tag-$1"
 				}
 			],
 			[
-				{},
+				"[a-zA-Z_]\\w*",
 				{
 					"cases": {
 						"@tagwords": {
@@ -375,17 +375,17 @@
 					}
 				}
 			],
-			[{}, "keyword"],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number.octal"],
-			[{}, "number"],
-			[{}, "number"],
-			[{}, "@brackets"],
-			[{}, "delimiter"],
+			["^\\s*#\\w+", "keyword"],
+			["\\d*\\d+e([\\-+]?\\d+)?(@floatsuffix)", "number.float"],
+			["\\d*\\.\\d+(e[\\-+]?\\d+)?(@floatsuffix)", "number.float"],
+			["&H[0-9a-f]+(@integersuffix)", "number.hex"],
+			["&0[0-7]+(@integersuffix)", "number.octal"],
+			["\\d+(@integersuffix)", "number"],
+			["#.*#", "number"],
+			["[{}()\\[\\]]", "@brackets"],
+			["@symbols", "delimiter"],
 			[
-				{},
+				"[\"\\u201c\\u201d]",
 				{
 					"token": "string.quote",
 					"next": "@string"
@@ -393,14 +393,14 @@
 			]
 		],
 		"whitespace": [
-			[{}, ""],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", ""],
+			["(\\'|REM(?!\\w)).*$", "comment"]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
+			["[^\"\\u201c\\u201d]+", "string"],
+			["[\"\\u201c\\u201d]{2}", "string.escape"],
 			[
-				{},
+				"[\"\\u201c\\u201d]C?",
 				{
 					"token": "string.quote",
 					"next": "@pop"

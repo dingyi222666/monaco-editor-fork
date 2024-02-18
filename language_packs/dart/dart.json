@@ -106,24 +106,24 @@
 		":",
 		"|="
 	],
-	"symbols": {},
-	"escapes": {},
-	"digits": {},
-	"octaldigits": {},
-	"binarydigits": {},
-	"hexdigits": {},
-	"regexpctl": {},
-	"regexpesc": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
+	"digits": "\\d+(_+\\d+)*",
+	"octaldigits": "[0-7]+(_+[0-7]+)*",
+	"binarydigits": "[0-1]+(_+[0-1]+)*",
+	"hexdigits": "[[0-9a-fA-F]+(_+[0-9a-fA-F]+)*",
+	"regexpctl": "[(){}\\[\\]\\$\\^|\\-*+?\\.]",
+	"regexpesc": "\\\\(?:[bBdDfnrstvwWn0\\\\\\/]|@regexpctl|c[A-Z]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4})",
 	"tokenizer": {
 		"root": [
-			[{}, "delimiter.bracket"],
+			["[{}]", "delimiter.bracket"],
 			{
 				"include": "common"
 			}
 		],
 		"common": [
 			[
-				{},
+				"[a-z_$][\\w$]*",
 				{
 					"cases": {
 						"@typeKeywords": "type.identifier",
@@ -132,24 +132,24 @@
 					}
 				}
 			],
-			[{}, "type.identifier"],
+			["[A-Z_$][\\w\\$]*", "type.identifier"],
 			{
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"\\/(?=([^\\\\\\/]|\\\\.)+\\/([gimsuy]*)(\\s*)(\\.|;|,|\\)|\\]|\\}|$))",
 				{
 					"token": "regexp",
 					"bracket": "@open",
 					"next": "@regexp"
 				}
 			],
-			[{}, "annotation"],
-			[{}, "@brackets"],
-			[{}, "@brackets"],
-			[{}, "delimiter"],
+			["@[a-zA-Z]+", "annotation"],
+			["[()\\[\\]]", "@brackets"],
+			["[<>](?!@symbols)", "@brackets"],
+			["!(?=([^=]|$))", "delimiter"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@operators": "delimiter",
@@ -157,39 +157,42 @@
 					}
 				}
 			],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number.octal"],
-			[{}, "number.binary"],
-			[{}, "number"],
-			[{}, "delimiter"],
-			[{}, "string.invalid"],
-			[{}, "string.invalid"],
-			[{}, "string", "@string_double"],
-			[{}, "string", "@string_single"]
+			["(@digits)[eE]([\\-+]?(@digits))?", "number.float"],
+			["(@digits)\\.(@digits)([eE][\\-+]?(@digits))?", "number.float"],
+			["0[xX](@hexdigits)n?", "number.hex"],
+			["0[oO]?(@octaldigits)n?", "number.octal"],
+			["0[bB](@binarydigits)n?", "number.binary"],
+			["(@digits)n?", "number"],
+			["[;,.]", "delimiter"],
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
+			["'([^'\\\\]|\\\\.)*$", "string.invalid"],
+			["\"", "string", "@string_double"],
+			["'", "string", "@string_single"]
 		],
 		"whitespace": [
-			[{}, ""],
-			[{}, "comment.doc", "@jsdoc"],
-			[{}, "comment", "@comment"],
-			[{}, "comment.doc"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", ""],
+			["\\/\\*\\*(?!\\/)", "comment.doc", "@jsdoc"],
+			["\\/\\*", "comment", "@comment"],
+			["\\/\\/\\/.*$", "comment.doc"],
+			["\\/\\/.*$", "comment"]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["[^\\/*]+", "comment"],
+			["\\*\\/", "comment", "@pop"],
+			["[\\/*]", "comment"]
 		],
 		"jsdoc": [
-			[{}, "comment.doc"],
-			[{}, "comment.doc", "@pop"],
-			[{}, "comment.doc"]
+			["[^\\/*]+", "comment.doc"],
+			["\\*\\/", "comment.doc", "@pop"],
+			["[\\/*]", "comment.doc"]
 		],
 		"regexp": [
-			[{}, ["regexp.escape.control", "regexp.escape.control", "regexp.escape.control"]],
 			[
-				{},
+				"(\\{)(\\d+(?:,\\d*)?)(\\})",
+				["regexp.escape.control", "regexp.escape.control", "regexp.escape.control"]
+			],
+			[
+				"(\\[)(\\^?)(?=(?:[^\\]\\\\\\/]|\\\\.)+)",
 				[
 					"regexp.escape.control",
 					{
@@ -198,14 +201,14 @@
 					}
 				]
 			],
-			[{}, ["regexp.escape.control", "regexp.escape.control"]],
-			[{}, "regexp.escape.control"],
-			[{}, "regexp.escape.control"],
-			[{}, "regexp"],
-			[{}, "regexp.escape"],
-			[{}, "regexp.invalid"],
+			["(\\()(\\?:|\\?=|\\?!)", ["regexp.escape.control", "regexp.escape.control"]],
+			["[()]", "regexp.escape.control"],
+			["@regexpctl", "regexp.escape.control"],
+			["[^\\\\\\/]", "regexp"],
+			["@regexpesc", "regexp.escape"],
+			["\\\\\\.", "regexp.invalid"],
 			[
-				{},
+				"(\\/)([gimsuy]*)",
 				[
 					{
 						"token": "regexp",
@@ -217,12 +220,12 @@
 			]
 		],
 		"regexrange": [
-			[{}, "regexp.escape.control"],
-			[{}, "regexp.invalid"],
-			[{}, "regexp.escape"],
-			[{}, "regexp"],
+			["-", "regexp.escape.control"],
+			["\\^", "regexp.invalid"],
+			["@regexpesc", "regexp.escape"],
+			["[^\\]]", "regexp"],
 			[
-				{},
+				"\\]",
 				{
 					"token": "regexp.escape.control",
 					"next": "@pop",
@@ -231,19 +234,19 @@
 			]
 		],
 		"string_double": [
-			[{}, "string"],
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
-			[{}, "string", "@pop"],
-			[{}, "identifier"]
+			["[^\\\\\"\\$]+", "string"],
+			["[^\\\\\"]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
+			["\"", "string", "@pop"],
+			["\\$\\w+", "identifier"]
 		],
 		"string_single": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
-			[{}, "string", "@pop"],
-			[{}, "identifier"]
+			["[^\\\\'\\$]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
+			["'", "string", "@pop"],
+			["\\$\\w+", "identifier"]
 		]
 	}
 }

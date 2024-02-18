@@ -122,7 +122,7 @@
 		"tk_popup",
 		"tk_setPalette"
 	],
-	"symbols": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%]+",
 	"brackets": [
 		{
 			"open": "(",
@@ -140,12 +140,12 @@
 			"token": "delimiter.square"
 		}
 	],
-	"escapes": {},
-	"variables": {},
+	"escapes": "\\\\(?:[abfnrtv\\\\\"'\\[\\]\\{\\};\\$]|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
+	"variables": "(?:\\$+(?:(?:\\:\\:?)?[a-zA-Z_]\\w*)+)",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"[a-zA-Z_]\\w*",
 				{
 					"cases": {
 						"@specialFunctions": {
@@ -158,26 +158,26 @@
 					}
 				}
 			],
-			[{}, "metatag"],
+			["\\s+\\-+(?!\\d|\\.)\\w*|{\\*}", "metatag"],
 			{
 				"include": "@whitespace"
 			},
-			[{}, "@brackets"],
-			[{}, "operator"],
+			["[{}()\\[\\]]", "@brackets"],
+			["@symbols", "operator"],
 			[
-				{},
+				"\\$+(?:\\:\\:)?\\{",
 				{
 					"token": "identifier",
 					"next": "@nestedVariable"
 				}
 			],
-			[{}, "type.identifier"],
-			[{}, "operator.sql"],
-			[{}, "number"],
-			[{}, "number"],
-			[{}, "delimiter"],
+			["@variables", "type.identifier"],
+			["\\.(?!\\d|\\.)[\\w\\-]*", "operator.sql"],
+			["\\d+(\\.\\d+)?", "number"],
+			["\\d+", "number"],
+			[";", "delimiter"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -185,7 +185,7 @@
 				}
 			],
 			[
-				{},
+				"'",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -195,24 +195,24 @@
 		],
 		"dstring": [
 			[
-				{},
+				"\\[",
 				{
 					"token": "@brackets",
 					"next": "@nestedCall"
 				}
 			],
 			[
-				{},
+				"\\$+(?:\\:\\:)?\\{",
 				{
 					"token": "identifier",
 					"next": "@nestedVariable"
 				}
 			],
-			[{}, "type.identifier"],
-			[{}, "string"],
-			[{}, "string.escape"],
+			["@variables", "type.identifier"],
+			["[^\\\\$\\[\\]\"]+", "string"],
+			["@escapes", "string.escape"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
@@ -222,24 +222,24 @@
 		],
 		"sstring": [
 			[
-				{},
+				"\\[",
 				{
 					"token": "@brackets",
 					"next": "@nestedCall"
 				}
 			],
 			[
-				{},
+				"\\$+(?:\\:\\:)?\\{",
 				{
 					"token": "identifier",
 					"next": "@nestedVariable"
 				}
 			],
-			[{}, "type.identifier"],
-			[{}, "string"],
-			[{}, "string.escape"],
+			["@variables", "type.identifier"],
+			["[^\\\\$\\[\\]']+", "string"],
+			["@escapes", "string.escape"],
 			[
-				{},
+				"'",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
@@ -248,20 +248,20 @@
 			]
 		],
 		"whitespace": [
-			[{}, "white"],
+			["[ \\t\\r\\n]+", "white"],
 			[
-				{},
+				"#.*\\\\$",
 				{
 					"token": "comment",
 					"next": "@newlineComment"
 				}
 			],
-			[{}, "comment"]
+			["#.*(?!\\\\)$", "comment"]
 		],
 		"newlineComment": [
-			[{}, "comment"],
+			[".*\\\\$", "comment"],
 			[
-				{},
+				".*(?!\\\\)$",
 				{
 					"token": "comment",
 					"next": "@pop"
@@ -269,9 +269,9 @@
 			]
 		],
 		"nestedVariable": [
-			[{}, "type.identifier"],
+			["[^\\{\\}\\$]+", "type.identifier"],
 			[
-				{},
+				"\\}",
 				{
 					"token": "identifier",
 					"next": "@pop"
@@ -280,14 +280,14 @@
 		],
 		"nestedCall": [
 			[
-				{},
+				"\\[",
 				{
 					"token": "@brackets",
 					"next": "@nestedCall"
 				}
 			],
 			[
-				{},
+				"\\]",
 				{
 					"token": "@brackets",
 					"next": "@pop"
@@ -299,21 +299,21 @@
 		],
 		"specialFunc": [
 			[
-				{},
+				"\"",
 				{
 					"token": "string",
 					"next": "@dstring"
 				}
 			],
 			[
-				{},
+				"'",
 				{
 					"token": "string",
 					"next": "@sstring"
 				}
 			],
 			[
-				{},
+				"\\S+",
 				{
 					"token": "type",
 					"next": "@pop"

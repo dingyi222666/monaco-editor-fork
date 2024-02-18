@@ -333,15 +333,15 @@
 	"typesnum": ["data", "qstring", "string", "unicode", "utf8", "varstring", "varunicode"],
 	"typesone": "ascii|big_endian|boolean|data|decimal|ebcdic|grouped|integer|linkcounted|pattern|qstring|real|record|rule|set of|streamed|string|token|udecimal|unicode|unsigned|utf8|varstring|varunicode",
 	"operators": ["+", "-", "/", ":=", "<", "<>", "=", ">", "\\", "and", "in", "not", "or"],
-	"symbols": {},
-	"escapes": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
 	"tokenizer": {
 		"root": [
-			[{}, "type"],
-			[{}, "type"],
-			[{}, "type"],
+			["@typesint[4|8]", "type"],
+			["#(@pounds)", "type"],
+			["@typesone", "type"],
 			[
-				{},
+				"[a-zA-Z_$][\\w-$]*",
 				{
 					"cases": {
 						"@functions": "keyword.function",
@@ -353,10 +353,10 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "@brackets"],
-			[{}, "@brackets"],
+			["[{}()\\[\\]]", "@brackets"],
+			["[<>](?!@symbols)", "@brackets"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@operators": "delimiter",
@@ -364,32 +364,32 @@
 					}
 				}
 			],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number.hex"],
-			[{}, "number"],
-			[{}, "delimiter"],
-			[{}, "string.invalid"],
-			[{}, "string", "@string"],
-			[{}, "string"],
-			[{}, ["string", "string.escape", "string"]],
-			[{}, "string.invalid"]
+			["[0-9_]*\\.[0-9_]+([eE][\\-+]?\\d+)?", "number.float"],
+			["0[xX][0-9a-fA-F_]+", "number.hex"],
+			["0[bB][01]+", "number.hex"],
+			["[0-9_]+", "number"],
+			["[;,.]", "delimiter"],
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
+			["\"", "string", "@string"],
+			["'[^\\\\']'", "string"],
+			["(')(@escapes)(')", ["string", "string.escape", "string"]],
+			["'", "string.invalid"]
 		],
 		"whitespace": [
-			[{}, ""],
-			[{}, "comment", "@comment"],
-			[{}, "comment"]
+			["[ \\t\\v\\f\\r\\n]+", ""],
+			["\\/\\*", "comment", "@comment"],
+			["\\/\\/.*$", "comment"]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["[^\\/*]+", "comment"],
+			["\\*\\/", "comment", "@pop"],
+			["[\\/*]", "comment"]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
-			[{}, "string", "@pop"]
+			["[^\\\\']+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
+			["'", "string", "@pop"]
 		]
 	}
 }

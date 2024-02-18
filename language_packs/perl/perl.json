@@ -423,16 +423,16 @@
 		"$^RE_DEBUG_FLAGS",
 		"$LAST_PAREN_MATCH"
 	],
-	"symbols": {},
+	"symbols": "[:+\\-\\^*$&%@=<>!?|\\/~\\.]",
 	"quoteLikeOps": ["qr", "m", "s", "q", "qq", "qx", "qw", "tr", "y"],
-	"escapes": {},
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
 	"tokenizer": {
 		"root": [
 			{
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"[a-zA-Z\\-_][\\w\\-_]*",
 				{
 					"cases": {
 						"@keywords": "keyword",
@@ -447,7 +447,7 @@
 				}
 			],
 			[
-				{},
+				"[\\$@%][*@#?\\+\\-\\$!\\w\\\\\\^><~:;\\.]+",
 				{
 					"cases": {
 						"@builtinVariables": "variable.predefined",
@@ -467,183 +467,186 @@
 			{
 				"include": "@heredoc"
 			},
-			[{}, "@brackets"],
-			[{}, "regexp"],
-			[{}, "operators"],
+			["[{}\\[\\]()]", "@brackets"],
+			[
+				"[\\/](?:(?:\\[(?:\\\\]|[^\\]])+\\])|(?:\\\\\\/|[^\\]\\/]))*[\\/]\\w*\\s*(?=[).,;]|$)",
+				"regexp"
+			],
+			["@symbols", "operators"],
 			{
 				"include": "@numbers"
 			},
-			[{}, "delimiter"]
+			["[,;]", "delimiter"]
 		],
 		"whitespace": [
-			[{}, "white"],
-			[{}, "metatag"],
-			[{}, "comment"]
+			["\\s+", "white"],
+			["(^#!.*$)", "metatag"],
+			["(^#.*$)", "comment"]
 		],
 		"numbers": [
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number"]
+			["\\d*\\.\\d+([eE][\\-+]?\\d+)?", "number.float"],
+			["0[xX][0-9a-fA-F_]*[0-9a-fA-F]", "number.hex"],
+			["\\d+", "number"]
 		],
-		"strings": [[{}, "string", "@stringBody"]],
+		"strings": [["'", "string", "@stringBody"]],
 		"stringBody": [
-			[{}, "string", "@popall"],
-			[{}, "string.escape"],
-			[{}, "string"]
+			["'", "string", "@popall"],
+			["\\\\'", "string.escape"],
+			[".", "string"]
 		],
-		"dblStrings": [[{}, "string", "@dblStringBody"]],
+		"dblStrings": [["\"", "string", "@dblStringBody"]],
 		"dblStringBody": [
-			[{}, "string", "@popall"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["\"", "string", "@popall"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
 			{
 				"include": "@variables"
 			},
-			[{}, "string"]
+			[".", "string"]
 		],
 		"quotedConstructs": [
 			[
-				{},
+				"(q|qw|tr|y)\\s*\\(",
 				{
 					"token": "string.delim",
 					"switchTo": "@qstring.(.)"
 				}
 			],
 			[
-				{},
+				"(q|qw|tr|y)\\s*\\[",
 				{
 					"token": "string.delim",
 					"switchTo": "@qstring.[.]"
 				}
 			],
 			[
-				{},
+				"(q|qw|tr|y)\\s*\\{",
 				{
 					"token": "string.delim",
 					"switchTo": "@qstring.{.}"
 				}
 			],
 			[
-				{},
+				"(q|qw|tr|y)\\s*<",
 				{
 					"token": "string.delim",
 					"switchTo": "@qstring.<.>"
 				}
 			],
 			[
-				{},
+				"(q|qw|tr|y)#",
 				{
 					"token": "string.delim",
 					"switchTo": "@qstring.#.#"
 				}
 			],
 			[
-				{},
+				"(q|qw|tr|y)\\s*([^A-Za-z0-9#\\s])",
 				{
 					"token": "string.delim",
 					"switchTo": "@qstring.$2.$2"
 				}
 			],
 			[
-				{},
+				"(q|qw|tr|y)\\s+(\\w)",
 				{
 					"token": "string.delim",
 					"switchTo": "@qstring.$2.$2"
 				}
 			],
 			[
-				{},
+				"(qr|m|s)\\s*\\(",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@qregexp.(.)"
 				}
 			],
 			[
-				{},
+				"(qr|m|s)\\s*\\[",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@qregexp.[.]"
 				}
 			],
 			[
-				{},
+				"(qr|m|s)\\s*\\{",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@qregexp.{.}"
 				}
 			],
 			[
-				{},
+				"(qr|m|s)\\s*<",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@qregexp.<.>"
 				}
 			],
 			[
-				{},
+				"(qr|m|s)#",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@qregexp.#.#"
 				}
 			],
 			[
-				{},
+				"(qr|m|s)\\s*([^A-Za-z0-9_#\\s])",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@qregexp.$2.$2"
 				}
 			],
 			[
-				{},
+				"(qr|m|s)\\s+(\\w)",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@qregexp.$2.$2"
 				}
 			],
 			[
-				{},
+				"(qq|qx)\\s*\\(",
 				{
 					"token": "string.delim",
 					"switchTo": "@qqstring.(.)"
 				}
 			],
 			[
-				{},
+				"(qq|qx)\\s*\\[",
 				{
 					"token": "string.delim",
 					"switchTo": "@qqstring.[.]"
 				}
 			],
 			[
-				{},
+				"(qq|qx)\\s*\\{",
 				{
 					"token": "string.delim",
 					"switchTo": "@qqstring.{.}"
 				}
 			],
 			[
-				{},
+				"(qq|qx)\\s*<",
 				{
 					"token": "string.delim",
 					"switchTo": "@qqstring.<.>"
 				}
 			],
 			[
-				{},
+				"(qq|qx)#",
 				{
 					"token": "string.delim",
 					"switchTo": "@qqstring.#.#"
 				}
 			],
 			[
-				{},
+				"(qq|qx)\\s*([^A-Za-z0-9#\\s])",
 				{
 					"token": "string.delim",
 					"switchTo": "@qqstring.$2.$2"
 				}
 			],
 			[
-				{},
+				"(qq|qx)\\s+(\\w)",
 				{
 					"token": "string.delim",
 					"switchTo": "@qqstring.$2.$2"
@@ -651,9 +654,9 @@
 			]
 		],
 		"qstring": [
-			[{}, "string.escape"],
+			["\\\\.", "string.escape"],
 			[
-				{},
+				".",
 				{
 					"cases": {
 						"$#==$S3": {
@@ -673,9 +676,9 @@
 			{
 				"include": "@variables"
 			},
-			[{}, "regexp.escape"],
+			["\\\\.", "regexp.escape"],
 			[
-				{},
+				".",
 				{
 					"cases": {
 						"$#==$S3": {
@@ -693,7 +696,7 @@
 		],
 		"regexpModifiers": [
 			[
-				{},
+				"[msixpodualngcer]+",
 				{
 					"token": "regexp.modifier",
 					"next": "@popall"
@@ -710,7 +713,7 @@
 		],
 		"heredoc": [
 			[
-				{},
+				"<<\\s*['\"`]?([\\w\\-]+)['\"`]?",
 				{
 					"token": "string.heredoc.delimiter",
 					"next": "@heredocBody.$1"
@@ -719,7 +722,7 @@
 		],
 		"heredocBody": [
 			[
-				{},
+				"^([\\w\\-]+)$",
 				{
 					"cases": {
 						"$1==$S2": [
@@ -732,17 +735,17 @@
 					}
 				}
 			],
-			[{}, "string.heredoc"]
+			[".", "string.heredoc"]
 		],
-		"perldoc": [[{}, "comment.doc", "@perldocBody"]],
+		"perldoc": [["^=\\w", "comment.doc", "@perldocBody"]],
 		"perldocBody": [
-			[{}, "type.identifier", "@popall"],
-			[{}, "comment.doc"]
+			["^=cut\\b", "type.identifier", "@popall"],
+			[".", "comment.doc"]
 		],
 		"variables": [
-			[{}, "variable"],
-			[{}, "variable"],
-			[{}, "variable"]
+			["\\$\\w+", "variable"],
+			["@\\w+", "variable"],
+			["%\\w+", "variable"]
 		]
 	}
 }

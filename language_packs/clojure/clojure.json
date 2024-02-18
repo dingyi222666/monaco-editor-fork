@@ -20,10 +20,10 @@
 		}
 	],
 	"constants": ["true", "false", "nil"],
-	"numbers": {},
-	"characters": {},
-	"escapes": {},
-	"qualifiedSymbols": {},
+	"numbers": "^(?:[+\\-]?\\d+(?:(?:N|(?:[eE][+\\-]?\\d+))|(?:\\.?\\d*(?:M|(?:[eE][+\\-]?\\d+))?)|\\/\\d+|[xX][0-9a-fA-F]+|r[0-9a-zA-Z]+)?(?=[\\\\\\[\\]\\s\"#'(),;@^`{}~]|$))",
+	"characters": "^(?:\\\\(?:backspace|formfeed|newline|return|space|tab|o[0-7]{3}|u[0-9A-Fa-f]{4}|x[0-9A-Fa-f]{4}|.)?(?=[\\\\\\[\\]\\s\"(),;@^`{}~]|$))",
+	"escapes": "^\\\\(?:[\"'\\\\bfnrt]|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
+	"qualifiedSymbols": "^(?:(?:[^\\\\\\/\\[\\]\\d\\s\"#'(),;@^`{}~][^\\\\\\[\\]\\s\"(),;@^`{}~]*(?:\\.[^\\\\\\/\\[\\]\\d\\s\"#'(),;@^`{}~][^\\\\\\[\\]\\s\"(),;@^`{}~]*)*\\/)?(?:\\/|[^\\\\\\/\\[\\]\\d\\s\"#'(),;@^`{}~][^\\\\\\[\\]\\s\"(),;@^`{}~]*)*(?=[\\\\\\[\\]\\s\"(),;@^`{}~]|$))",
 	"specialForms": [
 		".",
 		"catch",
@@ -698,16 +698,16 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "number"],
-			[{}, "string"],
+			["@numbers", "number"],
+			["@characters", "string"],
 			{
 				"include": "@string"
 			},
-			[{}, "@brackets"],
-			[{}, "regexp"],
-			[{}, "meta"],
+			["[()\\[\\]{}]", "@brackets"],
+			["\\/#\"(?:\\.|(?:\")|[^\"\\n])*\"\\/g", "regexp"],
+			["[#'@^`~]", "meta"],
 			[
-				{},
+				"@qualifiedSymbols",
 				{
 					"cases": {
 						"^:.+$": "constant",
@@ -720,20 +720,20 @@
 			]
 		],
 		"whitespace": [
-			[{}, "white"],
-			[{}, "comment"],
-			[{}, "comment", "@comment"]
+			["[\\s,]+", "white"],
+			[";.*$", "comment"],
+			["\\(comment\\b", "comment", "@comment"]
 		],
 		"comment": [
-			[{}, "comment", "@push"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["\\(", "comment", "@push"],
+			["\\)", "comment", "@pop"],
+			["[^()]", "comment"]
 		],
-		"string": [[{}, "string", "@multiLineString"]],
+		"string": [["\"", "string", "@multiLineString"]],
 		"multiLineString": [
-			[{}, "string", "@popall"],
-			[{}, "string.escape"],
-			[{}, "string"]
+			["\"", "string", "@popall"],
+			["@escapes", "string.escape"],
+			[".", "string"]
 		]
 	}
 }

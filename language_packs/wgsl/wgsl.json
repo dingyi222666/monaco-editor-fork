@@ -444,12 +444,12 @@
 		">>=",
 		"<<="
 	],
-	"symbols": {},
+	"symbols": "[!%&*+\\-\\.\\/:;<=>^|_~,]+",
 	"tokenizer": {
 		"root": [
-			[{}, "keyword", "@directive"],
+			["enable|requires|diagnostic", "keyword", "@directive"],
 			[
-				{},
+				"[_\\p{XID_Start}]\\p{XID_Continue}*",
 				{
 					"cases": {
 						"@atoms": "variable.predefined",
@@ -470,10 +470,10 @@
 			{
 				"include": "@numbers"
 			},
-			[{}, "@brackets"],
+			["[{}()\\[\\]]", "@brackets"],
 			["@", "annotation", "@attribute"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@operators": "operator",
@@ -481,46 +481,46 @@
 					}
 				}
 			],
-			[{}, "invalid"]
+			[".", "invalid"]
 		],
 		"commentOrSpace": [
-			[{}, "white"],
-			[{}, "comment", "@blockComment"],
-			[{}, "comment"]
+			["\\s+", "white"],
+			["\\/\\*", "comment", "@blockComment"],
+			["\\/\\/.*$", "comment"]
 		],
 		"blockComment": [
-			[{}, "comment"],
-			[{}, "comment", "@push"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["[^\\/*]+", "comment"],
+			["\\/\\*", "comment", "@push"],
+			["\\*\\/", "comment", "@pop"],
+			["[\\/*]", "comment"]
 		],
 		"attribute": [
 			{
 				"include": "@commentOrSpace"
 			},
-			[{}, "annotation", "@pop"]
+			["\\w+", "annotation", "@pop"]
 		],
 		"directive": [
 			{
 				"include": "@commentOrSpace"
 			},
-			[{}, "@brackets"],
-			[{}, "delimiter"],
-			[{}, "meta.content"],
-			[{}, "delimiter", "@pop"]
+			["[()]", "@brackets"],
+			[",", "delimiter"],
+			["[_\\p{XID_Start}]\\p{XID_Continue}*", "meta.content"],
+			[";", "delimiter", "@pop"]
 		],
 		"numbers": [
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number.hex"],
-			[{}, "number.hex"],
-			[{}, "number.hex"],
-			[{}, "number"],
-			[{}, "number"]
+			["0[fh]", "number.float"],
+			["[1-9][0-9]*[fh]", "number.float"],
+			["[0-9]*\\.[0-9]+([eE][+-]?[0-9]+)?[fh]?", "number.float"],
+			["[0-9]+\\.[0-9]*([eE][+-]?[0-9]+)?[fh]?", "number.float"],
+			["[0-9]+[eE][+-]?[0-9]+[fh]?", "number.float"],
+			["0[xX][0-9a-fA-F]*\\.[0-9a-fA-F]+(?:[pP][+-]?[0-9]+[fh]?)?", "number.hex"],
+			["0[xX][0-9a-fA-F]+\\.[0-9a-fA-F]*(?:[pP][+-]?[0-9]+[fh]?)?", "number.hex"],
+			["0[xX][0-9a-fA-F]+[pP][+-]?[0-9]+[fh]?", "number.hex"],
+			["0[xX][0-9a-fA-F]+[iu]?", "number.hex"],
+			["[1-9][0-9]*[iu]?", "number"],
+			["0[iu]?", "number"]
 		]
 	}
 }

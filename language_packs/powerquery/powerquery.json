@@ -821,12 +821,12 @@
 	],
 	"tokenizer": {
 		"root": [
-			[{}, "identifier.quote"],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number"],
+			["#\"[\\w \\.]+\"", "identifier.quote"],
+			["\\d*\\.\\d+([eE][\\-+]?\\d+)?", "number.float"],
+			["0[xX][0-9a-fA-F]+", "number.hex"],
+			["\\d+([eE][\\-+]?\\d+)?", "number"],
 			[
-				{},
+				"(#?[a-z]+)\\b",
 				{
 					"cases": {
 						"@typeKeywords": "type",
@@ -839,7 +839,7 @@
 				}
 			],
 			[
-				{},
+				"\\b([A-Z][a-zA-Z0-9]+\\.Type)\\b",
 				{
 					"cases": {
 						"@builtinTypes": "type",
@@ -848,7 +848,7 @@
 				}
 			],
 			[
-				{},
+				"\\b([A-Z][a-zA-Z0-9]+\\.[A-Z][a-zA-Z0-9]+)\\b",
 				{
 					"cases": {
 						"@builtinFunctions": "keyword.function",
@@ -857,7 +857,7 @@
 					}
 				}
 			],
-			[{}, "identifier"],
+			["\\b([a-zA-Z_][\\w\\.]*)\\b", "identifier"],
 			{
 				"include": "@whitespace"
 			},
@@ -867,11 +867,11 @@
 			{
 				"include": "@strings"
 			},
-			[{}, "@brackets"],
-			[{}, "operators"],
-			[{}, "delimiter"]
+			["[{}()\\[\\]]", "@brackets"],
+			["([=\\+<>\\-\\*&@\\?\\/!])|([<>]=)|(<>)|(=>)|(\\.\\.\\.)|(\\.\\.)", "operators"],
+			["[,;]", "delimiter"]
 		],
-		"whitespace": [[{}, "white"]],
+		"whitespace": [["\\s+", "white"]],
 		"comments": [
 			["\\/\\*", "comment", "@comment"],
 			["\\/\\/+.*", "comment"]

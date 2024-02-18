@@ -100,14 +100,14 @@
 		"with",
 		"yield"
 	],
-	"symbols": {},
-	"escapes": {},
-	"integersuffix": {},
-	"floatsuffix": {},
+	"symbols": "[=><!~?:&|+\\-*\\^%;\\.,\\/]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
+	"integersuffix": "[uU]?[yslnLI]?",
+	"floatsuffix": "[fFmM]?",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"[a-zA-Z_]\\w*",
 				{
 					"cases": {
 						"@keywords": {
@@ -120,50 +120,50 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "annotation"],
-			[{}, "keyword"],
-			[{}, "@brackets"],
-			[{}, "@brackets"],
-			[{}, "delimiter"],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number.bin"],
-			[{}, "number"],
-			[{}, "delimiter"],
-			[{}, "string.invalid"],
-			[{}, "string", "@string.\"\"\""],
-			[{}, "string", "@string.\""],
+			["\\[<.*>\\]", "annotation"],
+			["^#(if|else|endif)", "keyword"],
+			["[{}()\\[\\]]", "@brackets"],
+			["[<>](?!@symbols)", "@brackets"],
+			["@symbols", "delimiter"],
+			["\\d*\\d+[eE]([\\-+]?\\d+)?(@floatsuffix)", "number.float"],
+			["\\d*\\.\\d+([eE][\\-+]?\\d+)?(@floatsuffix)", "number.float"],
+			["0x[0-9a-fA-F]+LF", "number.float"],
+			["0x[0-9a-fA-F]+(@integersuffix)", "number.hex"],
+			["0b[0-1]+(@integersuffix)", "number.bin"],
+			["\\d+(@integersuffix)", "number"],
+			["[;,.]", "delimiter"],
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
+			["\"\"\"", "string", "@string.\"\"\""],
+			["\"", "string", "@string.\""],
 			[
-				{},
+				"\\@\"",
 				{
 					"token": "string.quote",
 					"next": "@litstring"
 				}
 			],
-			[{}, "string"],
-			[{}, ["string", "string.escape", "string"]],
-			[{}, "string.invalid"]
+			["'[^\\\\']'B?", "string"],
+			["(')(@escapes)(')", ["string", "string.escape", "string"]],
+			["'", "string.invalid"]
 		],
 		"whitespace": [
-			[{}, ""],
-			[{}, "comment", "@comment"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", ""],
+			["\\(\\*(?!\\))", "comment", "@comment"],
+			["\\/\\/.*$", "comment"]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"],
-			[{}, "comment"],
-			[{}, "comment"]
+			["[^*(]+", "comment"],
+			["\\*\\)", "comment", "@pop"],
+			["\\*", "comment"],
+			["\\(\\*\\)", "comment"],
+			["\\(", "comment"]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["[^\\\\\"]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
 			[
-				{},
+				"(\"\"\"|\"B?)",
 				{
 					"cases": {
 						"$#==$S2": {
@@ -176,10 +176,10 @@
 			]
 		],
 		"litstring": [
-			[{}, "string"],
-			[{}, "string.escape"],
+			["[^\"]+", "string"],
+			["\"\"", "string.escape"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"next": "@pop"

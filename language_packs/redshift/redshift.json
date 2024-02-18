@@ -735,10 +735,10 @@
 			{
 				"include": "@scopes"
 			},
-			[{}, "delimiter"],
-			[{}, "@brackets"],
+			["[;,.]", "delimiter"],
+			["[()]", "@brackets"],
 			[
-				{},
+				"[\\w@#$]+",
 				{
 					"cases": {
 						"@keywords": "keyword",
@@ -749,13 +749,13 @@
 					}
 				}
 			],
-			[{}, "operator"]
+			["[<>=!%&+\\-*/|~^]", "operator"]
 		],
-		"whitespace": [[{}, "white"]],
+		"whitespace": [["\\s+", "white"]],
 		"comments": [
-			[{}, "comment"],
+			["--+.*", "comment"],
 			[
-				{},
+				"\\/\\*",
 				{
 					"token": "comment.quote",
 					"next": "@comment"
@@ -763,19 +763,19 @@
 			]
 		],
 		"comment": [
-			[{}, "comment"],
+			["[^*/]+", "comment"],
 			[
-				{},
+				"\\*\\/",
 				{
 					"token": "comment.quote",
 					"next": "@pop"
 				}
 			],
-			[{}, "comment"]
+			[".", "comment"]
 		],
 		"pseudoColumns": [
 			[
-				{},
+				"[$][A-Za-z_][\\w@#$]*",
 				{
 					"cases": {
 						"@pseudoColumns": "predefined",
@@ -785,13 +785,13 @@
 			]
 		],
 		"numbers": [
-			[{}, "number"],
-			[{}, "number"],
-			[{}, "number"]
+			["0[xX][0-9a-fA-F]*", "number"],
+			["[$][+-]*\\d*(\\.\\d*)?", "number"],
+			["((\\d+(\\.\\d*)?)|(\\.\\d+))([eE][\\-+]?\\d+)?", "number"]
 		],
 		"strings": [
 			[
-				{},
+				"'",
 				{
 					"token": "string",
 					"next": "@string"
@@ -799,10 +799,10 @@
 			]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string"],
+			["[^']+", "string"],
+			["''", "string"],
 			[
-				{},
+				"'",
 				{
 					"token": "string",
 					"next": "@pop"
@@ -811,7 +811,7 @@
 		],
 		"complexIdentifiers": [
 			[
-				{},
+				"\"",
 				{
 					"token": "identifier.quote",
 					"next": "@quotedIdentifier"
@@ -819,10 +819,10 @@
 			]
 		],
 		"quotedIdentifier": [
-			[{}, "identifier"],
-			[{}, "identifier"],
+			["[^\"]+", "identifier"],
+			["\"\"", "identifier"],
 			[
-				{},
+				"\"",
 				{
 					"token": "identifier.quote",
 					"next": "@pop"

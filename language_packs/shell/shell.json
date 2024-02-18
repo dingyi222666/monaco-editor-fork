@@ -108,15 +108,15 @@
 		"yes",
 		"zsh"
 	],
-	"startingWithDash": {},
-	"identifiersWithDashes": {},
-	"symbols": {},
+	"startingWithDash": "\\-+\\w+",
+	"identifiersWithDashes": "[a-zA-Z]\\w+(?:@startingWithDash)+",
+	"symbols": "[=><!~?&|+\\-*\\/\\^;\\.,]+",
 	"tokenizer": {
 		"root": [
-			[{}, ""],
-			[{}, ["white", "attribute.name"]],
+			["@identifiersWithDashes", ""],
+			["(\\s)((?:@startingWithDash)+)", ["white", "attribute.name"]],
 			[
-				{},
+				"[a-zA-Z]\\w*",
 				{
 					"cases": {
 						"@keywords": "keyword",
@@ -137,38 +137,38 @@
 			{
 				"include": "@heredoc"
 			},
-			[{}, "@brackets"],
-			[{}, "delimiter"],
+			["[{}\\[\\]()]", "@brackets"],
+			["@symbols", "delimiter"],
 			{
 				"include": "@numbers"
 			},
-			[{}, "delimiter"]
+			["[,;]", "delimiter"]
 		],
 		"whitespace": [
-			[{}, "white"],
-			[{}, "metatag"],
-			[{}, "comment"]
+			["\\s+", "white"],
+			["(^#!.*$)", "metatag"],
+			["(^#.*$)", "comment"]
 		],
 		"numbers": [
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number"]
+			["\\d*\\.\\d+([eE][\\-+]?\\d+)?", "number.float"],
+			["0[xX][0-9a-fA-F_]*[0-9a-fA-F]", "number.hex"],
+			["\\d+", "number"]
 		],
 		"strings": [
-			[{}, "string", "@stringBody"],
-			[{}, "string", "@dblStringBody"]
+			["'", "string", "@stringBody"],
+			["\"", "string", "@dblStringBody"]
 		],
 		"stringBody": [
-			[{}, "string", "@popall"],
-			[{}, "string"]
+			["'", "string", "@popall"],
+			[".", "string"]
 		],
 		"dblStringBody": [
-			[{}, "string", "@popall"],
-			[{}, "string"]
+			["\"", "string", "@popall"],
+			[".", "string"]
 		],
 		"heredoc": [
 			[
-				{},
+				"(<<[-<]?)(\\s*)(['\"`]?)([\\w\\-]+)(['\"`]?)",
 				[
 					"constants",
 					"white",
@@ -179,33 +179,33 @@
 			]
 		],
 		"parameters": [
-			[{}, "variable.predefined"],
-			[{}, "variable"],
-			[{}, "variable"],
-			[{}, "variable", "@parameterBodyQuote"],
-			[{}, "variable", "@parameterBodyDoubleQuote"],
-			[{}, "variable", "@parameterBodyParen"],
-			[{}, "variable", "@parameterBodyCurlyBrace"]
+			["\\$\\d+", "variable.predefined"],
+			["\\$\\w+", "variable"],
+			["\\$[*@#?\\-$!0_]", "variable"],
+			["\\$'", "variable", "@parameterBodyQuote"],
+			["\\$\"", "variable", "@parameterBodyDoubleQuote"],
+			["\\$\\(", "variable", "@parameterBodyParen"],
+			["\\$\\{", "variable", "@parameterBodyCurlyBrace"]
 		],
 		"parameterBodyQuote": [
-			[{}, "variable"],
-			[{}, "delimiter"],
-			[{}, "variable", "@pop"]
+			["[^#:%*@\\-!_']+", "variable"],
+			["[#:%*@\\-!_]", "delimiter"],
+			["[']", "variable", "@pop"]
 		],
 		"parameterBodyDoubleQuote": [
-			[{}, "variable"],
-			[{}, "delimiter"],
-			[{}, "variable", "@pop"]
+			["[^#:%*@\\-!_\"]+", "variable"],
+			["[#:%*@\\-!_]", "delimiter"],
+			["[\"]", "variable", "@pop"]
 		],
 		"parameterBodyParen": [
-			[{}, "variable"],
-			[{}, "delimiter"],
-			[{}, "variable", "@pop"]
+			["[^#:%*@\\-!_)]+", "variable"],
+			["[#:%*@\\-!_]", "delimiter"],
+			["[)]", "variable", "@pop"]
 		],
 		"parameterBodyCurlyBrace": [
-			[{}, "variable"],
-			[{}, "delimiter"],
-			[{}, "variable", "@pop"]
+			["[^#:%*@\\-!_}]+", "variable"],
+			["[#:%*@\\-!_]", "delimiter"],
+			["[}]", "variable", "@pop"]
 		]
 	}
 }

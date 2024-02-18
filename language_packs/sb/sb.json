@@ -52,17 +52,17 @@
 	],
 	"tagwords": ["If", "Sub", "While", "For"],
 	"operators": [">", "<", "<>", "<=", ">=", "And", "Or", "+", "-", "*", "/", "="],
-	"identifier": {},
-	"symbols": {},
-	"escapes": {},
+	"identifier": "[a-zA-Z_][\\w]*",
+	"symbols": "[=><:+\\-*\\/%\\.,]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
 	"tokenizer": {
 		"root": [
 			{
 				"include": "@whitespace"
 			},
-			[{}, "type"],
+			["(@identifier)(?=[.])", "type"],
 			[
-				{},
+				"@identifier",
 				{
 					"cases": {
 						"@keywords": {
@@ -74,7 +74,7 @@
 				}
 			],
 			[
-				{},
+				"([.])(@identifier)",
 				{
 					"cases": {
 						"$2": ["delimiter", "type.member"],
@@ -82,11 +82,11 @@
 					}
 				}
 			],
-			[{}, "number.float"],
-			[{}, "number"],
-			[{}, "@brackets"],
+			["\\d*\\.\\d+", "number.float"],
+			["\\d+", "number"],
+			["[()\\[\\]]", "@brackets"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@operators": "operator",
@@ -94,18 +94,18 @@
 					}
 				}
 			],
-			[{}, "string.invalid"],
-			[{}, "string", "@string"]
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
+			["\"", "string", "@string"]
 		],
 		"whitespace": [
-			[{}, ""],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", ""],
+			["(\\').*$", "comment"]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
-			[{}, "string", "@pop"]
+			["[^\\\\\"]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
+			["\"C?", "string", "@pop"]
 		]
 	}
 }

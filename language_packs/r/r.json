@@ -139,18 +139,18 @@
 			{
 				"include": "@strings"
 			},
-			[{}, "@brackets"],
+			["[{}\\[\\]()]", "@brackets"],
 			{
 				"include": "@operators"
 			},
-			[{}, "comment.doc"],
-			[{}, "comment.doc", "@roxygen"],
-			[{}, "comment"],
-			[{}, "white"],
-			[{}, "delimiter"],
-			[{}, "tag"],
+			["#'$", "comment.doc"],
+			["#'", "comment.doc", "@roxygen"],
+			["(^#.*$)", "comment"],
+			["\\s+", "white"],
+			["[,:;]", "delimiter"],
+			["@[a-zA-Z]\\w*", "tag"],
 			[
-				{},
+				"[a-zA-Z]\\w*",
 				{
 					"cases": {
 						"@keywords": "keyword",
@@ -162,7 +162,7 @@
 		],
 		"roxygen": [
 			[
-				{},
+				"@\\w+",
 				{
 					"cases": {
 						"@roxygen": "tag",
@@ -175,7 +175,7 @@
 				}
 			],
 			[
-				{},
+				"\\s+",
 				{
 					"cases": {
 						"@eos": {
@@ -187,7 +187,7 @@
 				}
 			],
 			[
-				{},
+				".*",
 				{
 					"token": "comment.doc",
 					"next": "@pop"
@@ -195,28 +195,28 @@
 			]
 		],
 		"numbers": [
-			[{}, "number.hex"],
-			[{}, "number"]
+			["0[xX][0-9a-fA-F]+", "number.hex"],
+			["-?(\\d*\\.)?\\d+([eE][+\\-]?\\d+)?", "number"]
 		],
 		"operators": [
-			[{}, "operator"],
-			[{}, "operator"],
-			[{}, "operator"],
-			[{}, "operator"],
-			[{}, "operator"],
-			[{}, "operator"],
-			[{}, "operator"],
-			[{}, "operator"],
-			[{}, "operator"],
-			[{}, "operator"]
+			["<{1,2}-", "operator"],
+			["->{1,2}", "operator"],
+			["%[^%\\s]+%", "operator"],
+			["\\*\\*", "operator"],
+			["%%", "operator"],
+			["&&", "operator"],
+			["\\|\\|", "operator"],
+			["<<", "operator"],
+			[">>", "operator"],
+			["[-+=&|!<>^~*/:$]", "operator"]
 		],
 		"strings": [
-			[{}, "string.escape", "@stringBody"],
-			[{}, "string.escape", "@dblStringBody"]
+			["'", "string.escape", "@stringBody"],
+			["\"", "string.escape", "@dblStringBody"]
 		],
 		"stringBody": [
 			[
-				{},
+				"\\\\.",
 				{
 					"cases": {
 						"@special": "string",
@@ -224,12 +224,12 @@
 					}
 				}
 			],
-			[{}, "string.escape", "@popall"],
-			[{}, "string"]
+			["'", "string.escape", "@popall"],
+			[".", "string"]
 		],
 		"dblStringBody": [
 			[
-				{},
+				"\\\\.",
 				{
 					"cases": {
 						"@special": "string",
@@ -237,8 +237,8 @@
 					}
 				}
 			],
-			[{}, "string.escape", "@popall"],
-			[{}, "string"]
+			["\"", "string.escape", "@popall"],
+			[".", "string"]
 		]
 	}
 }

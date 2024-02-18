@@ -49,17 +49,17 @@
 		"sealed"
 	],
 	"softModifiers": ["inline", "opaque", "open", "transparent", "using"],
-	"name": {},
-	"type": {},
-	"symbols": {},
-	"digits": {},
-	"hexdigits": {},
-	"escapes": {},
-	"fstring_conv": {},
+	"name": "(?:[a-z_$][\\w$]*|`[^`]+`)",
+	"type": "(?:[A-Z][\\w$]*)",
+	"symbols": "[=><!~?:&|+\\-*\\/^\\\\%@#]+",
+	"digits": "\\d+(_+\\d+)*",
+	"hexdigits": "[[0-9a-fA-F]+(_+[0-9a-fA-F]+)*",
+	"escapes": "\\\\(?:[btnfr\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
+	"fstring_conv": "[bBhHsScCdoxXeEfgGaAt]|[Tn](?:[HIklMSLNpzZsQ]|[BbhAaCYyjmde]|[RTrDFC])",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"\\braw\"\"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -67,7 +67,7 @@
 				}
 			],
 			[
-				{},
+				"\\braw\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -75,7 +75,7 @@
 				}
 			],
 			[
-				{},
+				"\\bs\"\"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -83,7 +83,7 @@
 				}
 			],
 			[
-				{},
+				"\\bs\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -91,7 +91,7 @@
 				}
 			],
 			[
-				{},
+				"\\bf\"\"\"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -99,7 +99,7 @@
 				}
 			],
 			[
-				{},
+				"\\bf\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -107,7 +107,7 @@
 				}
 			],
 			[
-				{},
+				"\"\"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -115,28 +115,31 @@
 				}
 			],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
 					"next": "@string"
 				}
 			],
-			[{}, "number.float", "@allowMethod"],
-			[{}, "number.float", "@allowMethod"],
-			[{}, "number.hex", "@allowMethod"],
-			[{}, "number.float", "@allowMethod"],
-			[{}, "number", "@allowMethod"],
-			[{}, "key"],
-			[{}, "keyword", "@allowMethod"],
-			[{}, "keyword", "@import"],
-			[{}, ["keyword.modifier", "white", "keyword"]],
-			[{}, "keyword", "@case"],
-			[{}, "keyword", "@vardef"],
-			[{}, ["keyword", "white", "identifier"]],
-			[{}, "variable"],
+			["(@digits)[eE]([\\-+]?(@digits))?[fFdD]?", "number.float", "@allowMethod"],
+			["(@digits)\\.(@digits)([eE][\\-+]?(@digits))?[fFdD]?", "number.float", "@allowMethod"],
+			["0[xX](@hexdigits)[Ll]?", "number.hex", "@allowMethod"],
+			["(@digits)[fFdD]", "number.float", "@allowMethod"],
+			["(@digits)[lL]?", "number", "@allowMethod"],
+			["\\b_\\*", "key"],
+			["\\b(_)\\b", "keyword", "@allowMethod"],
+			["\\bimport\\b", "keyword", "@import"],
+			["\\b(case)([ \\t]+)(class)\\b", ["keyword.modifier", "white", "keyword"]],
+			["\\bcase\\b", "keyword", "@case"],
+			["\\bva[lr]\\b", "keyword", "@vardef"],
 			[
-				{},
+				"\\b(def)([ \\t]+)((?:unary_)?@symbols|@name(?:_=)|@name)",
+				["keyword", "white", "identifier"]
+			],
+			["@name(?=[ \\t]*:(?!:))", "variable"],
+			[
+				"(\\.)(@name|@symbols)",
 				[
 					"operator",
 					{
@@ -145,9 +148,9 @@
 					}
 				]
 			],
-			[{}, ["@brackets", "white", "variable"]],
+			["([{(])(\\s*)(@name(?=\\s*=>))", ["@brackets", "white", "variable"]],
 			[
-				{},
+				"@name",
 				{
 					"cases": {
 						"@keywords": "keyword",
@@ -165,23 +168,23 @@
 					}
 				}
 			],
-			[{}, "type", "@allowMethod"],
+			["@type", "type", "@allowMethod"],
 			{
 				"include": "@whitespace"
 			},
-			[{}, "annotation"],
-			[{}, "@brackets"],
-			[{}, "@brackets", "@allowMethod"],
-			[{}, "operator.square"],
-			[{}, "operator.square", "@allowMethod"],
-			[{}, "operator.square"],
-			[{}, "keyword"],
-			[{}, "operator"],
-			[{}, "delimiter"],
-			[{}, "attribute.name"],
-			[{}, "string", "@allowMethod"],
+			["@[a-zA-Z_$][\\w$]*(?:\\.[a-zA-Z_$][\\w$]*)*", "annotation"],
+			["[{(]", "@brackets"],
+			["[})]", "@brackets", "@allowMethod"],
+			["\\[", "operator.square"],
+			["](?!\\s*(?:va[rl]|def|type)\\b)", "operator.square", "@allowMethod"],
+			["]", "operator.square"],
+			["([=-]>|<-|>:|<:|:>|<%)(?=[\\s\\w()[\\]{},\\.\"'`])", "keyword"],
+			["@symbols", "operator"],
+			["[;,\\.]", "delimiter"],
+			["'[a-zA-Z$][\\w$]*(?!')", "attribute.name"],
+			["'[^\\\\']'", "string", "@allowMethod"],
 			[
-				{},
+				"(')(@escapes)(')",
 				[
 					"string",
 					"string.escape",
@@ -191,27 +194,27 @@
 					}
 				]
 			],
-			[{}, "string.invalid"]
+			["'", "string.invalid"]
 		],
 		"import": [
-			[{}, "delimiter", "@pop"],
-			[{}, "", "@pop"],
-			[{}, "white"],
-			[{}, "white", "@pop"],
-			[{}, "comment", "@comment"],
-			[{}, "type"],
-			[{}, "@brackets"],
-			[{}, "operator.square"],
-			[{}, "delimiter"]
+			[";", "delimiter", "@pop"],
+			["^|$", "", "@pop"],
+			["[ \\t]+", "white"],
+			["[\\n\\r]+", "white", "@pop"],
+			["\\/\\*", "comment", "@comment"],
+			["@name|@type", "type"],
+			["[(){}]", "@brackets"],
+			["[[\\]]", "operator.square"],
+			["[\\.,]", "delimiter"]
 		],
 		"allowMethod": [
-			[{}, "", "@pop"],
-			[{}, "white"],
-			[{}, "white", "@pop"],
-			[{}, "comment", "@comment"],
-			[{}, "keyword", "@pop"],
+			["^|$", "", "@pop"],
+			["[ \\t]+", "white"],
+			["[\\n\\r]+", "white", "@pop"],
+			["\\/\\*", "comment", "@comment"],
+			["(?==>[\\s\\w([{])", "keyword", "@pop"],
 			[
-				{},
+				"(@name|@symbols)(?=[ \\t]*[[({\"'`]|[ \\t]+(?:[+-]?\\.?\\d|\\w))",
 				{
 					"cases": {
 						"@keywords": {
@@ -232,39 +235,39 @@
 			["", "", "@pop"]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment", "@push"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["[^\\/*]+", "comment"],
+			["\\/\\*", "comment", "@push"],
+			["\\*\\/", "comment", "@pop"],
+			["[\\/*]", "comment"]
 		],
 		"case": [
-			[{}, "key"],
-			[{}, "keyword", "@allowMethod"],
-			[{}, "keyword", "@pop"],
-			[{}, "identifier", "@allowMethod"],
-			[{}, "variable", "@allowMethod"],
-			[{}, "keyword"],
+			["\\b_\\*", "key"],
+			["\\b(_|true|false|null|this|super)\\b", "keyword", "@allowMethod"],
+			["\\bif\\b|=>", "keyword", "@pop"],
+			["`[^`]+`", "identifier", "@allowMethod"],
+			["@name", "variable", "@allowMethod"],
+			[":::?|\\||@(?![a-z_$])", "keyword"],
 			{
 				"include": "@root"
 			}
 		],
 		"vardef": [
-			[{}, "key"],
-			[{}, "keyword"],
-			[{}, "variable"],
-			[{}, "keyword"],
-			[{}, "operator", "@pop"],
-			[{}, "white", "@pop"],
+			["\\b_\\*", "key"],
+			["\\b(_|true|false|null|this|super)\\b", "keyword"],
+			["@name", "variable"],
+			[":::?|\\||@(?![a-z_$])", "keyword"],
+			["=|:(?!:)", "operator", "@pop"],
+			["$", "white", "@pop"],
 			{
 				"include": "@root"
 			}
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["[^\\\\\"\\n\\r]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
@@ -273,103 +276,109 @@
 			]
 		],
 		"stringt": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
-			[{}, "string"],
+			["[^\\\\\"\\n\\r]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
+			["\"(?=\"\"\")", "string"],
 			[
-				{},
+				"\"\"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
 					"switchTo": "@allowMethod"
 				}
 			],
-			[{}, "string"]
+			["\"", "string"]
 		],
 		"fstring": [
-			[{}, "string.escape"],
+			["@escapes", "string.escape"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
 					"switchTo": "@allowMethod"
 				}
 			],
-			[{}, "string"],
-			[{}, ["operator", "identifier"]],
-			[{}, "operator", "@interp"],
-			[{}, "string"],
-			[{}, ["metatag", "keyword.modifier", "number", "metatag"]],
-			[{}, ["metatag", "number", "metatag"]],
-			[{}, ["metatag", "keyword.modifier", "metatag"]],
-			[{}, ["metatag", "metatag"]],
-			[{}, "string"]
+			["\\$\\$", "string"],
+			["(\\$)([a-z_]\\w*)", ["operator", "identifier"]],
+			["\\$\\{", "operator", "@interp"],
+			["%%", "string"],
+			[
+				"(%)([\\-#+ 0,(])(\\d+|\\.\\d+|\\d+\\.\\d+)(@fstring_conv)",
+				["metatag", "keyword.modifier", "number", "metatag"]
+			],
+			["(%)(\\d+|\\.\\d+|\\d+\\.\\d+)(@fstring_conv)", ["metatag", "number", "metatag"]],
+			["(%)([\\-#+ 0,(])(@fstring_conv)", ["metatag", "keyword.modifier", "metatag"]],
+			["(%)(@fstring_conv)", ["metatag", "metatag"]],
+			[".", "string"]
 		],
 		"fstringt": [
-			[{}, "string.escape"],
-			[{}, "string"],
+			["@escapes", "string.escape"],
+			["\"(?=\"\"\")", "string"],
 			[
-				{},
+				"\"\"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
 					"switchTo": "@allowMethod"
 				}
 			],
-			[{}, "string"],
-			[{}, ["operator", "identifier"]],
-			[{}, "operator", "@interp"],
-			[{}, "string"],
-			[{}, ["metatag", "keyword.modifier", "number", "metatag"]],
-			[{}, ["metatag", "number", "metatag"]],
-			[{}, ["metatag", "keyword.modifier", "metatag"]],
-			[{}, ["metatag", "metatag"]],
-			[{}, "string"]
+			["\\$\\$", "string"],
+			["(\\$)([a-z_]\\w*)", ["operator", "identifier"]],
+			["\\$\\{", "operator", "@interp"],
+			["%%", "string"],
+			[
+				"(%)([\\-#+ 0,(])(\\d+|\\.\\d+|\\d+\\.\\d+)(@fstring_conv)",
+				["metatag", "keyword.modifier", "number", "metatag"]
+			],
+			["(%)(\\d+|\\.\\d+|\\d+\\.\\d+)(@fstring_conv)", ["metatag", "number", "metatag"]],
+			["(%)([\\-#+ 0,(])(@fstring_conv)", ["metatag", "keyword.modifier", "metatag"]],
+			["(%)(@fstring_conv)", ["metatag", "metatag"]],
+			[".", "string"]
 		],
 		"sstring": [
-			[{}, "string.escape"],
+			["@escapes", "string.escape"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
 					"switchTo": "@allowMethod"
 				}
 			],
-			[{}, "string"],
-			[{}, ["operator", "identifier"]],
-			[{}, "operator", "@interp"],
-			[{}, "string"]
+			["\\$\\$", "string"],
+			["(\\$)([a-z_]\\w*)", ["operator", "identifier"]],
+			["\\$\\{", "operator", "@interp"],
+			[".", "string"]
 		],
 		"sstringt": [
-			[{}, "string.escape"],
-			[{}, "string"],
+			["@escapes", "string.escape"],
+			["\"(?=\"\"\")", "string"],
 			[
-				{},
+				"\"\"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
 					"switchTo": "@allowMethod"
 				}
 			],
-			[{}, "string"],
-			[{}, ["operator", "identifier"]],
-			[{}, "operator", "@interp"],
-			[{}, "string"]
+			["\\$\\$", "string"],
+			["(\\$)([a-z_]\\w*)", ["operator", "identifier"]],
+			["\\$\\{", "operator", "@interp"],
+			[".", "string"]
 		],
 		"interp": [
-			[{}, "operator", "@push"],
-			[{}, "operator", "@pop"],
+			["{", "operator", "@push"],
+			["}", "operator", "@pop"],
 			{
 				"include": "@root"
 			}
 		],
 		"rawstring": [
-			[{}, "string"],
+			["[^\"]", "string"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
@@ -378,22 +387,22 @@
 			]
 		],
 		"rawstringt": [
-			[{}, "string"],
-			[{}, "string"],
+			["[^\"]", "string"],
+			["\"(?=\"\"\")", "string"],
 			[
-				{},
+				"\"\"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
 					"switchTo": "@allowMethod"
 				}
 			],
-			[{}, "string"]
+			["\"", "string"]
 		],
 		"whitespace": [
-			[{}, "white"],
-			[{}, "comment", "@comment"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", "white"],
+			["\\/\\*", "comment", "@comment"],
+			["\\/\\/.*$", "comment"]
 		]
 	}
 }

@@ -465,16 +465,16 @@
 		">>=",
 		">>>="
 	],
-	"symbols": {},
-	"escapes": {},
-	"digits": {},
-	"octaldigits": {},
-	"binarydigits": {},
-	"hexdigits": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
+	"digits": "\\d+(_+\\d+)*",
+	"octaldigits": "[0-7]+(_+[0-7]+)*",
+	"binarydigits": "[0-1]+(_+[0-1]+)*",
+	"hexdigits": "[[0-9a-fA-F]+(_+[0-9a-fA-F]+)*",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"[a-z_$][\\w$]*",
 				{
 					"cases": {
 						"@keywords": {
@@ -485,7 +485,7 @@
 				}
 			],
 			[
-				{},
+				"[A-Z][\\w\\$]*",
 				{
 					"cases": {
 						"@keywords": {
@@ -498,10 +498,10 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "@brackets"],
-			[{}, "@brackets"],
+			["[{}()\\[\\]]", "@brackets"],
+			["[<>](?!@symbols)", "@brackets"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@operators": "delimiter",
@@ -509,42 +509,42 @@
 					}
 				}
 			],
-			[{}, "annotation"],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number"],
-			[{}, "delimiter"],
-			[{}, "string.invalid"],
-			[{}, "string.invalid"],
-			[{}, "string", "@string.\""],
-			[{}, "string", "@string.'"],
-			[{}, "string"],
-			[{}, ["string", "string.escape", "string"]],
-			[{}, "string.invalid"]
+			["@\\s*[a-zA-Z_\\$][\\w\\$]*", "annotation"],
+			["(@digits)[eE]([\\-+]?(@digits))?[fFdD]?", "number.float"],
+			["(@digits)\\.(@digits)([eE][\\-+]?(@digits))?[fFdD]?", "number.float"],
+			["(@digits)[fFdD]", "number.float"],
+			["(@digits)[lL]?", "number"],
+			["[;,.]", "delimiter"],
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
+			["'([^'\\\\]|\\\\.)*$", "string.invalid"],
+			["\"", "string", "@string.\""],
+			["'", "string", "@string.'"],
+			["'[^\\\\']'", "string"],
+			["(')(@escapes)(')", ["string", "string.escape", "string"]],
+			["'", "string.invalid"]
 		],
 		"whitespace": [
-			[{}, ""],
-			[{}, "comment.doc", "@apexdoc"],
-			[{}, "comment", "@comment"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", ""],
+			["\\/\\*\\*(?!\\/)", "comment.doc", "@apexdoc"],
+			["\\/\\*", "comment", "@comment"],
+			["\\/\\/.*$", "comment"]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["[^\\/*]+", "comment"],
+			["\\*\\/", "comment", "@pop"],
+			["[\\/*]", "comment"]
 		],
 		"apexdoc": [
-			[{}, "comment.doc"],
-			[{}, "comment.doc", "@pop"],
-			[{}, "comment.doc"]
+			["[^\\/*]+", "comment.doc"],
+			["\\*\\/", "comment.doc", "@pop"],
+			["[\\/*]", "comment.doc"]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["[^\\\\\"']+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
 			[
-				{},
+				"[\"']",
 				{
 					"cases": {
 						"$#==$S2": {

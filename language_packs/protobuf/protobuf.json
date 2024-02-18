@@ -23,7 +23,7 @@
 			"token": "delimiter.angle"
 		}
 	],
-	"symbols": {},
+	"symbols": "[=><!~?:&|+\\-*/^%]+",
 	"keywords": [
 		"syntax",
 		"import",
@@ -68,31 +68,31 @@
 	"operators": ["=", "+", "-"],
 	"namedLiterals": ["true", "false"],
 	"escapes": "\\\\(u{[0-9A-Fa-f]+}|n|r|t|\\\\|'|\\${)",
-	"identifier": {},
-	"fullIdentifier": {},
-	"optionName": {},
-	"messageName": {},
-	"enumName": {},
-	"messageType": {},
-	"enumType": {},
-	"floatLit": {},
-	"exponent": {},
-	"boolLit": {},
-	"decimalLit": {},
-	"octalLit": {},
-	"hexLit": {},
-	"type": {},
-	"keyType": {},
+	"identifier": "[a-zA-Z]\\w*",
+	"fullIdentifier": "@identifier(?:\\s*\\.\\s*@identifier)*",
+	"optionName": "(?:@identifier|\\(\\s*@fullIdentifier\\s*\\))(?:\\s*\\.\\s*@identifier)*",
+	"messageName": "@identifier",
+	"enumName": "@identifier",
+	"messageType": "\\.?\\s*(?:@identifier\\s*\\.\\s*)*@messageName",
+	"enumType": "\\.?\\s*(?:@identifier\\s*\\.\\s*)*@enumName",
+	"floatLit": "[0-9]+\\s*\\.\\s*[0-9]*(?:@exponent)?|[0-9]+@exponent|\\.[0-9]+(?:@exponent)?",
+	"exponent": "[eE]\\s*[+-]?\\s*[0-9]+",
+	"boolLit": "true\\b|false\\b",
+	"decimalLit": "[1-9][0-9]*",
+	"octalLit": "0[0-7]*",
+	"hexLit": "0[xX][0-9a-fA-F]+",
+	"type": "double|float|int32|int64|uint32|uint64|sint32|sint64|fixed32|fixed64|sfixed32|sfixed64|bool|string|bytes|@messageType|@enumType",
+	"keyType": "int32|int64|uint32|uint64|sint32|sint64|fixed32|fixed64|sfixed32|sfixed64|bool|string",
 	"tokenizer": {
 		"root": [
 			{
 				"include": "@whitespace"
 			},
-			[{}, "keyword"],
-			[{}, "operators"],
-			[{}, "delimiter"],
+			["syntax", "keyword"],
+			["=", "operators"],
+			[";", "delimiter"],
 			[
-				{},
+				"(\")(proto3)(\")",
 				[
 					"string.quote",
 					"string",
@@ -103,7 +103,7 @@
 				]
 			],
 			[
-				{},
+				"(\")(proto2)(\")",
 				[
 					"string.quote",
 					"string",
@@ -114,7 +114,7 @@
 				]
 			],
 			[
-				{},
+				".*?",
 				{
 					"token": "",
 					"switchTo": "@topLevel.proto2"
@@ -128,10 +128,10 @@
 			{
 				"include": "@constant"
 			},
-			[{}, "operators"],
-			[{}, "delimiter"],
+			["=", "operators"],
+			["[;.]", "delimiter"],
 			[
-				{},
+				"@fullIdentifier",
 				{
 					"cases": {
 						"option": {
@@ -168,9 +168,9 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "type.identifier"],
+			["@identifier", "type.identifier"],
 			[
-				{},
+				"{",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -185,12 +185,12 @@
 			{
 				"include": "@constant"
 			},
-			[{}, "operators"],
-			[{}, "delimiter"],
-			[{}, "keyword", "@option.$S2"],
-			[{}, "identifier"],
+			["=", "operators"],
+			[";", "delimiter"],
+			["option\\b", "keyword", "@option.$S2"],
+			["@identifier", "identifier"],
 			[
-				{},
+				"\\[",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -198,7 +198,7 @@
 				}
 			],
 			[
-				{},
+				"}",
 				{
 					"token": "@brackets",
 					"bracket": "@close",
@@ -210,9 +210,9 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "type.identifier"],
+			["@identifier", "type.identifier"],
 			[
-				{},
+				"{",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -227,8 +227,8 @@
 			{
 				"include": "@constant"
 			},
-			[{}, "operators"],
-			[{}, "delimiter"],
+			["=", "operators"],
+			[";", "delimiter"],
 			[
 				"(map)(s*)(<)",
 				[
@@ -242,7 +242,7 @@
 				]
 			],
 			[
-				{},
+				"@identifier",
 				{
 					"cases": {
 						"option": {
@@ -293,7 +293,7 @@
 				}
 			],
 			[
-				{},
+				"\\[",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -301,7 +301,7 @@
 				}
 			],
 			[
-				{},
+				"}",
 				{
 					"token": "@brackets",
 					"bracket": "@close",
@@ -313,9 +313,9 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "type.identifier"],
+			["@identifier", "type.identifier"],
 			[
-				{},
+				"{",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -330,10 +330,10 @@
 			{
 				"include": "@constant"
 			},
-			[{}, "delimiter"],
-			[{}, "keyword", "@field.$S2"],
+			[";", "delimiter"],
+			["(?:repeated|optional|required)", "keyword", "@field.$S2"],
 			[
-				{},
+				"\\[",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -341,7 +341,7 @@
 				}
 			],
 			[
-				{},
+				"}",
 				{
 					"token": "@brackets",
 					"bracket": "@close",
@@ -356,12 +356,12 @@
 			{
 				"include": "@constant"
 			},
-			[{}, "delimiter"],
-			[{}, "annotation"],
-			[{}, "annotation.brackets"],
-			[{}, "operator"],
+			[";", "delimiter"],
+			["@optionName", "annotation"],
+			["[()]", "annotation.brackets"],
+			["=", "operator"],
 			[
-				{},
+				"\\]",
 				{
 					"token": "@brackets",
 					"bracket": "@close",
@@ -373,17 +373,17 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "annotation"],
-			[{}, "annotation.brackets"],
-			[{}, "operator", "@pop"]
+			["@optionName", "annotation"],
+			["[()]", "annotation.brackets"],
+			["=", "operator", "@pop"]
 		],
 		"oneofDecl": [
 			{
 				"include": "@whitespace"
 			},
-			[{}, "identifier"],
+			["@identifier", "identifier"],
 			[
-				{},
+				"{",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -398,10 +398,10 @@
 			{
 				"include": "@constant"
 			},
-			[{}, "delimiter"],
-			[{}, ["identifier", "white", "delimiter"]],
+			[";", "delimiter"],
+			["(@identifier)(\\s*)(=)", ["identifier", "white", "delimiter"]],
 			[
-				{},
+				"@fullIdentifier|\\.",
 				{
 					"cases": {
 						"@builtinTypes": "keyword",
@@ -410,7 +410,7 @@
 				}
 			],
 			[
-				{},
+				"\\[",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -418,7 +418,7 @@
 				}
 			],
 			[
-				{},
+				"}",
 				{
 					"token": "@brackets",
 					"bracket": "@close",
@@ -430,19 +430,19 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "delimiter"],
-			[{}, "delimiter", "@pop"],
+			[",", "delimiter"],
+			[";", "delimiter", "@pop"],
 			{
 				"include": "@constant"
 			},
-			[{}, "keyword"]
+			["to\\b|max\\b", "keyword"]
 		],
 		"map": [
 			{
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"@fullIdentifier|\\.",
 				{
 					"cases": {
 						"@builtinTypes": "keyword",
@@ -450,9 +450,9 @@
 					}
 				}
 			],
-			[{}, "delimiter"],
+			[",", "delimiter"],
 			[
-				{},
+				">",
 				{
 					"token": "@brackets",
 					"bracket": "@close",
@@ -476,7 +476,7 @@
 				}
 			],
 			[
-				{},
+				"(@identifier)(\\s*)(=)",
 				[
 					"identifier",
 					"white",
@@ -487,7 +487,7 @@
 				]
 			],
 			[
-				{},
+				"@fullIdentifier|\\.",
 				{
 					"cases": {
 						"@builtinTypes": "keyword",
@@ -500,10 +500,10 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "identifier"],
+			["@identifier", "identifier"],
 			["=", "operator"],
 			[
-				{},
+				"{",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -518,22 +518,22 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "type.identifier", "@pop"],
-			[{}, "delimiter"]
+			["@identifier", "type.identifier", "@pop"],
+			[".", "delimiter"]
 		],
 		"identifier": [
 			{
 				"include": "@whitespace"
 			},
-			[{}, "identifier", "@pop"]
+			["@identifier", "identifier", "@pop"]
 		],
 		"serviceDecl": [
 			{
 				"include": "@whitespace"
 			},
-			[{}, "identifier"],
+			["@identifier", "identifier"],
 			[
-				{},
+				"{",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -548,11 +548,11 @@
 			{
 				"include": "@constant"
 			},
-			[{}, "delimiter"],
-			[{}, "keyword", "@option.$S2"],
-			[{}, "keyword", "@rpc.$S2"],
+			[";", "delimiter"],
+			["option\\b", "keyword", "@option.$S2"],
+			["rpc\\b", "keyword", "@rpc.$S2"],
 			[
-				{},
+				"\\[",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -560,7 +560,7 @@
 				}
 			],
 			[
-				{},
+				"}",
 				{
 					"token": "@brackets",
 					"bracket": "@close",
@@ -572,9 +572,9 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "identifier"],
+			["@identifier", "identifier"],
 			[
-				{},
+				"\\(",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -582,21 +582,21 @@
 				}
 			],
 			[
-				{},
+				"{",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
 					"next": "@methodOptions.$S2"
 				}
 			],
-			[{}, "delimiter", "@pop"]
+			[";", "delimiter", "@pop"]
 		],
 		"request": [
 			{
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"@messageType",
 				{
 					"cases": {
 						"stream": {
@@ -608,7 +608,7 @@
 				}
 			],
 			[
-				{},
+				"\\)",
 				{
 					"token": "@brackets",
 					"bracket": "@close",
@@ -620,9 +620,9 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "keyword"],
+			["returns\\b", "keyword"],
 			[
-				{},
+				"\\(",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
@@ -635,7 +635,7 @@
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"@messageType",
 				{
 					"cases": {
 						"stream": {
@@ -647,7 +647,7 @@
 				}
 			],
 			[
-				{},
+				"\\)",
 				{
 					"token": "@brackets",
 					"bracket": "@close",
@@ -662,13 +662,13 @@
 			{
 				"include": "@constant"
 			},
-			[{}, "delimiter"],
+			[";", "delimiter"],
 			["option", "keyword"],
-			[{}, "annotation"],
-			[{}, "annotation.brackets"],
-			[{}, "operator"],
+			["@optionName", "annotation"],
+			["[()]", "annotation.brackets"],
+			["=", "operator"],
 			[
-				{},
+				"}",
 				{
 					"token": "@brackets",
 					"bracket": "@close",
@@ -677,17 +677,17 @@
 			]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment", "@push"],
+			["[^\\/*]+", "comment"],
+			["\\/\\*", "comment", "@push"],
 			["\\*/", "comment", "@pop"],
-			[{}, "comment"]
+			["[\\/*]", "comment"]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["[^\\\\\"]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
@@ -696,11 +696,11 @@
 			]
 		],
 		"stringSingle": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["[^\\\\']+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
 			[
-				{},
+				"'",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
@@ -714,9 +714,9 @@
 			["@octalLit", "number.octal"],
 			["@decimalLit", "number"],
 			["@floatLit", "number.float"],
-			[{}, "string.invalid"],
+			["(\"([^\"\\\\]|\\\\.)*|'([^'\\\\]|\\\\.)*)$", "string.invalid"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -724,7 +724,7 @@
 				}
 			],
 			[
-				{},
+				"'",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -732,19 +732,19 @@
 				}
 			],
 			[
-				{},
+				"{",
 				{
 					"token": "@brackets",
 					"bracket": "@open",
 					"next": "@prototext"
 				}
 			],
-			[{}, "identifier"]
+			["identifier", "identifier"]
 		],
 		"whitespace": [
-			[{}, "white"],
-			[{}, "comment", "@comment"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", "white"],
+			["\\/\\*", "comment", "@comment"],
+			["\\/\\/.*$", "comment"]
 		],
 		"prototext": [
 			{
@@ -753,10 +753,10 @@
 			{
 				"include": "@constant"
 			},
-			[{}, "identifier"],
-			[{}, "delimiter"],
+			["@identifier", "identifier"],
+			["[:;]", "delimiter"],
 			[
-				{},
+				"}",
 				{
 					"token": "@brackets",
 					"bracket": "@close",

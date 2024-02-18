@@ -227,34 +227,34 @@
 		"right",
 		"rtc"
 	],
-	"symbols": {},
-	"escapes": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
 	"tokenizer": {
 		"root": [
-			[{}, "delimiter"],
-			[{}, "number.hex"],
-			[{}, "number.binary"],
-			[{}, "number.octal"],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number"],
-			[{}, "number"],
-			[{}, "tag"],
-			[{}, "tag"],
-			[{}, "tag"],
-			[{}, "tag"],
-			[{}, "predefined"],
-			[{}, "predefined"],
-			[{}, "delimiter"],
+			["(\\.\\.)", "delimiter"],
+			["\\b(16#[0-9A-Fa-f\\_]*)+\\b", "number.hex"],
+			["\\b(2#[01\\_]+)+\\b", "number.binary"],
+			["\\b(8#[0-9\\_]*)+\\b", "number.octal"],
+			["\\b\\d*\\.\\d+([eE][\\-+]?\\d+)?\\b", "number.float"],
+			["\\b(L?REAL)#[0-9\\_\\.e]+\\b", "number.float"],
+			["\\b(BYTE|(?:D|L)?WORD|U?(?:S|D|L)?INT)#[0-9\\_]+\\b", "number"],
+			["\\d+", "number"],
+			["\\b(T|DT|TOD)#[0-9:-_shmyd]+\\b", "tag"],
+			["\\%(I|Q|M)(X|B|W|D|L)[0-9\\.]+", "tag"],
+			["\\%(I|Q|M)[0-9\\.]*", "tag"],
+			["\\b[A-Za-z]{1,6}#[0-9]+\\b", "tag"],
+			["\\b(TO_|CTU_|CTD_|CTUD_|MUX_|SEL_)[A_Za-z]+\\b", "predefined"],
+			["\\b[A_Za-z]+(_TO_)[A_Za-z]+\\b", "predefined"],
+			["[;]", "delimiter"],
 			[
-				{},
+				"[.]",
 				{
 					"token": "delimiter",
 					"next": "@params"
 				}
 			],
 			[
-				{},
+				"[a-zA-Z_]\\w*",
 				{
 					"cases": {
 						"@operators": "operators",
@@ -271,10 +271,10 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "@brackets"],
-			[{}, "string.invalid"],
+			["[{}()\\[\\]]", "@brackets"],
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -282,51 +282,51 @@
 				}
 			],
 			[
-				{},
+				"'",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
 					"next": "@string_sq"
 				}
 			],
-			[{}, "string"],
-			[{}, ["string", "string.escape", "string"]],
-			[{}, "string.invalid"]
+			["'[^\\\\']'", "string"],
+			["(')(@escapes)(')", ["string", "string.escape", "string"]],
+			["'", "string.invalid"]
 		],
 		"params": [
 			[
-				{},
+				"\\b[A-Za-z0-9_]+\\b(?=\\()",
 				{
 					"token": "identifier",
 					"next": "@pop"
 				}
 			],
-			[{}, "variable.name", "@pop"]
+			["\\b[A-Za-z0-9_]+\\b", "variable.name", "@pop"]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment", "@push"],
+			["[^\\/*]+", "comment"],
+			["\\/\\*", "comment", "@push"],
 			["\\*/", "comment", "@pop"],
-			[{}, "comment"]
+			["[\\/*]", "comment"]
 		],
 		"comment2": [
-			[{}, "comment"],
-			[{}, "comment", "@push"],
+			["[^\\(*]+", "comment"],
+			["\\(\\*", "comment", "@push"],
 			["\\*\\)", "comment", "@pop"],
-			[{}, "comment"]
+			["[\\(*]", "comment"]
 		],
 		"whitespace": [
-			[{}, "white"],
-			[{}, "comment"],
-			[{}, "comment", "@comment"],
-			[{}, "comment", "@comment2"]
+			["[ \\t\\r\\n]+", "white"],
+			["\\/\\/.*$", "comment"],
+			["\\/\\*", "comment", "@comment"],
+			["\\(\\*", "comment", "@comment2"]
 		],
 		"string_dq": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["[^\\\\\"]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
@@ -335,11 +335,11 @@
 			]
 		],
 		"string_sq": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["[^\\\\']+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
 			[
-				{},
+				"'",
 				{
 					"token": "string.quote",
 					"bracket": "@close",

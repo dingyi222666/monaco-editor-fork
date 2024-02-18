@@ -36,12 +36,12 @@
 		"be",
 		"certified"
 	],
-	"symbols": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%]+",
 	"tokenizer": {
 		"root": [
-			[{}, ["", "comment"]],
+			["^(\\s*)(comment:?(?:\\s.*|))$", ["", "comment"]],
 			[
-				{},
+				"\"",
 				{
 					"token": "identifier.quote",
 					"bracket": "@open",
@@ -73,7 +73,7 @@
 				}
 			],
 			[
-				{},
+				"[a-z_$][\\w$]*",
 				{
 					"cases": {
 						"@operators": "operator",
@@ -86,19 +86,19 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "@brackets"],
-			[{}, "@brackets"],
-			[{}, "delimiter"],
-			[{}, "number.semver"],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number"],
-			[{}, "delimiter"]
+			["[{}()\\[\\]]", "@brackets"],
+			["[<>](?!@symbols)", "@brackets"],
+			["@symbols", "delimiter"],
+			["\\d*\\.\\d*\\.\\d*", "number.semver"],
+			["\\d*\\.\\d+([eE][\\-+]?\\d+)?", "number.float"],
+			["0[xX][0-9a-fA-F]+", "number.hex"],
+			["\\d+", "number"],
+			["[;,.]", "delimiter"]
 		],
 		"quoted_identifier": [
-			[{}, "identifier"],
+			["[^\\\\\"]+", "identifier"],
 			[
-				{},
+				"\"",
 				{
 					"token": "identifier.quote",
 					"bracket": "@close",
@@ -127,9 +127,9 @@
 					"next": "@identifier_rest"
 				}
 			],
-			[{}, "identifier"],
+			["[^\\\\.]+", "identifier"],
 			[
-				{},
+				"\\.",
 				{
 					"token": "delimiter",
 					"bracket": "@close",
@@ -138,9 +138,9 @@
 			]
 		],
 		"identifier_rest": [
-			[{}, "identifier"],
+			["[^\\\\.]+", "identifier"],
 			[
-				{},
+				"\\.",
 				{
 					"token": "delimiter",
 					"bracket": "@close",
@@ -154,7 +154,7 @@
 			},
 			[":", "delimiter"],
 			[
-				{},
+				"\\d*\\.\\d*\\.\\d*",
 				{
 					"token": "number.semver",
 					"bracket": "@close",
@@ -162,6 +162,6 @@
 				}
 			]
 		],
-		"whitespace": [[{}, "white"]]
+		"whitespace": [["[ \\t\\r\\n]+", "white"]]
 	}
 }

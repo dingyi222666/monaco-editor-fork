@@ -248,8 +248,8 @@
 		],
 		"comment": [
 			["\\*\\/", "comment", "@pop"],
-			[{}, "comment"],
-			[{}, "comment"]
+			["[^*/]+", "comment"],
+			[".", "comment"]
 		],
 		"name": [["@identifier", "attribute.value"]],
 		"numbers": [
@@ -346,7 +346,7 @@
 					"next": "@pop"
 				}
 			],
-			[{}, "string"],
+			["[^\\\\\"]+", "string"],
 			[".", "string"]
 		],
 		"stringendquote": [
@@ -358,7 +358,7 @@
 					"next": "@pop"
 				}
 			],
-			[{}, "string"],
+			["[^\\\\']+", "string"],
 			[".", "string"]
 		]
 	}

@@ -155,12 +155,12 @@
 		"video",
 		"wbr"
 	],
-	"symbols": {},
-	"escapes": {},
+	"symbols": "[\\+\\-\\*\\%\\&\\|\\!\\=\\/\\.\\,\\:]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"^(\\s*)([a-zA-Z_-][\\w-]*)",
 				{
 					"cases": {
 						"$2@tags": {
@@ -186,7 +186,7 @@
 				}
 			],
 			[
-				{},
+				"^(\\s*)(#[a-zA-Z_-][\\w-]*)",
 				{
 					"cases": {
 						"@eos": ["", "tag.id"],
@@ -201,7 +201,7 @@
 				}
 			],
 			[
-				{},
+				"^(\\s*)(\\.[a-zA-Z_-][\\w-]*)",
 				{
 					"cases": {
 						"@eos": ["", "tag.class"],
@@ -215,12 +215,12 @@
 					}
 				}
 			],
-			[{}, ""],
+			["^(\\s*)(\\|.*)$", ""],
 			{
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"[a-zA-Z_$][\\w$]*",
 				{
 					"cases": {
 						"@keywords": {
@@ -230,16 +230,16 @@
 					}
 				}
 			],
-			[{}, "@brackets"],
-			[{}, "delimiter"],
-			[{}, "number.float"],
-			[{}, "number"],
-			[{}, "string", "@string.\""],
-			[{}, "string", "@string.'"]
+			["[{}()\\[\\]]", "@brackets"],
+			["@symbols", "delimiter"],
+			["\\d+\\.\\d+([eE][\\-+]?\\d+)?", "number.float"],
+			["\\d+", "number"],
+			["\"", "string", "@string.\""],
+			["'", "string", "@string.'"]
 		],
 		"tag": [
 			[
-				{},
+				"(\\.)(\\s*$)",
 				[
 					{
 						"token": "delimiter",
@@ -249,14 +249,14 @@
 				]
 			],
 			[
-				{},
+				"\\s+",
 				{
 					"token": "",
 					"next": "@simpleText"
 				}
 			],
 			[
-				{},
+				"#[a-zA-Z_-][\\w-]*",
 				{
 					"cases": {
 						"@eos": {
@@ -268,7 +268,7 @@
 				}
 			],
 			[
-				{},
+				"\\.[a-zA-Z_-][\\w-]*",
 				{
 					"cases": {
 						"@eos": {
@@ -280,7 +280,7 @@
 				}
 			],
 			[
-				{},
+				"\\(",
 				{
 					"token": "delimiter.parenthesis",
 					"next": "@attributeList"
@@ -289,20 +289,20 @@
 		],
 		"simpleText": [
 			[
-				{},
+				"[^#]+$",
 				{
 					"token": "",
 					"next": "@popall"
 				}
 			],
 			[
-				{},
+				"[^#]+",
 				{
 					"token": ""
 				}
 			],
 			[
-				{},
+				"(#{)([^}]*)(})",
 				{
 					"cases": {
 						"@eos": [
@@ -318,18 +318,18 @@
 				}
 			],
 			[
-				{},
+				"#$",
 				{
 					"token": "",
 					"next": "@popall"
 				}
 			],
-			[{}, ""]
+			["#", ""]
 		],
 		"attributeList": [
-			[{}, ""],
+			["\\s+", ""],
 			[
-				{},
+				"(\\w+)(\\s*=\\s*)(\"|')",
 				[
 					"attribute.name",
 					"delimiter",
@@ -339,9 +339,9 @@
 					}
 				]
 			],
-			[{}, "attribute.name"],
+			["\\w+", "attribute.name"],
 			[
-				{},
+				",",
 				{
 					"cases": {
 						"@eos": {
@@ -353,14 +353,14 @@
 				}
 			],
 			[
-				{},
+				"\\)$",
 				{
 					"token": "delimiter.parenthesis",
 					"next": "@popall"
 				}
 			],
 			[
-				{},
+				"\\)",
 				{
 					"token": "delimiter.parenthesis",
 					"next": "@pop"
@@ -369,15 +369,15 @@
 		],
 		"whitespace": [
 			[
-				{},
+				"^(\\s*)(\\/\\/.*)$",
 				{
 					"token": "comment",
 					"next": "@blockText.$1.comment"
 				}
 			],
-			[{}, ""],
+			["[ \\t\\r\\n]+", ""],
 			[
-				{},
+				"<!--",
 				{
 					"token": "comment",
 					"next": "@comment"
@@ -386,7 +386,7 @@
 		],
 		"blockText": [
 			[
-				{},
+				"^\\s+.*$",
 				{
 					"cases": {
 						"($S2\\s+.*$)": {
@@ -400,7 +400,7 @@
 				}
 			],
 			[
-				{},
+				".",
 				{
 					"token": "@rematch",
 					"next": "@popall"
@@ -408,20 +408,20 @@
 			]
 		],
 		"comment": [
-			[{}, "comment.content"],
+			["[^<\\-]+", "comment.content"],
 			[
-				{},
+				"-->",
 				{
 					"token": "comment",
 					"next": "@pop"
 				}
 			],
-			[{}, "comment.content.invalid"],
-			[{}, "comment.content"]
+			["<!--", "comment.content.invalid"],
+			["[<\\-]", "comment.content"]
 		],
 		"string": [
 			[
-				{},
+				"[^\\\\\"'#]+",
 				{
 					"cases": {
 						"@eos": {
@@ -433,7 +433,7 @@
 				}
 			],
 			[
-				{},
+				"@escapes",
 				{
 					"cases": {
 						"@eos": {
@@ -445,7 +445,7 @@
 				}
 			],
 			[
-				{},
+				"\\\\.",
 				{
 					"cases": {
 						"@eos": {
@@ -456,10 +456,10 @@
 					}
 				}
 			],
-			[{}, ["interpolation.delimiter", "interpolation", "interpolation.delimiter"]],
-			[{}, "string"],
+			["(#{)([^}]*)(})", ["interpolation.delimiter", "interpolation", "interpolation.delimiter"]],
+			["#", "string"],
 			[
-				{},
+				"[\"']",
 				{
 					"cases": {
 						"$#==$S2": {
@@ -475,7 +475,7 @@
 		],
 		"value": [
 			[
-				{},
+				"[^\\\\\"']+",
 				{
 					"cases": {
 						"@eos": {
@@ -487,7 +487,7 @@
 				}
 			],
 			[
-				{},
+				"\\\\.",
 				{
 					"cases": {
 						"@eos": {
@@ -499,7 +499,7 @@
 				}
 			],
 			[
-				{},
+				"[\"']",
 				{
 					"cases": {
 						"$#==$S2": {

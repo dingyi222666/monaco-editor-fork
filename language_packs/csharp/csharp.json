@@ -169,12 +169,12 @@
 		">>",
 		"=>"
 	],
-	"symbols": {},
-	"escapes": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"\\@?[a-zA-Z_]\\w*",
 				{
 					"cases": {
 						"@namespaceFollows": {
@@ -196,7 +196,7 @@
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"}",
 				{
 					"cases": {
 						"$S2==interpolatedstring": {
@@ -211,10 +211,10 @@
 					}
 				}
 			],
-			[{}, "@brackets"],
-			[{}, "@brackets"],
+			["[{}()\\[\\]]", "@brackets"],
+			["[<>](?!@symbols)", "@brackets"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@operators": "delimiter",
@@ -222,47 +222,47 @@
 					}
 				}
 			],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number.hex"],
-			[{}, "number"],
-			[{}, "delimiter"],
-			[{}, "string.invalid"],
+			["[0-9_]*\\.[0-9_]+([eE][\\-+]?\\d+)?[fFdD]?", "number.float"],
+			["0[xX][0-9a-fA-F_]+", "number.hex"],
+			["0[bB][01_]+", "number.hex"],
+			["[0-9_]+", "number"],
+			["[;,.]", "delimiter"],
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"next": "@string"
 				}
 			],
 			[
-				{},
+				"\\$\\@\"",
 				{
 					"token": "string.quote",
 					"next": "@litinterpstring"
 				}
 			],
 			[
-				{},
+				"\\@\"",
 				{
 					"token": "string.quote",
 					"next": "@litstring"
 				}
 			],
 			[
-				{},
+				"\\$\"",
 				{
 					"token": "string.quote",
 					"next": "@interpolatedstring"
 				}
 			],
-			[{}, "string"],
-			[{}, ["string", "string.escape", "string"]],
-			[{}, "string.invalid"]
+			["'[^\\\\']'", "string"],
+			["(')(@escapes)(')", ["string", "string.escape", "string"]],
+			["'", "string.invalid"]
 		],
 		"qualified": [
 			[
-				{},
+				"[a-zA-Z_][\\w]*",
 				{
 					"cases": {
 						"@keywords": {
@@ -272,28 +272,28 @@
 					}
 				}
 			],
-			[{}, "delimiter"],
+			["\\.", "delimiter"],
 			["", "", "@pop"]
 		],
 		"namespace": [
 			{
 				"include": "@whitespace"
 			},
-			[{}, "namespace"],
-			[{}, "delimiter"],
+			["[A-Z]\\w*", "namespace"],
+			["[\\.=]", "delimiter"],
 			["", "", "@pop"]
 		],
 		"comment": [
-			[{}, "comment"],
+			["[^\\/*]+", "comment"],
 			["\\*/", "comment", "@pop"],
-			[{}, "comment"]
+			["[\\/*]", "comment"]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["[^\\\\\"]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"next": "@pop"
@@ -301,10 +301,10 @@
 			]
 		],
 		"litstring": [
-			[{}, "string"],
-			[{}, "string.escape"],
+			["[^\"]+", "string"],
+			["\"\"", "string.escape"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"next": "@pop"
@@ -312,19 +312,19 @@
 			]
 		],
 		"litinterpstring": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape"],
-			[{}, "string.escape"],
+			["[^\"{]+", "string"],
+			["\"\"", "string.escape"],
+			["{{", "string.escape"],
+			["}}", "string.escape"],
 			[
-				{},
+				"{",
 				{
 					"token": "string.quote",
 					"next": "root.litinterpstring"
 				}
 			],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"next": "@pop"
@@ -332,20 +332,20 @@
 			]
 		],
 		"interpolatedstring": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
-			[{}, "string.escape"],
-			[{}, "string.escape"],
+			["[^\\\\\"{]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
+			["{{", "string.escape"],
+			["}}", "string.escape"],
 			[
-				{},
+				"{",
 				{
 					"token": "string.quote",
 					"next": "root.interpolatedstring"
 				}
 			],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"next": "@pop"
@@ -353,11 +353,11 @@
 			]
 		],
 		"whitespace": [
-			[{}, "directive.csx"],
-			[{}, "namespace.cpp"],
-			[{}, ""],
-			[{}, "comment", "@comment"],
-			[{}, "comment"]
+			["^[ \\t\\v\\f]*#((r)|(load))(?=\\s)", "directive.csx"],
+			["^[ \\t\\v\\f]*#\\w.*$", "namespace.cpp"],
+			["[ \\t\\v\\f\\r\\n]+", ""],
+			["\\/\\*", "comment", "@comment"],
+			["\\/\\/.*$", "comment"]
 		]
 	}
 }

@@ -3,19 +3,19 @@
 	"tokenPostfix": "",
 	"tokenizer": {
 		"root": [
-			[{}],
+			["@@@@"],
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.root"
 				}
 			],
-			[{}, "metatag.html", "@doctype"],
-			[{}, "comment.html", "@comment"],
-			[{}, ["delimiter.html", "tag.html", "delimiter.html"]],
+			["<!DOCTYPE", "metatag.html", "@doctype"],
+			["<!--", "comment.html", "@comment"],
+			["(<)([\\w\\-]+)(\\/>)", ["delimiter.html", "tag.html", "delimiter.html"]],
 			[
-				{},
+				"(<)(script)",
 				[
 					"delimiter.html",
 					{
@@ -25,7 +25,7 @@
 				]
 			],
 			[
-				{},
+				"(<)(style)",
 				[
 					"delimiter.html",
 					{
@@ -35,7 +35,7 @@
 				]
 			],
 			[
-				{},
+				"(<)([:\\w\\-]+)",
 				[
 					"delimiter.html",
 					{
@@ -45,7 +45,7 @@
 				]
 			],
 			[
-				{},
+				"(<\\/)([\\w\\-]+)",
 				[
 					"delimiter.html",
 					{
@@ -54,72 +54,72 @@
 					}
 				]
 			],
-			[{}, "delimiter.html"],
-			[{}],
-			[{}]
+			["<", "delimiter.html"],
+			["[ \\t\\r\\n]+"],
+			["[^<@]+"]
 		],
 		"doctype": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.comment"
 				}
 			],
-			[{}, "metatag.content.html"],
-			[{}, "metatag.html", "@pop"]
+			["[^>]+", "metatag.content.html"],
+			[">", "metatag.html", "@pop"]
 		],
 		"comment": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.comment"
 				}
 			],
-			[{}, "comment.html", "@pop"],
-			[{}, "comment.content.html"],
-			[{}, "comment.content.html"]
+			["-->", "comment.html", "@pop"],
+			["[^-]+", "comment.content.html"],
+			[".", "comment.content.html"]
 		],
 		"otherTag": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.otherTag"
 				}
 			],
-			[{}, "delimiter.html", "@pop"],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
-			[{}]
+			["\\/?>", "delimiter.html", "@pop"],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
+			["[ \\t\\r\\n]+"]
 		],
 		"script": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.script"
 				}
 			],
-			[{}, "attribute.name", "@scriptAfterType"],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
+			["type", "attribute.name", "@scriptAfterType"],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@scriptEmbedded.text/javascript",
 					"nextEmbedded": "text/javascript"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"(<\\/)(script\\s*)(>)",
 				[
 					"delimiter.html",
 					"tag.html",
@@ -132,24 +132,24 @@
 		],
 		"scriptAfterType": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.scriptAfterType"
 				}
 			],
-			[{}, "delimiter", "@scriptAfterTypeEquals"],
+			["=", "delimiter", "@scriptAfterTypeEquals"],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@scriptEmbedded.text/javascript",
 					"nextEmbedded": "text/javascript"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/script\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -158,37 +158,37 @@
 		],
 		"scriptAfterTypeEquals": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.scriptAfterTypeEquals"
 				}
 			],
 			[
-				{},
+				"\"([^\"]*)\"",
 				{
 					"token": "attribute.value",
 					"switchTo": "@scriptWithCustomType.$1"
 				}
 			],
 			[
-				{},
+				"'([^']*)'",
 				{
 					"token": "attribute.value",
 					"switchTo": "@scriptWithCustomType.$1"
 				}
 			],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@scriptEmbedded.text/javascript",
 					"nextEmbedded": "text/javascript"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/script\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -197,27 +197,27 @@
 		],
 		"scriptWithCustomType": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.scriptWithCustomType.$S2"
 				}
 			],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@scriptEmbedded.$S2",
 					"nextEmbedded": "$S2"
 				}
 			],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
-			[{}],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/script\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -226,7 +226,7 @@
 		],
 		"scriptEmbedded": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInEmbeddedState.scriptEmbedded.$S2",
@@ -234,7 +234,7 @@
 				}
 			],
 			[
-				{},
+				"<\\/script",
 				{
 					"token": "@rematch",
 					"next": "@pop",
@@ -244,28 +244,28 @@
 		],
 		"style": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.style"
 				}
 			],
-			[{}, "attribute.name", "@styleAfterType"],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
+			["type", "attribute.name", "@styleAfterType"],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@styleEmbedded.text/css",
 					"nextEmbedded": "text/css"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"(<\\/)(style\\s*)(>)",
 				[
 					"delimiter.html",
 					"tag.html",
@@ -278,24 +278,24 @@
 		],
 		"styleAfterType": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.styleAfterType"
 				}
 			],
-			[{}, "delimiter", "@styleAfterTypeEquals"],
+			["=", "delimiter", "@styleAfterTypeEquals"],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@styleEmbedded.text/css",
 					"nextEmbedded": "text/css"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/style\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -304,37 +304,37 @@
 		],
 		"styleAfterTypeEquals": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.styleAfterTypeEquals"
 				}
 			],
 			[
-				{},
+				"\"([^\"]*)\"",
 				{
 					"token": "attribute.value",
 					"switchTo": "@styleWithCustomType.$1"
 				}
 			],
 			[
-				{},
+				"'([^']*)'",
 				{
 					"token": "attribute.value",
 					"switchTo": "@styleWithCustomType.$1"
 				}
 			],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@styleEmbedded.text/css",
 					"nextEmbedded": "text/css"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/style\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -343,27 +343,27 @@
 		],
 		"styleWithCustomType": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInSimpleState.styleWithCustomType.$S2"
 				}
 			],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@styleEmbedded.$S2",
 					"nextEmbedded": "$S2"
 				}
 			],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
-			[{}],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/style\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -372,7 +372,7 @@
 		],
 		"styleEmbedded": [
 			[
-				{},
+				"@[^@]",
 				{
 					"token": "@rematch",
 					"switchTo": "@razorInEmbeddedState.styleEmbedded.$S2",
@@ -380,7 +380,7 @@
 				}
 			],
 			[
-				{},
+				"<\\/style",
 				{
 					"token": "@rematch",
 					"next": "@pop",
@@ -389,10 +389,10 @@
 			]
 		],
 		"razorInSimpleState": [
-			[{}, "comment.cs", "@razorBlockCommentTopLevel"],
-			[{}, "metatag.cs", "@razorRootTopLevel"],
+			["@\\*", "comment.cs", "@razorBlockCommentTopLevel"],
+			["@[{(]", "metatag.cs", "@razorRootTopLevel"],
 			[
-				{},
+				"(@)(\\s*[\\w]+)",
 				[
 					"metatag.cs",
 					{
@@ -402,14 +402,14 @@
 				]
 			],
 			[
-				{},
+				"[})]",
 				{
 					"token": "metatag.cs",
 					"switchTo": "@$S2.$S3"
 				}
 			],
 			[
-				{},
+				"\\*@",
 				{
 					"token": "comment.cs",
 					"switchTo": "@$S2.$S3"
@@ -417,10 +417,10 @@
 			]
 		],
 		"razorInEmbeddedState": [
-			[{}, "comment.cs", "@razorBlockCommentTopLevel"],
-			[{}, "metatag.cs", "@razorRootTopLevel"],
+			["@\\*", "comment.cs", "@razorBlockCommentTopLevel"],
+			["@[{(]", "metatag.cs", "@razorRootTopLevel"],
 			[
-				{},
+				"(@)(\\s*[\\w]+)",
 				[
 					"metatag.cs",
 					{
@@ -431,7 +431,7 @@
 				]
 			],
 			[
-				{},
+				"[})]",
 				{
 					"token": "metatag.cs",
 					"switchTo": "@$S2.$S3",
@@ -439,7 +439,7 @@
 				}
 			],
 			[
-				{},
+				"\\*@",
 				{
 					"token": "comment.cs",
 					"switchTo": "@$S2.$S3",
@@ -448,35 +448,35 @@
 			]
 		],
 		"razorBlockCommentTopLevel": [
-			[{}, "@rematch", "@pop"],
-			[{}, "comment.cs"],
-			[{}, "comment.cs"]
+			["\\*@", "@rematch", "@pop"],
+			["[^*]+", "comment.cs"],
+			[".", "comment.cs"]
 		],
 		"razorBlockComment": [
-			[{}, "comment.cs", "@pop"],
-			[{}, "comment.cs"],
-			[{}, "comment.cs"]
+			["\\*@", "comment.cs", "@pop"],
+			["[^*]+", "comment.cs"],
+			[".", "comment.cs"]
 		],
 		"razorRootTopLevel": [
-			[{}, "delimiter.bracket.cs", "@razorRoot"],
-			[{}, "delimiter.parenthesis.cs", "@razorRoot"],
-			[{}, "@rematch", "@pop"],
+			["\\{", "delimiter.bracket.cs", "@razorRoot"],
+			["\\(", "delimiter.parenthesis.cs", "@razorRoot"],
+			["[})]", "@rematch", "@pop"],
 			{
 				"include": "razorCommon"
 			}
 		],
 		"razorRoot": [
-			[{}, "delimiter.bracket.cs", "@razorRoot"],
-			[{}, "delimiter.parenthesis.cs", "@razorRoot"],
-			[{}, "delimiter.bracket.cs", "@pop"],
-			[{}, "delimiter.parenthesis.cs", "@pop"],
+			["\\{", "delimiter.bracket.cs", "@razorRoot"],
+			["\\(", "delimiter.parenthesis.cs", "@razorRoot"],
+			["\\}", "delimiter.bracket.cs", "@pop"],
+			["\\)", "delimiter.parenthesis.cs", "@pop"],
 			{
 				"include": "razorCommon"
 			}
 		],
 		"razorCommon": [
 			[
-				{},
+				"[a-zA-Z_]\\w*",
 				{
 					"cases": {
 						"@razorKeywords": {
@@ -486,23 +486,23 @@
 					}
 				}
 			],
-			[{}, "delimiter.array.cs"],
-			[{}],
-			[{}, "comment.cs"],
-			[{}, "comment.cs", "@razorBlockComment"],
-			[{}, "string.cs"],
-			[{}, "string.cs"],
-			[{}, ["delimiter.html", "tag.html", "delimiter.html"]],
-			[{}, ["delimiter.html", "tag.html", "delimiter.html"]],
-			[{}, ["delimiter.html", "tag.html", "delimiter.html"]],
-			[{}, "delimiter.cs"],
-			[{}, "number.float.cs"],
-			[{}, "number.float.cs"],
-			[{}, "number.hex.cs"],
-			[{}, "number.octal.cs"],
-			[{}, "number.binary.cs"],
-			[{}, "number.cs"],
-			[{}, "number.cs"]
+			["[\\[\\]]", "delimiter.array.cs"],
+			["[ \\t\\r\\n]+"],
+			["\\/\\/.*$", "comment.cs"],
+			["@\\*", "comment.cs", "@razorBlockComment"],
+			["\"([^\"]*)\"", "string.cs"],
+			["'([^']*)'", "string.cs"],
+			["(<)([\\w\\-]+)(\\/>)", ["delimiter.html", "tag.html", "delimiter.html"]],
+			["(<)([\\w\\-]+)(>)", ["delimiter.html", "tag.html", "delimiter.html"]],
+			["(<\\/)([\\w\\-]+)(>)", ["delimiter.html", "tag.html", "delimiter.html"]],
+			["[\\+\\-\\*\\%\\&\\|\\^\\~\\!\\=\\<\\>\\/\\?\\;\\:\\.\\,]", "delimiter.cs"],
+			["\\d*\\d+[eE]([\\-+]?\\d+)?", "number.float.cs"],
+			["\\d*\\.\\d+([eE][\\-+]?\\d+)?", "number.float.cs"],
+			["0[xX][0-9a-fA-F']*[0-9a-fA-F]", "number.hex.cs"],
+			["0[0-7']*[0-7]", "number.octal.cs"],
+			["0[bB][0-1']*[0-1]", "number.binary.cs"],
+			["\\d[\\d']*", "number.cs"],
+			["\\d", "number.cs"]
 		]
 	},
 	"razorKeywords": [
@@ -600,5 +600,5 @@
 		"model",
 		"inject"
 	],
-	"escapes": {}
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})"
 }

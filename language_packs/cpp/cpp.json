@@ -242,22 +242,22 @@
 		"<<=",
 		">>="
 	],
-	"symbols": {},
-	"escapes": {},
-	"integersuffix": {},
-	"floatsuffix": {},
-	"encoding": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%]+",
+	"escapes": "\\\\(?:[0abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
+	"integersuffix": "([uU](ll|LL|l|L)|(ll|LL|l|L)?[uU]?)",
+	"floatsuffix": "[fFlL]?",
+	"encoding": "u|u8|U|L",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"@encoding?R\\\"(?:([^ ()\\\\\\t]*))\\(",
 				{
 					"token": "string.raw.begin",
 					"next": "@raw.$1"
 				}
 			],
 			[
-				{},
+				"[a-zA-Z_]\\w*",
 				{
 					"cases": {
 						"@keywords": {
@@ -268,26 +268,26 @@
 				}
 			],
 			[
-				{},
+				"^\\s*#\\s*include",
 				{
 					"token": "keyword.directive.include",
 					"next": "@include"
 				}
 			],
-			[{}, "keyword.directive"],
+			["^\\s*#\\s*\\w+", "keyword.directive"],
 			{
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"\\[\\s*\\[",
 				{
 					"token": "annotation",
 					"next": "@annotation"
 				}
 			],
-			[{}, "@brackets"],
+			["[{}()<>\\[\\]]", "@brackets"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@operators": "delimiter",
@@ -295,50 +295,50 @@
 					}
 				}
 			],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number.octal"],
-			[{}, "number.binary"],
-			[{}, "number"],
-			[{}, "number"],
-			[{}, "delimiter"],
-			[{}, "string.invalid"],
-			[{}, "string", "@string"],
-			[{}, "string"],
-			[{}, ["string", "string.escape", "string"]],
-			[{}, "string.invalid"]
+			["\\d*\\d+[eE]([\\-+]?\\d+)?(@floatsuffix)", "number.float"],
+			["\\d*\\.\\d+([eE][\\-+]?\\d+)?(@floatsuffix)", "number.float"],
+			["0[xX][0-9a-fA-F']*[0-9a-fA-F](@integersuffix)", "number.hex"],
+			["0[0-7']*[0-7](@integersuffix)", "number.octal"],
+			["0[bB][0-1']*[0-1](@integersuffix)", "number.binary"],
+			["\\d[\\d']*\\d(@integersuffix)", "number"],
+			["\\d(@integersuffix)", "number"],
+			["[;,.]", "delimiter"],
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
+			["\"", "string", "@string"],
+			["'[^\\\\']'", "string"],
+			["(')(@escapes)(')", ["string", "string.escape", "string"]],
+			["'", "string.invalid"]
 		],
 		"whitespace": [
-			[{}, ""],
-			[{}, "comment.doc", "@doccomment"],
-			[{}, "comment", "@comment"],
-			[{}, "comment", "@linecomment"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", ""],
+			["\\/\\*\\*(?!\\/)", "comment.doc", "@doccomment"],
+			["\\/\\*", "comment", "@comment"],
+			["\\/\\/.*\\\\$", "comment", "@linecomment"],
+			["\\/\\/.*$", "comment"]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["[^\\/*]+", "comment"],
+			["\\*\\/", "comment", "@pop"],
+			["[\\/*]", "comment"]
 		],
 		"linecomment": [
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			[".*[^\\\\]$", "comment", "@pop"],
+			["[^]+", "comment"]
 		],
 		"doccomment": [
-			[{}, "comment.doc"],
-			[{}, "comment.doc", "@pop"],
-			[{}, "comment.doc"]
+			["[^\\/*]+", "comment.doc"],
+			["\\*\\/", "comment.doc", "@pop"],
+			["[\\/*]", "comment.doc"]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
-			[{}, "string", "@pop"]
+			["[^\\\\\"]+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
+			["\"", "string", "@pop"]
 		],
 		"raw": [
 			[
-				{},
+				"(.*)(\\))(?:([^ ()\\\\\\t\"]*))(\\\")",
 				{
 					"cases": {
 						"$3==$S2": [
@@ -354,18 +354,18 @@
 					}
 				}
 			],
-			[{}, "string.raw"]
+			[".*", "string.raw"]
 		],
 		"annotation": [
 			{
 				"include": "@whitespace"
 			},
-			[{}, "keyword"],
-			[{}, "annotation"],
-			[{}, "delimiter"],
-			[{}, "@brackets"],
+			["using|alignas", "keyword"],
+			["[a-zA-Z0-9_]+", "annotation"],
+			["[,:]", "delimiter"],
+			["[()]", "@brackets"],
 			[
-				{},
+				"\\]\\s*\\]",
 				{
 					"token": "annotation",
 					"next": "@pop"
@@ -374,7 +374,7 @@
 		],
 		"include": [
 			[
-				{},
+				"(\\s*)(<)([^<>]*)(>)",
 				[
 					"",
 					"keyword.directive.include.begin",
@@ -386,7 +386,7 @@
 				]
 			],
 			[
-				{},
+				"(\\s*)(\")([^\"]*)(\")",
 				[
 					"",
 					"keyword.directive.include.begin",

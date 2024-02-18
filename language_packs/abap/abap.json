@@ -1236,11 +1236,11 @@
 		"/*",
 		"//"
 	],
-	"symbols": {},
+	"symbols": "[=><!~?&+\\-*\\/\\^%#@]+",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"[a-z_\\/$%@]([\\w\\/$%]|-(?!>))*",
 				{
 					"cases": {
 						"@typeKeywords": "type",
@@ -1254,15 +1254,15 @@
 					}
 				}
 			],
-			[{}, "identifier"],
-			[{}, "comment"],
+			["<[\\w]+>", "identifier"],
+			["##[\\w|_]+", "comment"],
 			{
 				"include": "@whitespace"
 			},
-			[{}, "delimiter"],
-			[{}, "@brackets"],
+			["[:,.]", "delimiter"],
+			["[{}()\\[\\]]", "@brackets"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@selectors": "tag",
@@ -1272,7 +1272,7 @@
 				}
 			],
 			[
-				{},
+				"'",
 				{
 					"token": "string",
 					"bracket": "@open",
@@ -1280,7 +1280,7 @@
 				}
 			],
 			[
-				{},
+				"`",
 				{
 					"token": "string",
 					"bracket": "@open",
@@ -1288,20 +1288,20 @@
 				}
 			],
 			[
-				{},
+				"\\|",
 				{
 					"token": "string",
 					"bracket": "@open",
 					"next": "@stringtemplate"
 				}
 			],
-			[{}, "number"]
+			["\\d+", "number"]
 		],
 		"stringtemplate": [
-			[{}, "string"],
-			[{}, "string"],
+			["[^\\\\\\|]+", "string"],
+			["\\\\\\|", "string"],
 			[
-				{},
+				"\\|",
 				{
 					"token": "string",
 					"bracket": "@close",
@@ -1310,9 +1310,9 @@
 			]
 		],
 		"stringping": [
-			[{}, "string"],
+			["[^\\\\`]+", "string"],
 			[
-				{},
+				"`",
 				{
 					"token": "string",
 					"bracket": "@close",
@@ -1321,9 +1321,9 @@
 			]
 		],
 		"stringquote": [
-			[{}, "string"],
+			["[^\\\\']+", "string"],
 			[
-				{},
+				"'",
 				{
 					"token": "string",
 					"bracket": "@close",
@@ -1332,9 +1332,9 @@
 			]
 		],
 		"whitespace": [
-			[{}, ""],
-			[{}, "comment"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", ""],
+			["^\\*.*$", "comment"],
+			["\\\".*$", "comment"]
 		]
 	}
 }

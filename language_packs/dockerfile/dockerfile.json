@@ -1,7 +1,7 @@
 {
 	"defaultToken": "",
 	"tokenPostfix": ".dockerfile",
-	"variable": {},
+	"variable": "\\${?[\\w]+}?",
 	"tokenizer": {
 		"root": [
 			{
@@ -10,9 +10,9 @@
 			{
 				"include": "@comment"
 			},
-			[{}, ["keyword", ""]],
+			["(ONBUILD)(\\s+)", ["keyword", ""]],
 			[
-				{},
+				"(ENV)(\\s+)([\\w]+)",
 				[
 					"keyword",
 					"",
@@ -23,7 +23,7 @@
 				]
 			],
 			[
-				{},
+				"(FROM|MAINTAINER|RUN|EXPOSE|ENV|ADD|ARG|VOLUME|LABEL|USER|WORKDIR|COPY|CMD|STOPSIGNAL|SHELL|HEALTHCHECK|ENTRYPOINT)",
 				{
 					"token": "keyword",
 					"next": "@arguments"
@@ -38,7 +38,7 @@
 				"include": "@strings"
 			},
 			[
-				{},
+				"(@variable)",
 				{
 					"cases": {
 						"@eos": {
@@ -50,7 +50,7 @@
 				}
 			],
 			[
-				{},
+				"\\\\",
 				{
 					"cases": {
 						"@eos": "",
@@ -59,7 +59,7 @@
 				}
 			],
 			[
-				{},
+				".",
 				{
 					"cases": {
 						"@eos": {
@@ -73,7 +73,7 @@
 		],
 		"whitespace": [
 			[
-				{},
+				"\\s+",
 				{
 					"cases": {
 						"@eos": {
@@ -85,18 +85,18 @@
 				}
 			]
 		],
-		"comment": [[{}, "comment", "@popall"]],
+		"comment": [["(^#.*$)", "comment", "@popall"]],
 		"strings": [
-			[{}, "", "@popall"],
-			[{}, ""],
-			[{}, "string", "@popall"],
-			[{}, "string", "@stringBody"],
-			[{}, "string", "@popall"],
-			[{}, "string", "@dblStringBody"]
+			["\\\\'$", "", "@popall"],
+			["\\\\'", ""],
+			["'$", "string", "@popall"],
+			["'", "string", "@stringBody"],
+			["\"$", "string", "@popall"],
+			["\"", "string", "@dblStringBody"]
 		],
 		"stringBody": [
 			[
-				{},
+				"[^\\\\\\$']",
 				{
 					"cases": {
 						"@eos": {
@@ -107,16 +107,16 @@
 					}
 				}
 			],
-			[{}, "string.escape"],
-			[{}, "string", "@popall"],
-			[{}, "string", "@pop"],
-			[{}, "variable"],
-			[{}, "string"],
-			[{}, "string", "@popall"]
+			["\\\\.", "string.escape"],
+			["'$", "string", "@popall"],
+			["'", "string", "@pop"],
+			["(@variable)", "variable"],
+			["\\\\$", "string"],
+			["$", "string", "@popall"]
 		],
 		"dblStringBody": [
 			[
-				{},
+				"[^\\\\\\$\"]",
 				{
 					"cases": {
 						"@eos": {
@@ -127,12 +127,12 @@
 					}
 				}
 			],
-			[{}, "string.escape"],
-			[{}, "string", "@popall"],
-			[{}, "string", "@pop"],
-			[{}, "variable"],
-			[{}, "string"],
-			[{}, "string", "@popall"]
+			["\\\\.", "string.escape"],
+			["\"$", "string", "@popall"],
+			["\"", "string", "@pop"],
+			["(@variable)", "variable"],
+			["\\\\$", "string"],
+			["$", "string", "@popall"]
 		]
 	}
 }

@@ -128,19 +128,19 @@
 			"token": "delimiter.square"
 		}
 	],
-	"symbols": {},
-	"escape": {},
-	"escapes": {},
-	"decpart": {},
-	"decimal": {},
-	"delim": {},
-	"heredelim": {},
-	"regexpctl": {},
-	"regexpesc": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%\\.]+",
+	"escape": "(?:[abefnrstv\\\\\"'\\n\\r]|[0-7]{1,3}|x[0-9A-Fa-f]{1,2}|u[0-9A-Fa-f]{4})",
+	"escapes": "\\\\(?:C\\-(@escape|.)|c(@escape|.)|@escape)",
+	"decpart": "\\d(_?\\d)*",
+	"decimal": "0|@decpart",
+	"delim": "[^a-zA-Z0-9\\s\\n\\r]",
+	"heredelim": "(?:\\w+|'[^']*'|\"[^\"]*\"|`[^`]*`)",
+	"regexpctl": "[(){}\\[\\]\\$\\^|\\-*+?\\.]",
+	"regexpesc": "\\\\(?:[AzZbBdDfnrstvwWn0\\\\\\/]|@regexpctl|c[A-Z]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4})?",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"^(\\s*)([a-z_]\\w*[!?=]?)",
 				[
 					"white",
 					{
@@ -165,7 +165,7 @@
 				]
 			],
 			[
-				{},
+				"[a-z_]\\w*[!?=]?",
 				{
 					"cases": {
 						"if|unless|while|until": {
@@ -190,26 +190,26 @@
 					}
 				}
 			],
-			[{}, "constructor.identifier"],
-			[{}, "global.constant"],
-			[{}, "namespace.instance.identifier"],
-			[{}, "namespace.class.identifier"],
+			["[A-Z][\\w]*[!?=]?", "constructor.identifier"],
+			["\\$[\\w]*", "global.constant"],
+			["@[\\w]*", "namespace.instance.identifier"],
+			["@@@[\\w]*", "namespace.class.identifier"],
 			[
-				{},
+				"<<[-~](@heredelim).*",
 				{
 					"token": "string.heredoc.delimiter",
 					"next": "@heredoc.$1"
 				}
 			],
 			[
-				{},
+				"[ \\t\\r\\n]+<<(@heredelim).*",
 				{
 					"token": "string.heredoc.delimiter",
 					"next": "@heredoc.$1"
 				}
 			],
 			[
-				{},
+				"^<<(@heredelim).*",
 				{
 					"token": "string.heredoc.delimiter",
 					"next": "@heredoc.$1"
@@ -219,58 +219,58 @@
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"\"",
 				{
 					"token": "string.d.delim",
 					"next": "@dstring.d.\""
 				}
 			],
 			[
-				{},
+				"'",
 				{
 					"token": "string.sq.delim",
 					"next": "@sstring.sq"
 				}
 			],
 			[
-				{},
+				"%([rsqxwW]|Q?)",
 				{
 					"token": "@rematch",
 					"next": "pstring"
 				}
 			],
 			[
-				{},
+				"`",
 				{
 					"token": "string.x.delim",
 					"next": "@dstring.x.`"
 				}
 			],
-			[{}, "string.s"],
+			[":(\\w|[$@])\\w*[!?=]?", "string.s"],
 			[
-				{},
+				":\"",
 				{
 					"token": "string.s.delim",
 					"next": "@dstring.s.\""
 				}
 			],
 			[
-				{},
+				":'",
 				{
 					"token": "string.s.delim",
 					"next": "@sstring.s"
 				}
 			],
 			[
-				{},
+				"\\/(?=(\\\\\\/|[^\\/\\n])+\\/)",
 				{
 					"token": "regexp.delim",
 					"next": "@regexp"
 				}
 			],
-			[{}, "@brackets"],
+			["[{}()\\[\\]]", "@brackets"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@keywordops": "keyword",
@@ -279,13 +279,13 @@
 					}
 				}
 			],
-			[{}, "delimiter"],
-			[{}, "number.hex"],
-			[{}, "number.octal"],
-			[{}, "number.binary"],
-			[{}, "number"],
+			["[;,]", "delimiter"],
+			["0[xX][0-9a-fA-F](_?[0-9a-fA-F])*", "number.hex"],
+			["0[_oO][0-7](_?[0-7])*", "number.octal"],
+			["0[bB][01](_?[01])*", "number.binary"],
+			["0[dD]@decpart", "number"],
 			[
-				{},
+				"@decimal((\\.@decpart)?([eE][\\-+]?@decpart)?)",
 				{
 					"cases": {
 						"$1": "number.float",
@@ -296,14 +296,14 @@
 		],
 		"dodecl": [
 			[
-				{},
+				"^",
 				{
 					"token": "",
 					"switchTo": "@root.$S2"
 				}
 			],
 			[
-				{},
+				"[a-z_]\\w*[!?=]?",
 				{
 					"cases": {
 						"end": {
@@ -329,9 +329,9 @@
 			}
 		],
 		"modifier": [
-			[{}, "", "@pop"],
+			["^", "", "@pop"],
 			[
-				{},
+				"[a-z_]\\w*[!?=]?",
 				{
 					"cases": {
 						"end": {
@@ -357,11 +357,11 @@
 			}
 		],
 		"sstring": [
-			[{}, "string.$S2"],
-			[{}, "string.$S2.escape"],
-			[{}, "string.$S2.invalid"],
+			["[^\\\\']+", "string.$S2"],
+			["\\\\\\\\|\\\\'|\\\\$", "string.$S2.escape"],
+			["\\\\.", "string.$S2.invalid"],
 			[
-				{},
+				"'",
 				{
 					"token": "string.$S2.delim",
 					"next": "@pop"
@@ -369,13 +369,13 @@
 			]
 		],
 		"dstring": [
-			[{}, "string.$S2"],
-			[{}, "string.$S2.escape", "@interpolated"],
-			[{}, "string.$S2.escape"],
-			[{}, "string.$S2.escape"],
-			[{}, "string.$S2.escape.invalid"],
+			["[^\\\\`\"#]+", "string.$S2"],
+			["#", "string.$S2.escape", "@interpolated"],
+			["\\\\$", "string.$S2.escape"],
+			["@escapes", "string.$S2.escape"],
+			["\\\\.", "string.$S2.escape.invalid"],
 			[
-				{},
+				"[`\"]",
 				{
 					"cases": {
 						"$#==$S3": {
@@ -389,7 +389,7 @@
 		],
 		"heredoc": [
 			[
-				{},
+				"^(\\s*)(@heredelim)$",
 				{
 					"cases": {
 						"$2==$S2": [
@@ -403,14 +403,14 @@
 					}
 				}
 			],
-			[{}, "string.heredoc"]
+			[".*", "string.heredoc"]
 		],
 		"interpolated": [
-			[{}, "global.constant", "@pop"],
-			[{}, "namespace.class.identifier", "@pop"],
-			[{}, "namespace.instance.identifier", "@pop"],
+			["\\$\\w*", "global.constant", "@pop"],
+			["@\\w*", "namespace.class.identifier", "@pop"],
+			["@@@\\w*", "namespace.instance.identifier", "@pop"],
 			[
-				{},
+				"[{]",
 				{
 					"token": "string.escape.curly",
 					"switchTo": "@interpolated_compound"
@@ -420,7 +420,7 @@
 		],
 		"interpolated_compound": [
 			[
-				{},
+				"[}]",
 				{
 					"token": "string.escape.curly",
 					"next": "@pop"
@@ -435,7 +435,7 @@
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"[^\\(\\{\\[\\\\]",
 				{
 					"cases": {
 						"$#==$S3": {
@@ -460,7 +460,7 @@
 			{
 				"include": "@regexcontrol"
 			},
-			[{}, "regexp"],
+			["[^\\\\\\/]", "regexp"],
 			[
 				"/[ixmp]*",
 				{
@@ -471,7 +471,7 @@
 		],
 		"regexcontrol": [
 			[
-				{},
+				"(\\{)(\\d+(?:,\\d*)?)(\\})",
 				[
 					"@brackets.regexp.escape.control",
 					"regexp.escape.control",
@@ -479,7 +479,7 @@
 				]
 			],
 			[
-				{},
+				"(\\[)(\\^?)",
 				[
 					"@brackets.regexp.escape.control",
 					{
@@ -488,33 +488,33 @@
 					}
 				]
 			],
-			[{}, ["@brackets.regexp.escape.control", "regexp.escape.control"]],
+			["(\\()(\\?[:=!])", ["@brackets.regexp.escape.control", "regexp.escape.control"]],
 			[
-				{},
+				"\\(\\?#",
 				{
 					"token": "regexp.escape.control",
 					"next": "@regexpcomment"
 				}
 			],
-			[{}, "@brackets.regexp.escape.control"],
-			[{}, "regexp.escape.control"],
-			[{}, "regexp.escape"],
-			[{}, "regexp.escape"],
-			[{}, "regexp.invalid"],
-			[{}, "regexp.escape", "@interpolated"]
+			["[()]", "@brackets.regexp.escape.control"],
+			["@regexpctl", "regexp.escape.control"],
+			["\\\\$", "regexp.escape"],
+			["@regexpesc", "regexp.escape"],
+			["\\\\\\.", "regexp.invalid"],
+			["#", "regexp.escape", "@interpolated"]
 		],
 		"regexrange": [
-			[{}, "regexp.escape.control"],
-			[{}, "regexp.invalid"],
-			[{}, "regexp.escape"],
-			[{}, "regexp.escape"],
-			[{}, "regexp"],
-			[{}, "@brackets.regexp.escape.control", "@pop"]
+			["-", "regexp.escape.control"],
+			["\\^", "regexp.invalid"],
+			["\\\\$", "regexp.escape"],
+			["@regexpesc", "regexp.escape"],
+			["[^\\]]", "regexp"],
+			["\\]", "@brackets.regexp.escape.control", "@pop"]
 		],
 		"regexpcomment": [
-			[{}, "comment"],
+			["[^)]+", "comment"],
 			[
-				{},
+				"\\)",
 				{
 					"token": "regexp.escape.control",
 					"next": "@pop"
@@ -523,119 +523,119 @@
 		],
 		"pstring": [
 			[
-				{},
+				"%([qws])\\(",
 				{
 					"token": "string.$1.delim",
 					"switchTo": "@qstring.$1.(.)"
 				}
 			],
 			[
-				{},
+				"%([qws])\\[",
 				{
 					"token": "string.$1.delim",
 					"switchTo": "@qstring.$1.[.]"
 				}
 			],
 			[
-				{},
+				"%([qws])\\{",
 				{
 					"token": "string.$1.delim",
 					"switchTo": "@qstring.$1.{.}"
 				}
 			],
 			[
-				{},
+				"%([qws])<",
 				{
 					"token": "string.$1.delim",
 					"switchTo": "@qstring.$1.<.>"
 				}
 			],
 			[
-				{},
+				"%([qws])(@delim)",
 				{
 					"token": "string.$1.delim",
 					"switchTo": "@qstring.$1.$2.$2"
 				}
 			],
 			[
-				{},
+				"%r\\(",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@pregexp.(.)"
 				}
 			],
 			[
-				{},
+				"%r\\[",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@pregexp.[.]"
 				}
 			],
 			[
-				{},
+				"%r\\{",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@pregexp.{.}"
 				}
 			],
 			[
-				{},
+				"%r<",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@pregexp.<.>"
 				}
 			],
 			[
-				{},
+				"%r(@delim)",
 				{
 					"token": "regexp.delim",
 					"switchTo": "@pregexp.$1.$1"
 				}
 			],
 			[
-				{},
+				"%(x|W|Q?)\\(",
 				{
 					"token": "string.$1.delim",
 					"switchTo": "@qqstring.$1.(.)"
 				}
 			],
 			[
-				{},
+				"%(x|W|Q?)\\[",
 				{
 					"token": "string.$1.delim",
 					"switchTo": "@qqstring.$1.[.]"
 				}
 			],
 			[
-				{},
+				"%(x|W|Q?)\\{",
 				{
 					"token": "string.$1.delim",
 					"switchTo": "@qqstring.$1.{.}"
 				}
 			],
 			[
-				{},
+				"%(x|W|Q?)<",
 				{
 					"token": "string.$1.delim",
 					"switchTo": "@qqstring.$1.<.>"
 				}
 			],
 			[
-				{},
+				"%(x|W|Q?)(@delim)",
 				{
 					"token": "string.$1.delim",
 					"switchTo": "@qqstring.$1.$2.$2"
 				}
 			],
 			[
-				{},
+				"%([rqwsxW]|Q?).",
 				{
 					"token": "invalid",
 					"next": "@pop"
 				}
 			],
 			[
-				{},
+				".",
 				{
 					"token": "invalid",
 					"next": "@pop"
@@ -643,10 +643,10 @@
 			]
 		],
 		"qstring": [
-			[{}, "string.$S2.escape"],
-			[{}, "string.$S2.escape"],
+			["\\\\$", "string.$S2.escape"],
+			["\\\\.", "string.$S2.escape"],
 			[
-				{},
+				".",
 				{
 					"cases": {
 						"$#==$S4": {
@@ -663,21 +663,21 @@
 			]
 		],
 		"qqstring": [
-			[{}, "string.$S2.escape", "@interpolated"],
+			["#", "string.$S2.escape", "@interpolated"],
 			{
 				"include": "@qstring"
 			}
 		],
 		"whitespace": [
-			[{}, ""],
-			[{}, "comment", "@comment"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", ""],
+			["^\\s*=begin\\b", "comment", "@comment"],
+			["#.*$", "comment"]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment.invalid"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["[^=]+", "comment"],
+			["^\\s*=begin\\b", "comment.invalid"],
+			["^\\s*=end\\b.*", "comment", "@pop"],
+			["[=]", "comment"]
 		]
 	}
 }

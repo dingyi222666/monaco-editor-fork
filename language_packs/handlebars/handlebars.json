@@ -3,20 +3,20 @@
 	"tokenPostfix": "",
 	"tokenizer": {
 		"root": [
-			[{}, "comment.block.start.handlebars", "@commentBlock"],
-			[{}, "comment.start.handlebars", "@comment"],
+			["\\{\\{!--", "comment.block.start.handlebars", "@commentBlock"],
+			["\\{\\{!", "comment.start.handlebars", "@comment"],
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.root"
 				}
 			],
-			[{}, "metatag.html", "@doctype"],
-			[{}, "comment.html", "@commentHtml"],
-			[{}, ["delimiter.html", "tag.html", "delimiter.html"]],
+			["<!DOCTYPE", "metatag.html", "@doctype"],
+			["<!--", "comment.html", "@commentHtml"],
+			["(<)(\\w+)(\\/>)", ["delimiter.html", "tag.html", "delimiter.html"]],
 			[
-				{},
+				"(<)(script)",
 				[
 					"delimiter.html",
 					{
@@ -26,7 +26,7 @@
 				]
 			],
 			[
-				{},
+				"(<)(style)",
 				[
 					"delimiter.html",
 					{
@@ -36,7 +36,7 @@
 				]
 			],
 			[
-				{},
+				"(<)([:\\w]+)",
 				[
 					"delimiter.html",
 					{
@@ -46,7 +46,7 @@
 				]
 			],
 			[
-				{},
+				"(<\\/)(\\w+)",
 				[
 					"delimiter.html",
 					{
@@ -55,80 +55,80 @@
 					}
 				]
 			],
-			[{}, "delimiter.html"],
-			[{}, "delimiter.html"],
-			[{}]
+			["<", "delimiter.html"],
+			["\\{", "delimiter.html"],
+			["[^<{]+"]
 		],
 		"doctype": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.comment"
 				}
 			],
-			[{}, "metatag.content.html"],
-			[{}, "metatag.html", "@pop"]
+			["[^>]+", "metatag.content.html"],
+			[">", "metatag.html", "@pop"]
 		],
 		"comment": [
-			[{}, "comment.end.handlebars", "@pop"],
-			[{}, "comment.content.handlebars"]
+			["\\}\\}", "comment.end.handlebars", "@pop"],
+			[".", "comment.content.handlebars"]
 		],
 		"commentBlock": [
-			[{}, "comment.block.end.handlebars", "@pop"],
-			[{}, "comment.content.handlebars"]
+			["--\\}\\}", "comment.block.end.handlebars", "@pop"],
+			[".", "comment.content.handlebars"]
 		],
 		"commentHtml": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.comment"
 				}
 			],
-			[{}, "comment.html", "@pop"],
-			[{}, "comment.content.html"],
-			[{}, "comment.content.html"]
+			["-->", "comment.html", "@pop"],
+			["[^-]+", "comment.content.html"],
+			[".", "comment.content.html"]
 		],
 		"otherTag": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.otherTag"
 				}
 			],
-			[{}, "delimiter.html", "@pop"],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
-			[{}]
+			["\\/?>", "delimiter.html", "@pop"],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
+			["[ \\t\\r\\n]+"]
 		],
 		"script": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.script"
 				}
 			],
-			[{}, "attribute.name", "@scriptAfterType"],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
+			["type", "attribute.name", "@scriptAfterType"],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@scriptEmbedded.text/javascript",
 					"nextEmbedded": "text/javascript"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"(<\\/)(script\\s*)(>)",
 				[
 					"delimiter.html",
 					"tag.html",
@@ -141,24 +141,24 @@
 		],
 		"scriptAfterType": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.scriptAfterType"
 				}
 			],
-			[{}, "delimiter", "@scriptAfterTypeEquals"],
+			["=", "delimiter", "@scriptAfterTypeEquals"],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@scriptEmbedded.text/javascript",
 					"nextEmbedded": "text/javascript"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/script\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -167,37 +167,37 @@
 		],
 		"scriptAfterTypeEquals": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.scriptAfterTypeEquals"
 				}
 			],
 			[
-				{},
+				"\"([^\"]*)\"",
 				{
 					"token": "attribute.value",
 					"switchTo": "@scriptWithCustomType.$1"
 				}
 			],
 			[
-				{},
+				"'([^']*)'",
 				{
 					"token": "attribute.value",
 					"switchTo": "@scriptWithCustomType.$1"
 				}
 			],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@scriptEmbedded.text/javascript",
 					"nextEmbedded": "text/javascript"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/script\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -206,27 +206,27 @@
 		],
 		"scriptWithCustomType": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.scriptWithCustomType.$S2"
 				}
 			],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@scriptEmbedded.$S2",
 					"nextEmbedded": "$S2"
 				}
 			],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
-			[{}],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/script\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -235,7 +235,7 @@
 		],
 		"scriptEmbedded": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInEmbeddedState.scriptEmbedded.$S2",
@@ -243,7 +243,7 @@
 				}
 			],
 			[
-				{},
+				"<\\/script",
 				{
 					"token": "@rematch",
 					"next": "@pop",
@@ -253,28 +253,28 @@
 		],
 		"style": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.style"
 				}
 			],
-			[{}, "attribute.name", "@styleAfterType"],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
+			["type", "attribute.name", "@styleAfterType"],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@styleEmbedded.text/css",
 					"nextEmbedded": "text/css"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"(<\\/)(style\\s*)(>)",
 				[
 					"delimiter.html",
 					"tag.html",
@@ -287,24 +287,24 @@
 		],
 		"styleAfterType": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.styleAfterType"
 				}
 			],
-			[{}, "delimiter", "@styleAfterTypeEquals"],
+			["=", "delimiter", "@styleAfterTypeEquals"],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@styleEmbedded.text/css",
 					"nextEmbedded": "text/css"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/style\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -313,37 +313,37 @@
 		],
 		"styleAfterTypeEquals": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.styleAfterTypeEquals"
 				}
 			],
 			[
-				{},
+				"\"([^\"]*)\"",
 				{
 					"token": "attribute.value",
 					"switchTo": "@styleWithCustomType.$1"
 				}
 			],
 			[
-				{},
+				"'([^']*)'",
 				{
 					"token": "attribute.value",
 					"switchTo": "@styleWithCustomType.$1"
 				}
 			],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@styleEmbedded.text/css",
 					"nextEmbedded": "text/css"
 				}
 			],
-			[{}],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/style\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -352,27 +352,27 @@
 		],
 		"styleWithCustomType": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInSimpleState.styleWithCustomType.$S2"
 				}
 			],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter.html",
 					"next": "@styleEmbedded.$S2",
 					"nextEmbedded": "$S2"
 				}
 			],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
-			[{}],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
+			["[ \\t\\r\\n]+"],
 			[
-				{},
+				"<\\/style\\s*>",
 				{
 					"token": "@rematch",
 					"next": "@pop"
@@ -381,7 +381,7 @@
 		],
 		"styleEmbedded": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@handlebarsInEmbeddedState.styleEmbedded.$S2",
@@ -389,7 +389,7 @@
 				}
 			],
 			[
-				{},
+				"<\\/style",
 				{
 					"token": "@rematch",
 					"next": "@pop",
@@ -398,9 +398,9 @@
 			]
 		],
 		"handlebarsInSimpleState": [
-			[{}, "delimiter.handlebars"],
+			["\\{\\{\\{?", "delimiter.handlebars"],
 			[
-				{},
+				"\\}\\}\\}?",
 				{
 					"token": "delimiter.handlebars",
 					"switchTo": "@$S2.$S3"
@@ -411,9 +411,9 @@
 			}
 		],
 		"handlebarsInEmbeddedState": [
-			[{}, "delimiter.handlebars"],
+			["\\{\\{\\{?", "delimiter.handlebars"],
 			[
-				{},
+				"\\}\\}\\}?",
 				{
 					"token": "delimiter.handlebars",
 					"switchTo": "@$S2.$S3",
@@ -425,11 +425,11 @@
 			}
 		],
 		"handlebarsRoot": [
-			[{}, "string.handlebars"],
-			[{}, "keyword.helper.handlebars"],
-			[{}, "keyword.helper.handlebars"],
-			[{}],
-			[{}, "variable.parameter.handlebars"]
+			["\"[^\"]*\"", "string.handlebars"],
+			["[#/][^\\s}]+", "keyword.helper.handlebars"],
+			["else\\b", "keyword.helper.handlebars"],
+			["[\\s]+"],
+			["[^}]", "variable.parameter.handlebars"]
 		]
 	}
 }

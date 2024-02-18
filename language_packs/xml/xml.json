@@ -2,15 +2,15 @@
 	"defaultToken": "",
 	"tokenPostfix": ".xml",
 	"ignoreCase": true,
-	"qualifiedName": {},
+	"qualifiedName": "(?:[\\w\\.\\-]+:)?[\\w\\.\\-]+",
 	"tokenizer": {
 		"root": [
-			[{}, ""],
+			["[^<&]+", ""],
 			{
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"(<)(@qualifiedName)",
 				[
 					{
 						"token": "delimiter"
@@ -22,7 +22,7 @@
 				]
 			],
 			[
-				{},
+				"(<\\/)(@qualifiedName)(\\s*)(>)",
 				[
 					{
 						"token": "delimiter"
@@ -37,7 +37,7 @@
 				]
 			],
 			[
-				{},
+				"(<\\?)(@qualifiedName)",
 				[
 					{
 						"token": "delimiter"
@@ -49,7 +49,7 @@
 				]
 			],
 			[
-				{},
+				"(<\\!)(@qualifiedName)",
 				[
 					{
 						"token": "delimiter"
@@ -61,40 +61,46 @@
 				]
 			],
 			[
-				{},
+				"<\\!\\[CDATA\\[",
 				{
 					"token": "delimiter.cdata",
 					"next": "@cdata"
 				}
 			],
-			[{}, "string.escape"]
+			["&\\w+;", "string.escape"]
 		],
 		"cdata": [
-			[{}, ""],
+			["[^\\]]+", ""],
 			[
-				{},
+				"\\]\\]>",
 				{
 					"token": "delimiter.cdata",
 					"next": "@pop"
 				}
 			],
-			[{}, ""]
+			["\\]", ""]
 		],
 		"tag": [
-			[{}, ""],
-			[{}, ["attribute.name", "", "attribute.value"]],
-			[{}, ["attribute.name", "", "attribute.value"]],
-			[{}, ["attribute.name", "", "attribute.value"]],
-			[{}, "attribute.name"],
+			["[ \\t\\r\\n]+", ""],
 			[
-				{},
+				"(@qualifiedName)(\\s*=\\s*)(\"[^\"]*\"|'[^']*')",
+				["attribute.name", "", "attribute.value"]
+			],
+			[
+				"(@qualifiedName)(\\s*=\\s*)(\"[^\">?\\/]*|'[^'>?\\/]*)(?=[\\?\\/]\\>)",
+				["attribute.name", "", "attribute.value"]
+			],
+			["(@qualifiedName)(\\s*=\\s*)(\"[^\">]*|'[^'>]*)", ["attribute.name", "", "attribute.value"]],
+			["@qualifiedName", "attribute.name"],
+			[
+				"\\?>",
 				{
 					"token": "delimiter",
 					"next": "@pop"
 				}
 			],
 			[
-				{},
+				"(\\/)(>)",
 				[
 					{
 						"token": "tag"
@@ -106,7 +112,7 @@
 				]
 			],
 			[
-				{},
+				">",
 				{
 					"token": "delimiter",
 					"next": "@pop"
@@ -114,9 +120,9 @@
 			]
 		],
 		"whitespace": [
-			[{}, ""],
+			["[ \\t\\r\\n]+", ""],
 			[
-				{},
+				"<!--",
 				{
 					"token": "comment",
 					"next": "@comment"
@@ -124,16 +130,16 @@
 			]
 		],
 		"comment": [
-			[{}, "comment.content"],
+			["[^<\\-]+", "comment.content"],
 			[
-				{},
+				"-->",
 				{
 					"token": "comment",
 					"next": "@pop"
 				}
 			],
-			[{}, "comment.content.invalid"],
-			[{}, "comment.content"]
+			["<!--", "comment.content.invalid"],
+			["[<\\-]", "comment.content"]
 		]
 	}
 }

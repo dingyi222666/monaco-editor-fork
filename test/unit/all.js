@@ -144,7 +144,7 @@ requirejs(
 						}
 						fs.writeFileSync(
 							path.join(outputDir, outputFileName),
-							JSON.stringify(exports.language, null, '  ')
+							JSON.stringify(replaceRegex(structuredClone(exports.language)), null, '  ')
 						);
 					});
 				}
@@ -156,3 +156,16 @@ requirejs(
 		process.exit(1);
 	}
 );
+
+function replaceRegex(obj) {
+	for (let key in obj) {
+		if (obj[key] instanceof RegExp) {
+			obj[key] = obj[key].source;
+		} else if (typeof obj[key] === 'object') {
+			obj[key] = replaceRegex(obj[key]);
+		} else if (typeof obj[key] === 'array') {
+			replaceRegex(obj[key]);
+		}
+	}
+	return obj;
+}

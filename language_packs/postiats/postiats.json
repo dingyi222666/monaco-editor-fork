@@ -330,123 +330,123 @@
 			"token": "delimiter.angle"
 		}
 	],
-	"symbols": {},
-	"IDENTFST": {},
-	"IDENTRST": {},
-	"symbolic": {},
-	"digit": {},
-	"digitseq0": {},
-	"xdigit": {},
-	"xdigitseq0": {},
-	"INTSP": {},
-	"FLOATSP": {},
-	"fexponent": {},
-	"fexponent_bin": {},
-	"deciexp": {},
-	"hexiexp": {},
-	"irregular_keywords": {},
-	"ESCHAR": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%]+",
+	"IDENTFST": "[a-zA-Z_]",
+	"IDENTRST": "[a-zA-Z0-9_'$]",
+	"symbolic": "[%&+-./:=@~`^|*!$#?<>]",
+	"digit": "[0-9]",
+	"digitseq0": "@digit*",
+	"xdigit": "[0-9A-Za-z]",
+	"xdigitseq0": "@xdigit*",
+	"INTSP": "[lLuU]",
+	"FLOATSP": "[fFlL]",
+	"fexponent": "[eE][+-]?[0-9]+",
+	"fexponent_bin": "[pP][+-]?[0-9]+",
+	"deciexp": "\\.[0-9]*@fexponent?",
+	"hexiexp": "\\.[0-9a-zA-Z]*@fexponent_bin?",
+	"irregular_keywords": "val[+-]?|case[+-]?|addr\\@?|fold\\@|free\\@|fix\\@?|lam\\@?|llam\\@?|prop[+-]?|type[+-]?|view[+-@]?|viewt@?ype[+-]?|t@?ype[+-]?|v(iew)?t@?ype[+-]?|abst@?ype|absv(iew)?t@?ype|for\\*?|while\\*?",
+	"ESCHAR": "[ntvbrfa\\\\\\?'\"\\(\\[\\{]",
 	"start": "root",
 	"tokenizer": {
 		"root": [
 			{
-				"regex": {},
+				"regex": "[ \\t\\r\\n]+",
 				"action": {
 					"token": ""
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\(\\*\\)",
 				"action": {
 					"token": "invalid"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\(\\*",
 				"action": {
 					"token": "comment",
 					"next": "lexing_COMMENT_block_ml"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\(",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": "\\)",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": "\\[",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": "\\]",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": "\\{",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": "\\}",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": ",\\(",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": ",",
 				"action": {
 					"token": "delimiter.comma"
 				}
 			},
 			{
-				"regex": {},
+				"regex": ";",
 				"action": {
 					"token": "delimiter.semicolon"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "@\\(",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": "@\\[",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": "@\\{",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": ":<",
 				"action": {
 					"token": "keyword",
 					"next": "@lexing_EFFECT_commaseq0"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\.@symbolic+",
 				"action": {
 					"token": "identifier.sym"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\.@digit*@fexponent@FLOATSP*",
 				"action": {
 					"token": "number.float"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\.@digit+",
 				"action": {
 					"token": "number.float"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\$@IDENTFST@IDENTRST*",
 				"action": {
 					"cases": {
 						"@keywords_dlr": {
@@ -459,7 +459,7 @@
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\#@IDENTFST@IDENTRST*",
 				"action": {
 					"cases": {
 						"@keywords_srp": {
@@ -472,13 +472,13 @@
 				}
 			},
 			{
-				"regex": {},
+				"regex": "%\\(",
 				"action": {
 					"token": "delimiter.parenthesis"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "^%{(#|\\^|\\$)?",
 				"action": {
 					"token": "keyword",
 					"next": "@lexing_EXTCODE",
@@ -486,50 +486,50 @@
 				}
 			},
 			{
-				"regex": {},
+				"regex": "^%}",
 				"action": {
 					"token": "keyword"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "'\\(",
 				"action": {
 					"token": "delimiter.parenthesis"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "'\\[",
 				"action": {
 					"token": "delimiter.bracket"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "'\\{",
 				"action": {
 					"token": "delimiter.brace"
 				}
 			},
-			[{}, ["string", "string.escape", "string"]],
-			[{}, "string"],
-			[{}, "string.quote", "@lexing_DQUOTE"],
+			["(')(\\\\@ESCHAR|\\\\[xX]@xdigit+|\\\\@digit+)(')", ["string", "string.escape", "string"]],
+			["'[^\\\\']'", "string"],
+			["\"", "string.quote", "@lexing_DQUOTE"],
 			{
-				"regex": {},
+				"regex": "`\\(",
 				"action": "@brackets"
 			},
 			{
-				"regex": {},
+				"regex": "\\\\",
 				"action": {
 					"token": "punctuation"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "@irregular_keywords(?!@IDENTRST)",
 				"action": {
 					"token": "keyword"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "@IDENTFST@IDENTRST*[<!\\[]?",
 				"action": {
 					"cases": {
 						"@keywords": {
@@ -545,34 +545,34 @@
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\/\\/\\/\\/",
 				"action": {
 					"token": "comment",
 					"next": "@lexing_COMMENT_rest"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\/\\/.*$",
 				"action": {
 					"token": "comment"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\/\\*",
 				"action": {
 					"token": "comment",
 					"next": "@lexing_COMMENT_block_c"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "-<|=<",
 				"action": {
 					"token": "keyword",
 					"next": "@lexing_EFFECT_commaseq0"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "@symbolic+",
 				"action": {
 					"cases": {
 						"@operators": "keyword",
@@ -581,61 +581,61 @@
 				}
 			},
 			{
-				"regex": {},
+				"regex": "0[xX]@xdigit+(@hexiexp|@fexponent_bin)@FLOATSP*",
 				"action": {
 					"token": "number.float"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "0[xX]@xdigit+@INTSP*",
 				"action": {
 					"token": "number.hex"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "0[0-7]+(?![0-9])@INTSP*",
 				"action": {
 					"token": "number.octal"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "@digit+(@fexponent|@deciexp)@FLOATSP*",
 				"action": {
 					"token": "number.float"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "@digit@digitseq0@INTSP*",
 				"action": {
 					"token": "number.decimal"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "@digit+@INTSP*",
 				"action": {
 					"token": "number"
 				}
 			}
 		],
 		"lexing_COMMENT_block_ml": [
-			[{}, "comment"],
-			[{}, "comment", "@push"],
-			[{}, "comment.invalid"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["[^\\(\\*]+", "comment"],
+			["\\(\\*", "comment", "@push"],
+			["\\(\\*", "comment.invalid"],
+			["\\*\\)", "comment", "@pop"],
+			["\\*", "comment"]
 		],
 		"lexing_COMMENT_block_c": [
-			[{}, "comment"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["[^\\/*]+", "comment"],
+			["\\*\\/", "comment", "@pop"],
+			["[\\/*]", "comment"]
 		],
 		"lexing_COMMENT_rest": [
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["$", "comment", "@pop"],
+			[".*", "comment"]
 		],
 		"lexing_EFFECT_commaseq0": [
 			{
-				"regex": {},
+				"regex": "@IDENTFST@IDENTRST+|@digit+",
 				"action": {
 					"cases": {
 						"@keywords_effects": {
@@ -648,13 +648,13 @@
 				}
 			},
 			{
-				"regex": {},
+				"regex": ",",
 				"action": {
 					"token": "punctuation"
 				}
 			},
 			{
-				"regex": {},
+				"regex": ">",
 				"action": {
 					"token": "@rematch",
 					"next": "@pop"
@@ -663,7 +663,7 @@
 		],
 		"lexing_EXTCODE": [
 			{
-				"regex": {},
+				"regex": "^%}",
 				"action": {
 					"token": "@rematch",
 					"next": "@pop",
@@ -671,20 +671,20 @@
 				}
 			},
 			{
-				"regex": {},
+				"regex": "[^%]+",
 				"action": ""
 			}
 		],
 		"lexing_DQUOTE": [
 			{
-				"regex": {},
+				"regex": "\"",
 				"action": {
 					"token": "string.quote",
 					"next": "@pop"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "(\\{\\$)(@IDENTFST@IDENTRST*)(\\})",
 				"action": [
 					{
 						"token": "string.escape"
@@ -698,19 +698,19 @@
 				]
 			},
 			{
-				"regex": {},
+				"regex": "\\\\$",
 				"action": {
 					"token": "string.escape"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "\\\\(@ESCHAR|[xX]@xdigit+|@digit+)",
 				"action": {
 					"token": "string.escape"
 				}
 			},
 			{
-				"regex": {},
+				"regex": "[^\\\\\"]+",
 				"action": {
 					"token": "string"
 				}

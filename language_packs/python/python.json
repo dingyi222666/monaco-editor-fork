@@ -164,11 +164,11 @@
 			{
 				"include": "@strings"
 			},
-			[{}, "delimiter"],
-			[{}, "@brackets"],
-			[{}, "tag"],
+			["[,:;]", "delimiter"],
+			["[{}\\[\\]()]", "@brackets"],
+			["@[a-zA-Z_]\\w*", "tag"],
 			[
-				{},
+				"[a-zA-Z_]\\w*",
 				{
 					"cases": {
 						"@keywords": "keyword",
@@ -178,46 +178,46 @@
 			]
 		],
 		"whitespace": [
-			[{}, "white"],
-			[{}, "comment"],
-			[{}, "string", "@endDocString"],
-			[{}, "string", "@endDblDocString"]
+			["\\s+", "white"],
+			["(^#.*$)", "comment"],
+			["'''", "string", "@endDocString"],
+			["\"\"\"", "string", "@endDblDocString"]
 		],
 		"endDocString": [
-			[{}, "string"],
-			[{}, "string"],
-			[{}, "string", "@popall"],
-			[{}, "string"]
+			["[^']+", "string"],
+			["\\\\'", "string"],
+			["'''", "string", "@popall"],
+			["'", "string"]
 		],
 		"endDblDocString": [
-			[{}, "string"],
-			[{}, "string"],
-			[{}, "string", "@popall"],
-			[{}, "string"]
+			["[^\"]+", "string"],
+			["\\\\\"", "string"],
+			["\"\"\"", "string", "@popall"],
+			["\"", "string"]
 		],
 		"numbers": [
-			[{}, "number.hex"],
-			[{}, "number"]
+			["-?0x([abcdef]|[ABCDEF]|\\d)+[lL]?", "number.hex"],
+			["-?(\\d*\\.)?\\d+([eE][+\\-]?\\d+)?[jJ]?[lL]?", "number"]
 		],
 		"strings": [
-			[{}, "string.escape", "@popall"],
-			[{}, "string.escape", "@stringBody"],
-			[{}, "string.escape", "@popall"],
-			[{}, "string.escape", "@dblStringBody"]
+			["'$", "string.escape", "@popall"],
+			["'", "string.escape", "@stringBody"],
+			["\"$", "string.escape", "@popall"],
+			["\"", "string.escape", "@dblStringBody"]
 		],
 		"stringBody": [
-			[{}, "string", "@popall"],
-			[{}, "string"],
-			[{}, "string"],
-			[{}, "string.escape", "@popall"],
-			[{}, "string"]
+			["[^\\\\']+$", "string", "@popall"],
+			["[^\\\\']+", "string"],
+			["\\\\.", "string"],
+			["'", "string.escape", "@popall"],
+			["\\\\$", "string"]
 		],
 		"dblStringBody": [
-			[{}, "string", "@popall"],
-			[{}, "string"],
-			[{}, "string"],
-			[{}, "string.escape", "@popall"],
-			[{}, "string"]
+			["[^\\\\\"]+$", "string", "@popall"],
+			["[^\\\\\"]+", "string"],
+			["\\\\.", "string"],
+			["\"", "string.escape", "@popall"],
+			["\\\\$", "string"]
 		]
 	}
 }

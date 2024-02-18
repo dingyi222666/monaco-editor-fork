@@ -19,14 +19,14 @@
 			"close": "]"
 		}
 	],
-	"keywords": {},
-	"symbols": {},
-	"escapes": {},
+	"keywords": "call|defined|echo|errorlevel|exist|for|goto|if|pause|set|shift|start|title|not|pushd|popd",
+	"symbols": "[=><!~?&|+\\-*\\/\\^;\\.,]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
 	"tokenizer": {
 		"root": [
-			[{}, ["", "comment"]],
+			["^(\\s*)(rem(?:\\s.*|))$", ["", "comment"]],
 			[
-				{},
+				"(\\@?)(@keywords)(?!\\w)",
 				[
 					{
 						"token": "keyword"
@@ -36,25 +36,25 @@
 					}
 				]
 			],
-			[{}, ""],
-			[{}, "keyword.tag-setlocal"],
-			[{}, "keyword.tag-setlocal"],
-			[{}, ""],
-			[{}, "metatag"],
-			[{}, "variable"],
-			[{}, "variable"],
-			[{}, "@brackets"],
-			[{}, "delimiter"],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number"],
-			[{}, "delimiter"],
-			[{}, "string", "@string.\""],
-			[{}, "string", "@string.'"]
+			["[ \\t\\r\\n]+", ""],
+			["setlocal(?!\\w)", "keyword.tag-setlocal"],
+			["endlocal(?!\\w)", "keyword.tag-setlocal"],
+			["[a-zA-Z_]\\w*", ""],
+			[":\\w*", "metatag"],
+			["%[^%]+%", "variable"],
+			["%%[\\w]+(?!\\w)", "variable"],
+			["[{}()\\[\\]]", "@brackets"],
+			["@symbols", "delimiter"],
+			["\\d*\\.\\d+([eE][\\-+]?\\d+)?", "number.float"],
+			["0[xX][0-9a-fA-F_]*[0-9a-fA-F]", "number.hex"],
+			["\\d+", "number"],
+			["[;,.]", "delimiter"],
+			["\"", "string", "@string.\""],
+			["'", "string", "@string.'"]
 		],
 		"string": [
 			[
-				{},
+				"[^\\\\\"'%]+",
 				{
 					"cases": {
 						"@eos": {
@@ -65,12 +65,12 @@
 					}
 				}
 			],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
-			[{}, "variable"],
-			[{}, "variable"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
+			["%[\\w ]+%", "variable"],
+			["%%[\\w]+(?!\\w)", "variable"],
 			[
-				{},
+				"[\"']",
 				{
 					"cases": {
 						"$#==$S2": {
@@ -81,7 +81,7 @@
 					}
 				}
 			],
-			[{}, "string", "@popall"]
+			["$", "string", "@popall"]
 		]
 	}
 }

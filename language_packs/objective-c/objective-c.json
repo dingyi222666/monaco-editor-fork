@@ -88,8 +88,8 @@
 		"void",
 		"while"
 	],
-	"decpart": {},
-	"decimal": {},
+	"decpart": "\\d(_?\\d)*",
+	"decimal": "0|@decpart",
 	"tokenizer": {
 		"root": [
 			{
@@ -104,10 +104,10 @@
 			{
 				"include": "@strings"
 			},
-			[{}, "delimiter"],
-			[{}, "@brackets"],
+			["[,:;]", "delimiter"],
+			["[{}\\[\\]()<>]", "@brackets"],
 			[
-				{},
+				"[a-zA-Z@#]\\w*",
 				{
 					"cases": {
 						"@keywords": "keyword",
@@ -115,9 +115,9 @@
 					}
 				}
 			],
-			[{}, "operator"]
+			["[<>=\\\\+\\\\-\\\\*\\\\/\\\\^\\\\|\\\\~,]|and\\\\b|or\\\\b|not\\\\b]", "operator"]
 		],
-		"whitespace": [[{}, "white"]],
+		"whitespace": [["\\s+", "white"]],
 		"comments": [
 			["\\/\\*", "comment", "@comment"],
 			["\\/\\/+.*", "comment"]
@@ -127,9 +127,9 @@
 			[".", "comment"]
 		],
 		"numbers": [
-			[{}, "number.hex"],
+			["0[xX][0-9a-fA-F]*(_?[0-9a-fA-F])*", "number.hex"],
 			[
-				{},
+				"@decimal((\\.@decpart)?([eE][\\-+]?@decpart)?)[fF]*",
 				{
 					"cases": {
 						"(\\d)*": "number",
@@ -139,24 +139,24 @@
 			]
 		],
 		"strings": [
-			[{}, "string.escape", "@popall"],
-			[{}, "string.escape", "@stringBody"],
-			[{}, "string.escape", "@popall"],
-			[{}, "string.escape", "@dblStringBody"]
+			["'$", "string.escape", "@popall"],
+			["'", "string.escape", "@stringBody"],
+			["\"$", "string.escape", "@popall"],
+			["\"", "string.escape", "@dblStringBody"]
 		],
 		"stringBody": [
-			[{}, "string", "@popall"],
-			[{}, "string"],
-			[{}, "string"],
-			[{}, "string.escape", "@popall"],
-			[{}, "string"]
+			["[^\\\\']+$", "string", "@popall"],
+			["[^\\\\']+", "string"],
+			["\\\\.", "string"],
+			["'", "string.escape", "@popall"],
+			["\\\\$", "string"]
 		],
 		"dblStringBody": [
-			[{}, "string", "@popall"],
-			[{}, "string"],
-			[{}, "string"],
-			[{}, "string.escape", "@popall"],
-			[{}, "string"]
+			["[^\\\\\"]+$", "string", "@popall"],
+			["[^\\\\\"]+", "string"],
+			["\\\\.", "string"],
+			["\"", "string.escape", "@popall"],
+			["\\\\$", "string"]
 		]
 	}
 }

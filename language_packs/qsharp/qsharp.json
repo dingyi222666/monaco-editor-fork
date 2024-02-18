@@ -203,12 +203,12 @@
 		"w/="
 	],
 	"namespaceFollows": ["namespace", "open"],
-	"symbols": {},
-	"escapes": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%@._]+",
+	"escapes": "\\\\[\\s\\S]",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"[a-zA-Z_$][\\w$]*",
 				{
 					"cases": {
 						"@namespaceFollows": {
@@ -227,9 +227,9 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "@brackets"],
+			["[{}()\\[\\]]", "@brackets"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@operators": "operator",
@@ -237,11 +237,11 @@
 					}
 				}
 			],
-			[{}, "number.float"],
-			[{}, "number"],
-			[{}, "delimiter"],
+			["\\d*\\.\\d+([eE][\\-+]?\\d+)?", "number.float"],
+			["\\d+", "number"],
+			["[;,.]", "delimiter"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@open",
@@ -250,10 +250,10 @@
 			]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
+			["[^\\\\\"]+", "string"],
+			["@escapes", "string.escape"],
 			[
-				{},
+				"\"",
 				{
 					"token": "string.quote",
 					"bracket": "@close",
@@ -265,13 +265,13 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "namespace"],
-			[{}, "delimiter"],
+			["[A-Za-z]\\w*", "namespace"],
+			["[\\.=]", "delimiter"],
 			["", "", "@pop"]
 		],
 		"whitespace": [
-			[{}, "white"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", "white"],
+			["(\\/\\/).*", "comment"]
 		]
 	}
 }

@@ -81,28 +81,28 @@
 	],
 	"constants": ["true", "false"],
 	"operators": ["==", "!=", ">", "<", ">=", "<="],
-	"symbol": {},
-	"identifier": {},
+	"symbol": "[=><!]+",
+	"identifier": "[a-zA-Z_][\\w]*",
 	"tokenizer": {
 		"root": [
-			[{}, "comment.start.liquid", "@comment"],
+			["\\{\\%\\s*comment\\s*\\%\\}", "comment.start.liquid", "@comment"],
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@liquidState.root"
 				}
 			],
 			[
-				{},
+				"\\{\\%",
 				{
 					"token": "@rematch",
 					"switchTo": "@liquidState.root"
 				}
 			],
-			[{}, ["delimiter.html", "tag.html", "delimiter.html"]],
+			["(<)([\\w\\-]+)(\\/>)", ["delimiter.html", "tag.html", "delimiter.html"]],
 			[
-				{},
+				"(<)([:\\w]+)",
 				[
 					"delimiter.html",
 					{
@@ -112,7 +112,7 @@
 				]
 			],
 			[
-				{},
+				"(<\\/)([\\w\\-]+)",
 				[
 					"delimiter.html",
 					{
@@ -121,49 +121,49 @@
 					}
 				]
 			],
-			[{}, "delimiter.html"],
-			[{}, "delimiter.html"],
-			[{}]
+			["<", "delimiter.html"],
+			["\\{", "delimiter.html"],
+			["[^<{]+"]
 		],
 		"comment": [
-			[{}, "comment.end.liquid", "@pop"],
-			[{}, "comment.content.liquid"]
+			["\\{\\%\\s*endcomment\\s*\\%\\}", "comment.end.liquid", "@pop"],
+			[".", "comment.content.liquid"]
 		],
 		"otherTag": [
 			[
-				{},
+				"\\{\\{",
 				{
 					"token": "@rematch",
 					"switchTo": "@liquidState.otherTag"
 				}
 			],
 			[
-				{},
+				"\\{\\%",
 				{
 					"token": "@rematch",
 					"switchTo": "@liquidState.otherTag"
 				}
 			],
-			[{}, "delimiter.html", "@pop"],
-			[{}, "attribute.value"],
-			[{}, "attribute.value"],
-			[{}, "attribute.name"],
-			[{}, "delimiter"],
-			[{}]
+			["\\/?>", "delimiter.html", "@pop"],
+			["\"([^\"]*)\"", "attribute.value"],
+			["'([^']*)'", "attribute.value"],
+			["[\\w\\-]+", "attribute.name"],
+			["=", "delimiter"],
+			["[ \\t\\r\\n]+"]
 		],
 		"liquidState": [
-			[{}, "delimiter.output.liquid"],
+			["\\{\\{", "delimiter.output.liquid"],
 			[
-				{},
+				"\\}\\}",
 				{
 					"token": "delimiter.output.liquid",
 					"switchTo": "@$S2.$S3"
 				}
 			],
-			[{}, "delimiter.tag.liquid"],
-			[{}, "delimiter.tag.liquid", "@liquidRaw"],
+			["\\{\\%", "delimiter.tag.liquid"],
+			["raw\\s*\\%\\}", "delimiter.tag.liquid", "@liquidRaw"],
 			[
-				{},
+				"\\%\\}",
 				{
 					"token": "delimiter.tag.liquid",
 					"switchTo": "@$S2.$S3"
@@ -174,11 +174,11 @@
 			}
 		],
 		"liquidRaw": [
-			[{}],
-			[{}, "delimiter.tag.liquid"],
-			[{}],
+			["^(?!\\{\\%\\s*endraw\\s*\\%\\}).+"],
+			["\\{\\%", "delimiter.tag.liquid"],
+			["@identifier"],
 			[
-				{},
+				"\\%\\}",
 				{
 					"token": "delimiter.tag.liquid",
 					"next": "@root"
@@ -186,12 +186,12 @@
 			]
 		],
 		"liquidRoot": [
-			[{}, "number.liquid"],
-			[{}, "string.liquid"],
-			[{}, "string.liquid"],
-			[{}],
+			["\\d+(\\.\\d+)?", "number.liquid"],
+			["\"[^\"]*\"", "string.liquid"],
+			["'[^']*'", "string.liquid"],
+			["\\s+"],
 			[
-				{},
+				"@symbol",
 				{
 					"cases": {
 						"@operators": "operator.liquid",
@@ -199,9 +199,9 @@
 					}
 				}
 			],
-			[{}],
+			["\\."],
 			[
-				{},
+				"@identifier",
 				{
 					"cases": {
 						"@constants": "keyword.liquid",
@@ -211,7 +211,7 @@
 					}
 				}
 			],
-			[{}, "variable.liquid"]
+			["[^}|%]", "variable.liquid"]
 		]
 	}
 }

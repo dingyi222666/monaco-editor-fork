@@ -138,17 +138,23 @@
 	"ignoreCase": true,
 	"tokenizer": {
 		"root": [
-			[{}, "tag"],
+			["<[^\\s\\u00a0>]*>?", "tag"],
 			{
 				"include": "@strings"
 			},
-			[{}, "comment"],
-			[{}, "@brackets"],
-			[{}, "delimiter"],
-			[{}, "tag"],
-			[{}, "tag"],
+			["#.*", "comment"],
+			["[{}()\\[\\]]", "@brackets"],
+			["[;,.]", "delimiter"],
 			[
-				{},
+				"[_\\w\\d]+:(\\.(?=[\\w_\\-\\\\%])|[:\\w_-]|\\\\[-\\\\_~.!$&'()*+,;=/?#@%]|%[a-f\\d][a-f\\d])*",
+				"tag"
+			],
+			[
+				":(\\.(?=[\\w_\\-\\\\%])|[:\\w_-]|\\\\[-\\\\_~.!$&'()*+,;=/?#@%]|%[a-f\\d][a-f\\d])+",
+				"tag"
+			],
+			[
+				"[$?]?[_\\w\\d]+",
 				{
 					"cases": {
 						"@keywords": {
@@ -161,29 +167,29 @@
 					}
 				}
 			],
-			[{}, "operator.sql"],
-			[{}, "operator.sql"],
-			[{}, "operator.sql"],
-			[{}, "metatag.html"],
-			[{}, "white"]
+			["\\^\\^", "operator.sql"],
+			["\\^[*+\\-<>=&|^\\/!?]*", "operator.sql"],
+			["[*+\\-<>=&|\\/!?]", "operator.sql"],
+			["@[a-z\\d\\-]*", "metatag.html"],
+			["\\s+", "white"]
 		],
 		"strings": [
-			[{}, "string.invalid"],
-			[{}, "string.sql", "@pop"],
-			[{}, "string.sql", "@stringBody"],
-			[{}, "string.invalid"],
-			[{}, "string.sql", "@pop"],
-			[{}, "string.sql", "@dblStringBody"]
+			["'([^'\\\\]|\\\\.)*$", "string.invalid"],
+			["'$", "string.sql", "@pop"],
+			["'", "string.sql", "@stringBody"],
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
+			["\"$", "string.sql", "@pop"],
+			["\"", "string.sql", "@dblStringBody"]
 		],
 		"stringBody": [
-			[{}, "string.sql"],
-			[{}, "string.escape"],
-			[{}, "string.sql", "@pop"]
+			["[^\\\\']+", "string.sql"],
+			["\\\\.", "string.escape"],
+			["'", "string.sql", "@pop"]
 		],
 		"dblStringBody": [
-			[{}, "string.sql"],
-			[{}, "string.escape"],
-			[{}, "string.sql", "@pop"]
+			["[^\\\\\"]+", "string.sql"],
+			["\\\\.", "string.escape"],
+			["\"", "string.sql", "@pop"]
 		]
 	}
 }

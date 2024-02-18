@@ -2,7 +2,7 @@
 	"defaultToken": "",
 	"ignoreCase": false,
 	"tokenPostfix": ".mips",
-	"regEx": {},
+	"regEx": "\\/(?!\\/\\/)(?:[^\\/\\\\]|\\\\.)*\\/[igm]*",
 	"keywords": [
 		".data",
 		".text",
@@ -63,13 +63,13 @@
 		"mtlo",
 		"move"
 	],
-	"symbols": {},
-	"escapes": {},
+	"symbols": "[\\.,\\:]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"'$]|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
 	"tokenizer": {
 		"root": [
-			[{}, "variable.predefined"],
+			["\\$[a-zA-Z_]\\w*", "variable.predefined"],
 			[
-				{},
+				"[.a-zA-Z_]\\w*",
 				{
 					"cases": {
 						"this": "variable.predefined",
@@ -80,8 +80,8 @@
 					}
 				}
 			],
-			[{}, ""],
-			[{}, "comment"],
+			["[ \\t\\r\\n]+", ""],
+			["#.*$", "comment"],
 			[
 				"///",
 				{
@@ -89,20 +89,20 @@
 					"next": "@hereregexp"
 				}
 			],
-			[{}, ["", "regexp"]],
-			[{}, ["delimiter", "", "regexp"]],
-			[{}, ["delimiter", "", "regexp"]],
-			[{}, "delimiter"],
-			[{}, "number.float"],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number.octal"],
-			[{}, "number"],
-			[{}, "delimiter"],
-			[{}, "string", "@herestring.\"\"\""],
-			[{}, "string", "@herestring.'''"],
+			["^(\\s*)(@regEx)", ["", "regexp"]],
+			["(\\,)(\\s*)(@regEx)", ["delimiter", "", "regexp"]],
+			["(\\:)(\\s*)(@regEx)", ["delimiter", "", "regexp"]],
+			["@symbols", "delimiter"],
+			["\\d+[eE]([\\-+]?\\d+)?", "number.float"],
+			["\\d+\\.\\d+([eE][\\-+]?\\d+)?", "number.float"],
+			["0[xX][0-9a-fA-F]+", "number.hex"],
+			["0[0-7]+(?!\\d)", "number.octal"],
+			["\\d+", "number"],
+			["[,.]", "delimiter"],
+			["\"\"\"", "string", "@herestring.\"\"\""],
+			["'''", "string", "@herestring.'''"],
 			[
-				{},
+				"\"",
 				{
 					"cases": {
 						"@eos": "string",
@@ -114,7 +114,7 @@
 				}
 			],
 			[
-				{},
+				"'",
 				{
 					"cases": {
 						"@eos": "string",
@@ -127,12 +127,12 @@
 			]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
-			[{}, "string.escape.invalid"],
+			["[^\"'\\#\\\\]+", "string"],
+			["@escapes", "string.escape"],
+			["\\.", "string.escape.invalid"],
+			["\\.", "string.escape.invalid"],
 			[
-				{},
+				"#{",
 				{
 					"cases": {
 						"$S2==\"": {
@@ -144,7 +144,7 @@
 				}
 			],
 			[
-				{},
+				"[\"']",
 				{
 					"cases": {
 						"$#==$S2": {
@@ -155,11 +155,11 @@
 					}
 				}
 			],
-			[{}, "string"]
+			["#", "string"]
 		],
 		"herestring": [
 			[
-				{},
+				"(\"\"\"|''')",
 				{
 					"cases": {
 						"$1==$S2": {
@@ -170,27 +170,27 @@
 					}
 				}
 			],
-			[{}, "string"],
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["[^#\\\\'\"]+", "string"],
+			["['\"]+", "string"],
+			["@escapes", "string.escape"],
+			["\\.", "string.escape.invalid"],
 			[
-				{},
+				"#{",
 				{
 					"token": "string.quote",
 					"next": "root.interpolatedstring"
 				}
 			],
-			[{}, "string"]
+			["#", "string"]
 		],
 		"comment": [
-			[{}, "comment"],
-			[{}, "comment"]
+			["[^#]+", "comment"],
+			["#", "comment"]
 		],
 		"hereregexp": [
-			[{}, "regexp"],
-			[{}, "regexp"],
-			[{}, "comment"],
+			["[^\\\\\\/#]+", "regexp"],
+			["\\\\.", "regexp"],
+			["#.*$", "comment"],
 			[
 				"///[igm]*",
 				{
@@ -198,7 +198,7 @@
 					"next": "@pop"
 				}
 			],
-			[{}, "regexp"]
+			["\\/", "regexp"]
 		]
 	}
 }

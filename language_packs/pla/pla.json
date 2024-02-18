@@ -35,17 +35,17 @@
 		".e",
 		".end"
 	],
-	"comment": {},
-	"identifier": {},
-	"plaContent": {},
+	"comment": "#.*$",
+	"identifier": "[a-zA-Z]+[a-zA-Z0-9_\\-]*",
+	"plaContent": "[01\\-~\\|]+",
 	"tokenizer": {
 		"root": [
 			{
 				"include": "@whitespace"
 			},
-			[{}, "comment"],
+			["@comment", "comment"],
 			[
-				{},
+				"\\.([a-zA-Z_\\-]+)",
 				{
 					"cases": {
 						"@eos": {
@@ -69,16 +69,16 @@
 					}
 				}
 			],
-			[{}, "identifier"],
-			[{}, "string"]
+			["@identifier", "identifier"],
+			["@plaContent", "string"]
 		],
-		"whitespace": [[{}, ""]],
+		"whitespace": [["[ \\t\\r\\n]+", ""]],
 		"type": [
 			{
 				"include": "@whitespace"
 			},
 			[
-				{},
+				"\\w+",
 				{
 					"token": "type",
 					"next": "@pop"
@@ -87,7 +87,7 @@
 		],
 		"keywordArg": [
 			[
-				{},
+				"[ \\t\\r\\n]+",
 				{
 					"cases": {
 						"@eos": {
@@ -98,9 +98,9 @@
 					}
 				}
 			],
-			[{}, "comment", "@pop"],
+			["@comment", "comment", "@pop"],
 			[
-				{},
+				"[<>()\\[\\]]",
 				{
 					"cases": {
 						"@eos": {
@@ -112,7 +112,7 @@
 				}
 			],
 			[
-				{},
+				"\\-?\\d+",
 				{
 					"cases": {
 						"@eos": {
@@ -124,7 +124,7 @@
 				}
 			],
 			[
-				{},
+				"@identifier",
 				{
 					"cases": {
 						"@eos": {
@@ -136,7 +136,7 @@
 				}
 			],
 			[
-				{},
+				"[;=]",
 				{
 					"cases": {
 						"@eos": {

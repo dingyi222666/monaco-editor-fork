@@ -64,12 +64,12 @@
 		"..",
 		"..."
 	],
-	"symbols": {},
-	"escapes": {},
+	"symbols": "[=><!~?:&|+\\-*\\/\\^%]+",
+	"escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
 	"tokenizer": {
 		"root": [
 			[
-				{},
+				"[a-zA-Z_]\\w*",
 				{
 					"cases": {
 						"@keywords": {
@@ -82,11 +82,11 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, ["delimiter", "", "key", "", "delimiter"]],
-			[{}, ["@brackets", "", "key", "", "delimiter"]],
-			[{}, "@brackets"],
+			["(,)(\\s*)([a-zA-Z_]\\w*)(\\s*)(:)(?!:)", ["delimiter", "", "key", "", "delimiter"]],
+			["({)(\\s*)([a-zA-Z_]\\w*)(\\s*)(:)(?!:)", ["@brackets", "", "key", "", "delimiter"]],
+			["[{}()\\[\\]]", "@brackets"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@operators": "delimiter",
@@ -94,24 +94,24 @@
 					}
 				}
 			],
-			[{}, "number.float"],
-			[{}, "number.hex"],
-			[{}, "number"],
-			[{}, "delimiter"],
-			[{}, "string.invalid"],
-			[{}, "string.invalid"],
-			[{}, "string", "@string.\""],
-			[{}, "string", "@string.'"]
+			["\\d*\\.\\d+([eE][\\-+]?\\d+)?", "number.float"],
+			["0[xX][0-9a-fA-F_]*[0-9a-fA-F]", "number.hex"],
+			["\\d+?", "number"],
+			["[;,.]", "delimiter"],
+			["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
+			["'([^'\\\\]|\\\\.)*$", "string.invalid"],
+			["\"", "string", "@string.\""],
+			["'", "string", "@string.'"]
 		],
 		"whitespace": [
-			[{}, ""],
-			[{}, "comment", "@comment.$1"],
-			[{}, "comment"]
+			["[ \\t\\r\\n]+", ""],
+			["--\\[([=]*)\\[", "comment", "@comment.$1"],
+			["--.*$", "comment"]
 		],
 		"comment": [
-			[{}, "comment"],
+			["[^\\]]+", "comment"],
 			[
-				{},
+				"\\]([=]*)\\]",
 				{
 					"cases": {
 						"$1==$S2": {
@@ -122,14 +122,14 @@
 					}
 				}
 			],
-			[{}, "comment"]
+			[".", "comment"]
 		],
 		"string": [
-			[{}, "string"],
-			[{}, "string.escape"],
-			[{}, "string.escape.invalid"],
+			["[^\\\\\"']+", "string"],
+			["@escapes", "string.escape"],
+			["\\\\.", "string.escape.invalid"],
 			[
-				{},
+				"[\"']",
 				{
 					"cases": {
 						"$#==$S2": {

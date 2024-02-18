@@ -132,13 +132,13 @@
 	"operators": ["+", "-", "*", "/", "&", "^", "."],
 	"relations": ["=", "#", "<", "<=", ">", ">=", "<:", ":"],
 	"delimiters": ["|", "..", "=>", ",", ";", ":="],
-	"symbols": {},
-	"escapes": {},
+	"symbols": "[>=<#.,:;+\\-*/&^]+",
+	"escapes": "\\\\(?:[\\\\fnrt\"']|[0-7]{3})",
 	"tokenizer": {
 		"root": [
-			[{}, "invalid"],
+			["_\\w*", "invalid"],
 			[
-				{},
+				"[a-zA-Z][a-zA-Z0-9_]*",
 				{
 					"cases": {
 						"@keywords": {
@@ -157,11 +157,11 @@
 			{
 				"include": "@whitespace"
 			},
-			[{}, "@brackets"],
-			[{}, "number.float"],
-			[{}, "number"],
+			["[{}()\\[\\]]", "@brackets"],
+			["[0-9]+\\.[0-9]+(?:[DdEeXx][\\+\\-]?[0-9]+)?", "number.float"],
+			["[0-9]+(?:\\_[0-9a-fA-F]+)?L?", "number"],
 			[
-				{},
+				"@symbols",
 				{
 					"cases": {
 						"@operators": "operators",
@@ -171,32 +171,32 @@
 					}
 				}
 			],
-			[{}, "string.char"],
-			[{}, ["string.char", "string.escape", "string.char"]],
-			[{}, "invalid"],
-			[{}, "invalid"],
-			[{}, "string.text", "@text"]
+			["'[^\\\\']'", "string.char"],
+			["(')(@escapes)(')", ["string.char", "string.escape", "string.char"]],
+			["'", "invalid"],
+			["\"([^\"\\\\]|\\\\.)*$", "invalid"],
+			["\"", "string.text", "@text"]
 		],
 		"text": [
-			[{}, "string.text"],
-			[{}, "string.escape"],
-			[{}, "invalid"],
-			[{}, "string.text", "@pop"]
+			["[^\\\\\"]+", "string.text"],
+			["@escapes", "string.escape"],
+			["\\\\.", "invalid"],
+			["\"", "string.text", "@pop"]
 		],
 		"comment": [
-			[{}, "comment", "@push"],
-			[{}, "comment", "@pop"],
-			[{}, "comment"]
+			["\\(\\*", "comment", "@push"],
+			["\\*\\)", "comment", "@pop"],
+			[".", "comment"]
 		],
 		"pragma": [
-			[{}, "keyword.pragma", "@push"],
-			[{}, "keyword.pragma", "@pop"],
-			[{}, "keyword.pragma"]
+			["<\\*", "keyword.pragma", "@push"],
+			["\\*>", "keyword.pragma", "@pop"],
+			[".", "keyword.pragma"]
 		],
 		"whitespace": [
-			[{}, "white"],
-			[{}, "comment", "@comment"],
-			[{}, "keyword.pragma", "@pragma"]
+			["[ \\t\\r\\n]+", "white"],
+			["\\(\\*", "comment", "@comment"],
+			["<\\*", "keyword.pragma", "@pragma"]
 		]
 	}
 }
