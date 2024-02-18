@@ -1,0 +1,111 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".sb",
+	"ignoreCase": true,
+	"brackets": [
+		{
+			"token": "delimiter.array",
+			"open": "[",
+			"close": "]"
+		},
+		{
+			"token": "delimiter.parenthesis",
+			"open": "(",
+			"close": ")"
+		},
+		{
+			"token": "keyword.tag-if",
+			"open": "If",
+			"close": "EndIf"
+		},
+		{
+			"token": "keyword.tag-while",
+			"open": "While",
+			"close": "EndWhile"
+		},
+		{
+			"token": "keyword.tag-for",
+			"open": "For",
+			"close": "EndFor"
+		},
+		{
+			"token": "keyword.tag-sub",
+			"open": "Sub",
+			"close": "EndSub"
+		}
+	],
+	"keywords": [
+		"Else",
+		"ElseIf",
+		"EndFor",
+		"EndIf",
+		"EndSub",
+		"EndWhile",
+		"For",
+		"Goto",
+		"If",
+		"Step",
+		"Sub",
+		"Then",
+		"To",
+		"While"
+	],
+	"tagwords": ["If", "Sub", "While", "For"],
+	"operators": [">", "<", "<>", "<=", ">=", "And", "Or", "+", "-", "*", "/", "="],
+	"identifier": {},
+	"symbols": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			{
+				"include": "@whitespace"
+			},
+			[{}, "type"],
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": {
+							"token": "keyword.$0"
+						},
+						"@operators": "operator",
+						"@default": "variable.name"
+					}
+				}
+			],
+			[
+				{},
+				{
+					"cases": {
+						"$2": ["delimiter", "type.member"],
+						"@default": ""
+					}
+				}
+			],
+			[{}, "number.float"],
+			[{}, "number"],
+			[{}, "@brackets"],
+			[
+				{},
+				{
+					"cases": {
+						"@operators": "operator",
+						"@default": "delimiter"
+					}
+				}
+			],
+			[{}, "string.invalid"],
+			[{}, "string", "@string"]
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment"]
+		],
+		"string": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"]
+		]
+	}
+}

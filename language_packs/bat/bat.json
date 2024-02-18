@@ -1,0 +1,87 @@
+{
+	"defaultToken": "",
+	"ignoreCase": true,
+	"tokenPostfix": ".bat",
+	"brackets": [
+		{
+			"token": "delimiter.bracket",
+			"open": "{",
+			"close": "}"
+		},
+		{
+			"token": "delimiter.parenthesis",
+			"open": "(",
+			"close": ")"
+		},
+		{
+			"token": "delimiter.square",
+			"open": "[",
+			"close": "]"
+		}
+	],
+	"keywords": {},
+	"symbols": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			[{}, ["", "comment"]],
+			[
+				{},
+				[
+					{
+						"token": "keyword"
+					},
+					{
+						"token": "keyword.$2"
+					}
+				]
+			],
+			[{}, ""],
+			[{}, "keyword.tag-setlocal"],
+			[{}, "keyword.tag-setlocal"],
+			[{}, ""],
+			[{}, "metatag"],
+			[{}, "variable"],
+			[{}, "variable"],
+			[{}, "@brackets"],
+			[{}, "delimiter"],
+			[{}, "number.float"],
+			[{}, "number.hex"],
+			[{}, "number"],
+			[{}, "delimiter"],
+			[{}, "string", "@string.\""],
+			[{}, "string", "@string.'"]
+		],
+		"string": [
+			[
+				{},
+				{
+					"cases": {
+						"@eos": {
+							"token": "string",
+							"next": "@popall"
+						},
+						"@default": "string"
+					}
+				}
+			],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "variable"],
+			[{}, "variable"],
+			[
+				{},
+				{
+					"cases": {
+						"$#==$S2": {
+							"token": "string",
+							"next": "@pop"
+						},
+						"@default": "string"
+					}
+				}
+			],
+			[{}, "string", "@popall"]
+		]
+	}
+}

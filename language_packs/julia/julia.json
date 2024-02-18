@@ -1,0 +1,523 @@
+{
+	"tokenPostfix": ".julia",
+	"keywords": [
+		"begin",
+		"while",
+		"if",
+		"for",
+		"try",
+		"return",
+		"break",
+		"continue",
+		"function",
+		"macro",
+		"quote",
+		"let",
+		"local",
+		"global",
+		"const",
+		"do",
+		"struct",
+		"module",
+		"baremodule",
+		"using",
+		"import",
+		"export",
+		"end",
+		"else",
+		"elseif",
+		"catch",
+		"finally",
+		"mutable",
+		"primitive",
+		"abstract",
+		"type",
+		"in",
+		"isa",
+		"where",
+		"new"
+	],
+	"types": [
+		"LinRange",
+		"LineNumberNode",
+		"LinearIndices",
+		"LoadError",
+		"MIME",
+		"Matrix",
+		"Method",
+		"MethodError",
+		"Missing",
+		"MissingException",
+		"Module",
+		"NTuple",
+		"NamedTuple",
+		"Nothing",
+		"Number",
+		"OrdinalRange",
+		"OutOfMemoryError",
+		"OverflowError",
+		"Pair",
+		"PartialQuickSort",
+		"PermutedDimsArray",
+		"Pipe",
+		"Ptr",
+		"QuoteNode",
+		"Rational",
+		"RawFD",
+		"ReadOnlyMemoryError",
+		"Real",
+		"ReentrantLock",
+		"Ref",
+		"Regex",
+		"RegexMatch",
+		"RoundingMode",
+		"SegmentationFault",
+		"Set",
+		"Signed",
+		"Some",
+		"StackOverflowError",
+		"StepRange",
+		"StepRangeLen",
+		"StridedArray",
+		"StridedMatrix",
+		"StridedVecOrMat",
+		"StridedVector",
+		"String",
+		"StringIndexError",
+		"SubArray",
+		"SubString",
+		"SubstitutionString",
+		"Symbol",
+		"SystemError",
+		"Task",
+		"Text",
+		"TextDisplay",
+		"Timer",
+		"Tuple",
+		"Type",
+		"TypeError",
+		"TypeVar",
+		"UInt",
+		"UInt128",
+		"UInt16",
+		"UInt32",
+		"UInt64",
+		"UInt8",
+		"UndefInitializer",
+		"AbstractArray",
+		"UndefKeywordError",
+		"AbstractChannel",
+		"UndefRefError",
+		"AbstractChar",
+		"UndefVarError",
+		"AbstractDict",
+		"Union",
+		"AbstractDisplay",
+		"UnionAll",
+		"AbstractFloat",
+		"UnitRange",
+		"AbstractIrrational",
+		"Unsigned",
+		"AbstractMatrix",
+		"AbstractRange",
+		"Val",
+		"AbstractSet",
+		"Vararg",
+		"AbstractString",
+		"VecElement",
+		"AbstractUnitRange",
+		"VecOrMat",
+		"AbstractVecOrMat",
+		"Vector",
+		"AbstractVector",
+		"VersionNumber",
+		"Any",
+		"WeakKeyDict",
+		"ArgumentError",
+		"WeakRef",
+		"Array",
+		"AssertionError",
+		"BigFloat",
+		"BigInt",
+		"BitArray",
+		"BitMatrix",
+		"BitSet",
+		"BitVector",
+		"Bool",
+		"BoundsError",
+		"CapturedException",
+		"CartesianIndex",
+		"CartesianIndices",
+		"Cchar",
+		"Cdouble",
+		"Cfloat",
+		"Channel",
+		"Char",
+		"Cint",
+		"Cintmax_t",
+		"Clong",
+		"Clonglong",
+		"Cmd",
+		"Colon",
+		"Complex",
+		"ComplexF16",
+		"ComplexF32",
+		"ComplexF64",
+		"CompositeException",
+		"Condition",
+		"Cptrdiff_t",
+		"Cshort",
+		"Csize_t",
+		"Cssize_t",
+		"Cstring",
+		"Cuchar",
+		"Cuint",
+		"Cuintmax_t",
+		"Culong",
+		"Culonglong",
+		"Cushort",
+		"Cvoid",
+		"Cwchar_t",
+		"Cwstring",
+		"DataType",
+		"DenseArray",
+		"DenseMatrix",
+		"DenseVecOrMat",
+		"DenseVector",
+		"Dict",
+		"DimensionMismatch",
+		"Dims",
+		"DivideError",
+		"DomainError",
+		"EOFError",
+		"Enum",
+		"ErrorException",
+		"Exception",
+		"ExponentialBackOff",
+		"Expr",
+		"Float16",
+		"Float32",
+		"Float64",
+		"Function",
+		"GlobalRef",
+		"HTML",
+		"IO",
+		"IOBuffer",
+		"IOContext",
+		"IOStream",
+		"IdDict",
+		"IndexCartesian",
+		"IndexLinear",
+		"IndexStyle",
+		"InexactError",
+		"InitError",
+		"Int",
+		"Int128",
+		"Int16",
+		"Int32",
+		"Int64",
+		"Int8",
+		"Integer",
+		"InterruptException",
+		"InvalidStateException",
+		"Irrational",
+		"KeyError"
+	],
+	"keywordops": ["<:", ">:", ":", "=>", "...", ".", "->", "?"],
+	"allops": {},
+	"constants": [
+		"true",
+		"false",
+		"nothing",
+		"missing",
+		"undef",
+		"Inf",
+		"pi",
+		"NaN",
+		"π",
+		"ℯ",
+		"ans",
+		"PROGRAM_FILE",
+		"ARGS",
+		"C_NULL",
+		"VERSION",
+		"DEPOT_PATH",
+		"LOAD_PATH"
+	],
+	"operators": [
+		"!",
+		"!=",
+		"!==",
+		"%",
+		"&",
+		"*",
+		"+",
+		"-",
+		"/",
+		"//",
+		"<",
+		"<<",
+		"<=",
+		"==",
+		"===",
+		"=>",
+		">",
+		">=",
+		">>",
+		">>>",
+		"\\",
+		"^",
+		"|",
+		"|>",
+		"~",
+		"÷",
+		"∈",
+		"∉",
+		"∋",
+		"∌",
+		"∘",
+		"√",
+		"∛",
+		"∩",
+		"∪",
+		"≈",
+		"≉",
+		"≠",
+		"≡",
+		"≢",
+		"≤",
+		"≥",
+		"⊆",
+		"⊇",
+		"⊈",
+		"⊉",
+		"⊊",
+		"⊋",
+		"⊻"
+	],
+	"brackets": [
+		{
+			"open": "(",
+			"close": ")",
+			"token": "delimiter.parenthesis"
+		},
+		{
+			"open": "{",
+			"close": "}",
+			"token": "delimiter.curly"
+		},
+		{
+			"open": "[",
+			"close": "]",
+			"token": "delimiter.square"
+		}
+	],
+	"ident": {},
+	"escape": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			[{}, "keyword", "@typeanno"],
+			[
+				{},
+				[
+					"keyword",
+					{
+						"token": "",
+						"next": "@typeanno"
+					}
+				]
+			],
+			[{}, "keyword", "@typeanno"],
+			[{}, "metatag"],
+			[{}, ["keyword", "metatag"]],
+			[{}, ["", "metatag"]],
+			[{}, "metatag", "@quote"],
+			[{}, "regexp.delim", "@tregexp"],
+			[{}, "regexp.delim", "@sregexp"],
+			[{}, "string.delim", "@rtstring"],
+			[{}, "string.delim", "@dtstring"],
+			[{}, "string.delim", "@rsstring"],
+			[{}, "string.delim", "@dsstring"],
+			[
+				{},
+				{
+					"cases": {
+						"$1@types": {
+							"token": "type",
+							"next": "@gen"
+						},
+						"@default": {
+							"token": "type",
+							"next": "@gen"
+						}
+					}
+				}
+			],
+			[
+				{},
+				{
+					"cases": {
+						"@types": "type",
+						"@keywords": "keyword",
+						"@constants": "variable",
+						"@default": "keyword.flow"
+					}
+				}
+			],
+			[
+				{},
+				{
+					"cases": {
+						"@types": "type",
+						"@keywords": "keyword",
+						"@constants": "variable",
+						"@default": "identifier"
+					}
+				}
+			],
+			[{}, "key"],
+			[{}, "key", "@paste"],
+			[{}, "annotation"],
+			{
+				"include": "@whitespace"
+			},
+			[{}, "string.character"],
+			[{}, "@brackets"],
+			[
+				{},
+				{
+					"cases": {
+						"@keywordops": "keyword",
+						"@operators": "operator"
+					}
+				}
+			],
+			[{}, "delimiter"],
+			[{}, "number.hex"],
+			[{}, "number.octal"],
+			[{}, "number.binary"],
+			[{}, "number"]
+		],
+		"typeanno": [
+			[{}, "type", "@gen"],
+			[{}, ["type", "keyword"]],
+			[{}, "type", "@pop"],
+			["", "", "@pop"]
+		],
+		"gen": [
+			[{}, "type", "@push"],
+			[{}, "type"],
+			[{}, "keyword"],
+			[
+				{},
+				[
+					"type",
+					{
+						"token": "keyword",
+						"next": "@pop"
+					}
+				]
+			],
+			[{}, "type", "@pop"],
+			{
+				"include": "@root"
+			}
+		],
+		"quote": [
+			[{}, "key", "@paste"],
+			[{}, "@brackets", "@paren"],
+			[{}, "metatag", "@pop"],
+			{
+				"include": "@root"
+			}
+		],
+		"paste": [
+			[{}, "metatag", "@quote"],
+			[{}, "@brackets", "@paren"],
+			[{}, "key", "@pop"],
+			{
+				"include": "@root"
+			}
+		],
+		"paren": [
+			[{}, "key", "@paste"],
+			[{}, "metatag", "@quote"],
+			[{}, "@brackets", "@push"],
+			[{}, "@brackets", "@pop"],
+			{
+				"include": "@root"
+			}
+		],
+		"sregexp": [
+			[{}, "invalid"],
+			[{}, "regexp"],
+			[{}, "@brackets"],
+			[{}, "operator.scss"],
+			[{}, "regexp.delim", "@pop"]
+		],
+		"tregexp": [
+			[{}, "regexp"],
+			[{}, "@brackets"],
+			[{}, "operator.scss"],
+			[{}, "string"],
+			[{}, "regexp.delim", "@pop"]
+		],
+		"rsstring": [
+			[{}, "invalid"],
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.delim", "@pop"]
+		],
+		"rtstring": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string"],
+			[{}, "string.delim", "@pop"]
+		],
+		"dsstring": [
+			[{}, "invalid"],
+			[{}, "string"],
+			[{}, "", "@interpolated"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string.delim", "@pop"]
+		],
+		"dtstring": [
+			[{}, "string"],
+			[{}, "", "@interpolated"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string"],
+			[{}, "string.delim", "@pop"]
+		],
+		"interpolated": [
+			[
+				{},
+				{
+					"token": "",
+					"switchTo": "@interpolated_compound"
+				}
+			],
+			[{}, "identifier"],
+			["", "", "@pop"]
+		],
+		"interpolated_compound": [
+			[{}, "", "@pop"],
+			{
+				"include": "@root"
+			}
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment", "@multi_comment"],
+			[{}, "comment"]
+		],
+		"multi_comment": [
+			[{}, "comment", "@push"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"],
+			[{}, "comment"]
+		]
+	}
+}

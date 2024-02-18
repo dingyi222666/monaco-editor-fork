@@ -1,0 +1,176 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".go",
+	"keywords": [
+		"break",
+		"case",
+		"chan",
+		"const",
+		"continue",
+		"default",
+		"defer",
+		"else",
+		"fallthrough",
+		"for",
+		"func",
+		"go",
+		"goto",
+		"if",
+		"import",
+		"interface",
+		"map",
+		"package",
+		"range",
+		"return",
+		"select",
+		"struct",
+		"switch",
+		"type",
+		"var",
+		"bool",
+		"true",
+		"false",
+		"uint8",
+		"uint16",
+		"uint32",
+		"uint64",
+		"int8",
+		"int16",
+		"int32",
+		"int64",
+		"float32",
+		"float64",
+		"complex64",
+		"complex128",
+		"byte",
+		"rune",
+		"uint",
+		"int",
+		"uintptr",
+		"string",
+		"nil"
+	],
+	"operators": [
+		"+",
+		"-",
+		"*",
+		"/",
+		"%",
+		"&",
+		"|",
+		"^",
+		"<<",
+		">>",
+		"&^",
+		"+=",
+		"-=",
+		"*=",
+		"/=",
+		"%=",
+		"&=",
+		"|=",
+		"^=",
+		"<<=",
+		">>=",
+		"&^=",
+		"&&",
+		"||",
+		"<-",
+		"++",
+		"--",
+		"==",
+		"<",
+		">",
+		"=",
+		"!",
+		"!=",
+		"<=",
+		">=",
+		":=",
+		"...",
+		"(",
+		")",
+		"",
+		"]",
+		"{",
+		"}",
+		",",
+		";",
+		".",
+		":"
+	],
+	"symbols": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": {
+							"token": "keyword.$0"
+						},
+						"@default": "identifier"
+					}
+				}
+			],
+			{
+				"include": "@whitespace"
+			},
+			[{}, "annotation"],
+			[{}, "keyword"],
+			[{}, "@brackets"],
+			[{}, "@brackets"],
+			[
+				{},
+				{
+					"cases": {
+						"@operators": "delimiter",
+						"@default": ""
+					}
+				}
+			],
+			[{}, "number.float"],
+			[{}, "number.float"],
+			[{}, "number.hex"],
+			[{}, "number.octal"],
+			[{}, "number.binary"],
+			[{}, "number"],
+			[{}, "number"],
+			[{}, "delimiter"],
+			[{}, "string.invalid"],
+			[{}, "string", "@string"],
+			[{}, "string", "@rawstring"],
+			[{}, "string"],
+			[{}, ["string", "string.escape", "string"]],
+			[{}, "string.invalid"]
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment.doc", "@doccomment"],
+			[{}, "comment", "@comment"],
+			[{}, "comment"]
+		],
+		"comment": [
+			[{}, "comment"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"]
+		],
+		"doccomment": [
+			[{}, "comment.doc"],
+			[{}, "comment.doc.invalid"],
+			[{}, "comment.doc", "@pop"],
+			[{}, "comment.doc"]
+		],
+		"string": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"]
+		],
+		"rawstring": [
+			[{}, "string"],
+			[{}, "string", "@pop"]
+		]
+	}
+}

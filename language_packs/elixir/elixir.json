@@ -1,0 +1,723 @@
+{
+	"defaultToken": "source",
+	"tokenPostfix": ".elixir",
+	"brackets": [
+		{
+			"open": "[",
+			"close": "]",
+			"token": "delimiter.square"
+		},
+		{
+			"open": "(",
+			"close": ")",
+			"token": "delimiter.parenthesis"
+		},
+		{
+			"open": "{",
+			"close": "}",
+			"token": "delimiter.curly"
+		},
+		{
+			"open": "<<",
+			"close": ">>",
+			"token": "delimiter.angle.special"
+		}
+	],
+	"declarationKeywords": [
+		"def",
+		"defp",
+		"defn",
+		"defnp",
+		"defguard",
+		"defguardp",
+		"defmacro",
+		"defmacrop",
+		"defdelegate",
+		"defcallback",
+		"defmacrocallback",
+		"defmodule",
+		"defprotocol",
+		"defexception",
+		"defimpl",
+		"defstruct"
+	],
+	"operatorKeywords": ["and", "in", "not", "or", "when"],
+	"namespaceKeywords": ["alias", "import", "require", "use"],
+	"otherKeywords": [
+		"after",
+		"case",
+		"catch",
+		"cond",
+		"do",
+		"else",
+		"end",
+		"fn",
+		"for",
+		"if",
+		"quote",
+		"raise",
+		"receive",
+		"rescue",
+		"super",
+		"throw",
+		"try",
+		"unless",
+		"unquote_splicing",
+		"unquote",
+		"with"
+	],
+	"constants": ["true", "false", "nil"],
+	"nameBuiltin": ["__MODULE__", "__DIR__", "__ENV__", "__CALLER__", "__STACKTRACE__"],
+	"operator": {},
+	"variableName": {},
+	"atomName": {},
+	"specialAtomName": {},
+	"aliasPart": {},
+	"moduleName": {},
+	"sigilSymmetricDelimiter": {},
+	"sigilStartDelimiter": {},
+	"sigilEndDelimiter": {},
+	"sigilModifiers": {},
+	"decimal": {},
+	"hex": {},
+	"octal": {},
+	"binary": {},
+	"escape": {},
+	"tokenizer": {
+		"root": [
+			{
+				"include": "@whitespace"
+			},
+			{
+				"include": "@comments"
+			},
+			{
+				"include": "@keywordsShorthand"
+			},
+			{
+				"include": "@numbers"
+			},
+			{
+				"include": "@identifiers"
+			},
+			{
+				"include": "@strings"
+			},
+			{
+				"include": "@atoms"
+			},
+			{
+				"include": "@sigils"
+			},
+			{
+				"include": "@attributes"
+			},
+			{
+				"include": "@symbols"
+			}
+		],
+		"whitespace": [[{}, "white"]],
+		"comments": [[{}, ["comment.punctuation", "comment"]]],
+		"keywordsShorthand": [
+			[{}, ["constant", "constant.punctuation", "white"]],
+			[
+				{},
+				{
+					"token": "constant.delimiter",
+					"next": "@doubleQuotedStringKeyword"
+				}
+			],
+			[
+				{},
+				{
+					"token": "constant.delimiter",
+					"next": "@singleQuotedStringKeyword"
+				}
+			]
+		],
+		"doubleQuotedStringKeyword": [
+			[
+				{},
+				{
+					"token": "constant.delimiter",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@stringConstantContentInterpol"
+			}
+		],
+		"singleQuotedStringKeyword": [
+			[
+				{},
+				{
+					"token": "constant.delimiter",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@stringConstantContentInterpol"
+			}
+		],
+		"numbers": [
+			[{}, "number.binary"],
+			[{}, "number.octal"],
+			[{}, "number.hex"],
+			[{}, "number.float"],
+			[{}, "number"]
+		],
+		"identifiers": [
+			[
+				{},
+				[
+					"keyword.declaration",
+					"white",
+					{
+						"cases": {
+							"unquote": "keyword",
+							"@default": "function"
+						}
+					}
+				]
+			],
+			[
+				{},
+				{
+					"cases": {
+						"@declarationKeywords": "keyword.declaration",
+						"@namespaceKeywords": "keyword",
+						"@otherKeywords": "keyword",
+						"@default": "function.call"
+					}
+				}
+			],
+			[{}, ["type.identifier", "white", "operator", "white", "function.call"]],
+			[{}, ["constant.punctuation", "constant", "white", "operator", "white", "function.call"]],
+			[
+				{},
+				[
+					"operator",
+					"white",
+					{
+						"cases": {
+							"@otherKeywords": "keyword",
+							"@default": "function.call"
+						}
+					}
+				]
+			],
+			[{}, ["operator", "white", "function.call"]],
+			[
+				{},
+				{
+					"cases": {
+						"@declarationKeywords": "keyword.declaration",
+						"@operatorKeywords": "keyword.operator",
+						"@namespaceKeywords": "keyword",
+						"@otherKeywords": "keyword",
+						"@constants": "constant.language",
+						"@nameBuiltin": "variable.language",
+						"_.*": "comment.unused",
+						"@default": "identifier"
+					}
+				}
+			],
+			[{}, "type.identifier"]
+		],
+		"strings": [
+			[
+				{},
+				{
+					"token": "string.delimiter",
+					"next": "@doubleQuotedHeredoc"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string.delimiter",
+					"next": "@singleQuotedHeredoc"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string.delimiter",
+					"next": "@doubleQuotedString"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string.delimiter",
+					"next": "@singleQuotedString"
+				}
+			]
+		],
+		"doubleQuotedHeredoc": [
+			[
+				{},
+				{
+					"token": "string.delimiter",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@stringContentInterpol"
+			}
+		],
+		"singleQuotedHeredoc": [
+			[
+				{},
+				{
+					"token": "string.delimiter",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@stringContentInterpol"
+			}
+		],
+		"doubleQuotedString": [
+			[
+				{},
+				{
+					"token": "string.delimiter",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@stringContentInterpol"
+			}
+		],
+		"singleQuotedString": [
+			[
+				{},
+				{
+					"token": "string.delimiter",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@stringContentInterpol"
+			}
+		],
+		"atoms": [
+			[{}, ["constant.punctuation", "constant"]],
+			[
+				{},
+				{
+					"token": "constant.delimiter",
+					"next": "@doubleQuotedStringAtom"
+				}
+			],
+			[
+				{},
+				{
+					"token": "constant.delimiter",
+					"next": "@singleQuotedStringAtom"
+				}
+			]
+		],
+		"doubleQuotedStringAtom": [
+			[
+				{},
+				{
+					"token": "constant.delimiter",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@stringConstantContentInterpol"
+			}
+		],
+		"singleQuotedStringAtom": [
+			[
+				{},
+				{
+					"token": "constant.delimiter",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@stringConstantContentInterpol"
+			}
+		],
+		"sigils": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@sigil.interpol"
+				}
+			],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@sigil.noInterpol"
+				}
+			]
+		],
+		"sigil": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@sigilStart.$S2.$1.{.}"
+				}
+			],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@sigilStart.$S2.$1.[.]"
+				}
+			],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@sigilStart.$S2.$1.(.)"
+				}
+			],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@sigilStart.$S2.$1.<.>"
+				}
+			],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@sigilStart.$S2.$1.$2.$2"
+				}
+			]
+		],
+		"sigilStart.interpol.s": [
+			[
+				{},
+				{
+					"token": "string.delimiter",
+					"switchTo": "@sigilContinue.$S2.$S3.$S4.$S5"
+				}
+			]
+		],
+		"sigilContinue.interpol.s": [
+			[
+				{},
+				{
+					"cases": {
+						"$1==$S5": {
+							"token": "string.delimiter",
+							"next": "@pop"
+						},
+						"@default": "string"
+					}
+				}
+			],
+			{
+				"include": "@stringContentInterpol"
+			}
+		],
+		"sigilStart.noInterpol.S": [
+			[
+				{},
+				{
+					"token": "string.delimiter",
+					"switchTo": "@sigilContinue.$S2.$S3.$S4.$S5"
+				}
+			]
+		],
+		"sigilContinue.noInterpol.S": [
+			[{}, "string"],
+			[
+				{},
+				{
+					"cases": {
+						"$1==$S5": {
+							"token": "string.delimiter",
+							"next": "@pop"
+						},
+						"@default": "string"
+					}
+				}
+			],
+			{
+				"include": "@stringContent"
+			}
+		],
+		"sigilStart.interpol.r": [
+			[
+				{},
+				{
+					"token": "regexp.delimiter",
+					"switchTo": "@sigilContinue.$S2.$S3.$S4.$S5"
+				}
+			]
+		],
+		"sigilContinue.interpol.r": [
+			[
+				{},
+				{
+					"cases": {
+						"$1==$S5": {
+							"token": "regexp.delimiter",
+							"next": "@pop"
+						},
+						"@default": "regexp"
+					}
+				}
+			],
+			{
+				"include": "@regexpContentInterpol"
+			}
+		],
+		"sigilStart.noInterpol.R": [
+			[
+				{},
+				{
+					"token": "regexp.delimiter",
+					"switchTo": "@sigilContinue.$S2.$S3.$S4.$S5"
+				}
+			]
+		],
+		"sigilContinue.noInterpol.R": [
+			[{}, "regexp"],
+			[
+				{},
+				{
+					"cases": {
+						"$1==$S5": {
+							"token": "regexp.delimiter",
+							"next": "@pop"
+						},
+						"@default": "regexp"
+					}
+				}
+			],
+			{
+				"include": "@regexpContent"
+			}
+		],
+		"sigilStart.interpol": [
+			[
+				{},
+				{
+					"token": "sigil.delimiter",
+					"switchTo": "@sigilContinue.$S2.$S3.$S4.$S5"
+				}
+			]
+		],
+		"sigilContinue.interpol": [
+			[
+				{},
+				{
+					"cases": {
+						"$1==$S5": {
+							"token": "sigil.delimiter",
+							"next": "@pop"
+						},
+						"@default": "sigil"
+					}
+				}
+			],
+			{
+				"include": "@sigilContentInterpol"
+			}
+		],
+		"sigilStart.noInterpol": [
+			[
+				{},
+				{
+					"token": "sigil.delimiter",
+					"switchTo": "@sigilContinue.$S2.$S3.$S4.$S5"
+				}
+			]
+		],
+		"sigilContinue.noInterpol": [
+			[{}, "sigil"],
+			[
+				{},
+				{
+					"cases": {
+						"$1==$S5": {
+							"token": "sigil.delimiter",
+							"next": "@pop"
+						},
+						"@default": "sigil"
+					}
+				}
+			],
+			{
+				"include": "@sigilContent"
+			}
+		],
+		"attributes": [
+			[
+				{},
+				{
+					"token": "comment.block.documentation",
+					"next": "@doubleQuotedHeredocDocstring"
+				}
+			],
+			[
+				{},
+				{
+					"token": "comment.block.documentation",
+					"next": "@singleQuotedHeredocDocstring"
+				}
+			],
+			[
+				{},
+				{
+					"token": "comment.block.documentation",
+					"next": "@doubleQuotedStringDocstring"
+				}
+			],
+			[
+				{},
+				{
+					"token": "comment.block.documentation",
+					"next": "@singleQuotedStringDocstring"
+				}
+			],
+			[{}, "comment.block.documentation"],
+			[{}, "variable"]
+		],
+		"doubleQuotedHeredocDocstring": [
+			[
+				{},
+				{
+					"token": "comment.block.documentation",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@docstringContent"
+			}
+		],
+		"singleQuotedHeredocDocstring": [
+			[
+				{},
+				{
+					"token": "comment.block.documentation",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@docstringContent"
+			}
+		],
+		"doubleQuotedStringDocstring": [
+			[
+				{},
+				{
+					"token": "comment.block.documentation",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@docstringContent"
+			}
+		],
+		"singleQuotedStringDocstring": [
+			[
+				{},
+				{
+					"token": "comment.block.documentation",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@docstringContent"
+			}
+		],
+		"symbols": [
+			[{}, "number.constant"],
+			[{}, "operator"],
+			[{}, "operator"],
+			[{}, "@brackets"],
+			[{}, "identifier"],
+			[{}, "punctuation"],
+			[{}, "operator"],
+			[{}, "punctuation"]
+		],
+		"stringContentInterpol": [
+			{
+				"include": "@interpolation"
+			},
+			{
+				"include": "@escapeChar"
+			},
+			{
+				"include": "@stringContent"
+			}
+		],
+		"stringContent": [[{}, "string"]],
+		"stringConstantContentInterpol": [
+			{
+				"include": "@interpolation"
+			},
+			{
+				"include": "@escapeChar"
+			},
+			{
+				"include": "@stringConstantContent"
+			}
+		],
+		"stringConstantContent": [[{}, "constant"]],
+		"regexpContentInterpol": [
+			{
+				"include": "@interpolation"
+			},
+			{
+				"include": "@escapeChar"
+			},
+			{
+				"include": "@regexpContent"
+			}
+		],
+		"regexpContent": [
+			[{}, ["white", "comment.punctuation", "comment"]],
+			[{}, "regexp"]
+		],
+		"sigilContentInterpol": [
+			{
+				"include": "@interpolation"
+			},
+			{
+				"include": "@escapeChar"
+			},
+			{
+				"include": "@sigilContent"
+			}
+		],
+		"sigilContent": [[{}, "sigil"]],
+		"docstringContent": [[{}, "comment.block.documentation"]],
+		"escapeChar": [[{}, "constant.character.escape"]],
+		"interpolation": [
+			[
+				{},
+				{
+					"token": "delimiter.bracket.embed",
+					"next": "@interpolationContinue"
+				}
+			]
+		],
+		"interpolationContinue": [
+			[
+				{},
+				{
+					"token": "delimiter.bracket.embed",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@root"
+			}
+		]
+	}
+}

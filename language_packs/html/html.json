@@ -1,0 +1,307 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".html",
+	"ignoreCase": true,
+	"tokenizer": {
+		"root": [
+			[{}, "metatag", "@doctype"],
+			[{}, "comment", "@comment"],
+			[{}, ["delimiter", "tag", "", "delimiter"]],
+			[
+				{},
+				[
+					"delimiter",
+					{
+						"token": "tag",
+						"next": "@script"
+					}
+				]
+			],
+			[
+				{},
+				[
+					"delimiter",
+					{
+						"token": "tag",
+						"next": "@style"
+					}
+				]
+			],
+			[
+				{},
+				[
+					"delimiter",
+					{
+						"token": "tag",
+						"next": "@otherTag"
+					}
+				]
+			],
+			[
+				{},
+				[
+					"delimiter",
+					{
+						"token": "tag",
+						"next": "@otherTag"
+					}
+				]
+			],
+			[{}, "delimiter"],
+			[{}]
+		],
+		"doctype": [
+			[{}, "metatag.content"],
+			[{}, "metatag", "@pop"]
+		],
+		"comment": [
+			[{}, "comment", "@pop"],
+			[{}, "comment.content"],
+			[{}, "comment.content"]
+		],
+		"otherTag": [
+			[{}, "delimiter", "@pop"],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[{}]
+		],
+		"script": [
+			[{}, "attribute.name", "@scriptAfterType"],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@scriptEmbedded",
+					"nextEmbedded": "text/javascript"
+				}
+			],
+			[{}],
+			[
+				{},
+				[
+					"delimiter",
+					"tag",
+					{
+						"token": "delimiter",
+						"next": "@pop"
+					}
+				]
+			]
+		],
+		"scriptAfterType": [
+			[{}, "delimiter", "@scriptAfterTypeEquals"],
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@scriptEmbedded",
+					"nextEmbedded": "text/javascript"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"scriptAfterTypeEquals": [
+			[
+				{},
+				{
+					"token": "attribute.value",
+					"switchTo": "@scriptWithCustomType.text/javascript"
+				}
+			],
+			[
+				{},
+				{
+					"token": "attribute.value",
+					"switchTo": "@scriptWithCustomType.text/javascript"
+				}
+			],
+			[
+				{},
+				{
+					"token": "attribute.value",
+					"switchTo": "@scriptWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "attribute.value",
+					"switchTo": "@scriptWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@scriptEmbedded",
+					"nextEmbedded": "text/javascript"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"scriptWithCustomType": [
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@scriptEmbedded.$S2",
+					"nextEmbedded": "$S2"
+				}
+			],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"scriptEmbedded": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[{}, ""]
+		],
+		"style": [
+			[{}, "attribute.name", "@styleAfterType"],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@styleEmbedded",
+					"nextEmbedded": "text/css"
+				}
+			],
+			[{}],
+			[
+				{},
+				[
+					"delimiter",
+					"tag",
+					{
+						"token": "delimiter",
+						"next": "@pop"
+					}
+				]
+			]
+		],
+		"styleAfterType": [
+			[{}, "delimiter", "@styleAfterTypeEquals"],
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@styleEmbedded",
+					"nextEmbedded": "text/css"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"styleAfterTypeEquals": [
+			[
+				{},
+				{
+					"token": "attribute.value",
+					"switchTo": "@styleWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "attribute.value",
+					"switchTo": "@styleWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@styleEmbedded",
+					"nextEmbedded": "text/css"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"styleWithCustomType": [
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@styleEmbedded.$S2",
+					"nextEmbedded": "$S2"
+				}
+			],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"styleEmbedded": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[{}, ""]
+		]
+	}
+}

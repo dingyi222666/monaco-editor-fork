@@ -1,0 +1,249 @@
+{
+	"defaultToken": "invalid",
+	"tokenPostfix": ".dart",
+	"keywords": [
+		"abstract",
+		"dynamic",
+		"implements",
+		"show",
+		"as",
+		"else",
+		"import",
+		"static",
+		"assert",
+		"enum",
+		"in",
+		"super",
+		"async",
+		"export",
+		"interface",
+		"switch",
+		"await",
+		"extends",
+		"is",
+		"sync",
+		"break",
+		"external",
+		"library",
+		"this",
+		"case",
+		"factory",
+		"mixin",
+		"throw",
+		"catch",
+		"false",
+		"new",
+		"true",
+		"class",
+		"final",
+		"null",
+		"try",
+		"const",
+		"finally",
+		"on",
+		"typedef",
+		"continue",
+		"for",
+		"operator",
+		"var",
+		"covariant",
+		"Function",
+		"part",
+		"void",
+		"default",
+		"get",
+		"rethrow",
+		"while",
+		"deferred",
+		"hide",
+		"return",
+		"with",
+		"do",
+		"if",
+		"set",
+		"yield"
+	],
+	"typeKeywords": ["int", "double", "String", "bool"],
+	"operators": [
+		"+",
+		"-",
+		"*",
+		"/",
+		"~/",
+		"%",
+		"++",
+		"--",
+		"==",
+		"!=",
+		">",
+		"<",
+		">=",
+		"<=",
+		"=",
+		"-=",
+		"/=",
+		"%=",
+		">>=",
+		"^=",
+		"+=",
+		"*=",
+		"~/=",
+		"<<=",
+		"&=",
+		"!=",
+		"||",
+		"&&",
+		"&",
+		"|",
+		"^",
+		"~",
+		"<<",
+		">>",
+		"!",
+		">>>",
+		"??",
+		"?",
+		":",
+		"|="
+	],
+	"symbols": {},
+	"escapes": {},
+	"digits": {},
+	"octaldigits": {},
+	"binarydigits": {},
+	"hexdigits": {},
+	"regexpctl": {},
+	"regexpesc": {},
+	"tokenizer": {
+		"root": [
+			[{}, "delimiter.bracket"],
+			{
+				"include": "common"
+			}
+		],
+		"common": [
+			[
+				{},
+				{
+					"cases": {
+						"@typeKeywords": "type.identifier",
+						"@keywords": "keyword",
+						"@default": "identifier"
+					}
+				}
+			],
+			[{}, "type.identifier"],
+			{
+				"include": "@whitespace"
+			},
+			[
+				{},
+				{
+					"token": "regexp",
+					"bracket": "@open",
+					"next": "@regexp"
+				}
+			],
+			[{}, "annotation"],
+			[{}, "@brackets"],
+			[{}, "@brackets"],
+			[{}, "delimiter"],
+			[
+				{},
+				{
+					"cases": {
+						"@operators": "delimiter",
+						"@default": ""
+					}
+				}
+			],
+			[{}, "number.float"],
+			[{}, "number.float"],
+			[{}, "number.hex"],
+			[{}, "number.octal"],
+			[{}, "number.binary"],
+			[{}, "number"],
+			[{}, "delimiter"],
+			[{}, "string.invalid"],
+			[{}, "string.invalid"],
+			[{}, "string", "@string_double"],
+			[{}, "string", "@string_single"]
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment.doc", "@jsdoc"],
+			[{}, "comment", "@comment"],
+			[{}, "comment.doc"],
+			[{}, "comment"]
+		],
+		"comment": [
+			[{}, "comment"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"]
+		],
+		"jsdoc": [
+			[{}, "comment.doc"],
+			[{}, "comment.doc", "@pop"],
+			[{}, "comment.doc"]
+		],
+		"regexp": [
+			[{}, ["regexp.escape.control", "regexp.escape.control", "regexp.escape.control"]],
+			[
+				{},
+				[
+					"regexp.escape.control",
+					{
+						"token": "regexp.escape.control",
+						"next": "@regexrange"
+					}
+				]
+			],
+			[{}, ["regexp.escape.control", "regexp.escape.control"]],
+			[{}, "regexp.escape.control"],
+			[{}, "regexp.escape.control"],
+			[{}, "regexp"],
+			[{}, "regexp.escape"],
+			[{}, "regexp.invalid"],
+			[
+				{},
+				[
+					{
+						"token": "regexp",
+						"bracket": "@close",
+						"next": "@pop"
+					},
+					"keyword.other"
+				]
+			]
+		],
+		"regexrange": [
+			[{}, "regexp.escape.control"],
+			[{}, "regexp.invalid"],
+			[{}, "regexp.escape"],
+			[{}, "regexp"],
+			[
+				{},
+				{
+					"token": "regexp.escape.control",
+					"next": "@pop",
+					"bracket": "@close"
+				}
+			]
+		],
+		"string_double": [
+			[{}, "string"],
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"],
+			[{}, "identifier"]
+		],
+		"string_single": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"],
+			[{}, "identifier"]
+		]
+	}
+}

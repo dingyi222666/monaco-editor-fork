@@ -1,0 +1,410 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": "",
+	"ignoreCase": true,
+	"keywords": [
+		"apply",
+		"autoescape",
+		"block",
+		"deprecated",
+		"do",
+		"embed",
+		"extends",
+		"flush",
+		"for",
+		"from",
+		"if",
+		"import",
+		"include",
+		"macro",
+		"sandbox",
+		"set",
+		"use",
+		"verbatim",
+		"with",
+		"endapply",
+		"endautoescape",
+		"endblock",
+		"endembed",
+		"endfor",
+		"endif",
+		"endmacro",
+		"endsandbox",
+		"endset",
+		"endwith",
+		"true",
+		"false"
+	],
+	"tokenizer": {
+		"root": [
+			[{}],
+			[{}, "comment.twig", "@commentState"],
+			[{}, "delimiter.twig", "@blockState"],
+			[{}, "delimiter.twig", "@variableState"],
+			[{}, "metatag.html", "@doctype"],
+			[{}, "comment.html", "@comment"],
+			[{}, ["delimiter.html", "tag.html", "", "delimiter.html"]],
+			[
+				{},
+				[
+					"delimiter.html",
+					{
+						"token": "tag.html",
+						"next": "@script"
+					}
+				]
+			],
+			[
+				{},
+				[
+					"delimiter.html",
+					{
+						"token": "tag.html",
+						"next": "@style"
+					}
+				]
+			],
+			[
+				{},
+				[
+					"delimiter.html",
+					{
+						"token": "tag.html",
+						"next": "@otherTag"
+					}
+				]
+			],
+			[
+				{},
+				[
+					"delimiter.html",
+					{
+						"token": "tag.html",
+						"next": "@otherTag"
+					}
+				]
+			],
+			[{}, "delimiter.html"],
+			[{}]
+		],
+		"commentState": [
+			[{}, "comment.twig", "@pop"],
+			[{}, "comment.twig"]
+		],
+		"blockState": [
+			[{}, "delimiter.twig", "@pop"],
+			[{}],
+			[
+				{},
+				[
+					"keyword.twig",
+					"",
+					{
+						"token": "delimiter.twig",
+						"next": "@rawDataState"
+					}
+				]
+			],
+			{
+				"include": "expression"
+			}
+		],
+		"rawDataState": [
+			[
+				{},
+				[
+					"delimiter.twig",
+					"",
+					"keyword.twig",
+					"",
+					{
+						"token": "delimiter.twig",
+						"next": "@popall"
+					}
+				]
+			],
+			[{}, "string.twig"]
+		],
+		"variableState": [
+			[{}, "delimiter.twig", "@pop"],
+			{
+				"include": "expression"
+			}
+		],
+		"stringState": [
+			[{}, "string.twig", "@pop"],
+			[{}, "string.twig", "@interpolationState"],
+			[{}, "string.twig"]
+		],
+		"interpolationState": [
+			[{}, "string.twig", "@pop"],
+			{
+				"include": "expression"
+			}
+		],
+		"expression": [
+			[{}],
+			[{}, "operators.twig"],
+			[{}, ["operators.twig", ""]],
+			[{}, "operators.twig"],
+			[{}, ["operators.twig", ""]],
+			[{}, ["operators.twig", ""]],
+			[{}, ["operators.twig", ""]],
+			[{}, "operators.twig"],
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword.twig",
+						"@default": "variable.twig"
+					}
+				}
+			],
+			[{}, "number.twig"],
+			[{}, "delimiter.twig"],
+			[{}, "string.twig"],
+			[{}, "string.twig", "@stringState"],
+			[{}, "operators.twig"],
+			[{}, "operators.twig"]
+		],
+		"doctype": [
+			[{}, "metatag.content.html"],
+			[{}, "metatag.html", "@pop"]
+		],
+		"comment": [
+			[{}, "comment.html", "@pop"],
+			[{}, "comment.content.html"],
+			[{}, "comment.content.html"]
+		],
+		"otherTag": [
+			[{}, "delimiter.html", "@pop"],
+			[{}, "attribute.value.html"],
+			[{}, "attribute.value.html"],
+			[{}, "attribute.name.html"],
+			[{}, "delimiter.html"],
+			[{}]
+		],
+		"script": [
+			[{}, "attribute.name.html", "@scriptAfterType"],
+			[{}, "attribute.value.html"],
+			[{}, "attribute.value.html"],
+			[{}, "attribute.name.html"],
+			[{}, "delimiter.html"],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@scriptEmbedded",
+					"nextEmbedded": "text/javascript"
+				}
+			],
+			[{}],
+			[
+				{},
+				[
+					"delimiter.html",
+					"tag.html",
+					{
+						"token": "delimiter.html",
+						"next": "@pop"
+					}
+				]
+			]
+		],
+		"scriptAfterType": [
+			[{}, "delimiter.html", "@scriptAfterTypeEquals"],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@scriptEmbedded",
+					"nextEmbedded": "text/javascript"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"scriptAfterTypeEquals": [
+			[
+				{},
+				{
+					"token": "attribute.value.html",
+					"switchTo": "@scriptWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "attribute.value.html",
+					"switchTo": "@scriptWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@scriptEmbedded",
+					"nextEmbedded": "text/javascript"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"scriptWithCustomType": [
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@scriptEmbedded.$S2",
+					"nextEmbedded": "$S2"
+				}
+			],
+			[{}, "attribute.value.html"],
+			[{}, "attribute.value.html"],
+			[{}, "attribute.name.html"],
+			[{}, "delimiter.html"],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"scriptEmbedded": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[{}, ""]
+		],
+		"style": [
+			[{}, "attribute.name.html", "@styleAfterType"],
+			[{}, "attribute.value.html"],
+			[{}, "attribute.value.html"],
+			[{}, "attribute.name.html"],
+			[{}, "delimiter.html"],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@styleEmbedded",
+					"nextEmbedded": "text/css"
+				}
+			],
+			[{}],
+			[
+				{},
+				[
+					"delimiter.html",
+					"tag.html",
+					{
+						"token": "delimiter.html",
+						"next": "@pop"
+					}
+				]
+			]
+		],
+		"styleAfterType": [
+			[{}, "delimiter.html", "@styleAfterTypeEquals"],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@styleEmbedded",
+					"nextEmbedded": "text/css"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"styleAfterTypeEquals": [
+			[
+				{},
+				{
+					"token": "attribute.value.html",
+					"switchTo": "@styleWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "attribute.value.html",
+					"switchTo": "@styleWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@styleEmbedded",
+					"nextEmbedded": "text/css"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"styleWithCustomType": [
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@styleEmbedded.$S2",
+					"nextEmbedded": "$S2"
+				}
+			],
+			[{}, "attribute.value.html"],
+			[{}, "attribute.value.html"],
+			[{}, "attribute.name.html"],
+			[{}, "delimiter.html"],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"styleEmbedded": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[{}, ""]
+		]
+	}
+}

@@ -1,0 +1,185 @@
+{
+	"tokenPostfix": ".yaml",
+	"brackets": [
+		{
+			"token": "delimiter.bracket",
+			"open": "{",
+			"close": "}"
+		},
+		{
+			"token": "delimiter.square",
+			"open": "[",
+			"close": "]"
+		}
+	],
+	"keywords": ["true", "True", "TRUE", "false", "False", "FALSE", "null", "Null", "Null", "~"],
+	"numberInteger": {},
+	"numberFloat": {},
+	"numberOctal": {},
+	"numberHex": {},
+	"numberInfinity": {},
+	"numberNaN": {},
+	"numberDate": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			{
+				"include": "@whitespace"
+			},
+			{
+				"include": "@comment"
+			},
+			[{}, "meta.directive"],
+			[{}, "operators.directivesEnd"],
+			[{}, "operators.documentEnd"],
+			[{}, "operators"],
+			{
+				"include": "@anchor"
+			},
+			{
+				"include": "@tagHandle"
+			},
+			{
+				"include": "@flowCollections"
+			},
+			{
+				"include": "@blockStyle"
+			},
+			[{}, "number"],
+			[{}, "number.float"],
+			[{}, "number.octal"],
+			[{}, "number.hex"],
+			[{}, "number.infinity"],
+			[{}, "number.nan"],
+			[{}, "number.date"],
+			[{}, ["type", "white", "operators", "white"]],
+			{
+				"include": "@flowScalars"
+			},
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@default": "string"
+					}
+				}
+			]
+		],
+		"object": [
+			{
+				"include": "@whitespace"
+			},
+			{
+				"include": "@comment"
+			},
+			[{}, "@brackets", "@pop"],
+			[{}, "delimiter.comma"],
+			[{}, "operators"],
+			[{}, "type"],
+			{
+				"include": "@flowCollections"
+			},
+			{
+				"include": "@flowScalars"
+			},
+			{
+				"include": "@tagHandle"
+			},
+			{
+				"include": "@anchor"
+			},
+			{
+				"include": "@flowNumber"
+			},
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@default": "string"
+					}
+				}
+			]
+		],
+		"array": [
+			{
+				"include": "@whitespace"
+			},
+			{
+				"include": "@comment"
+			},
+			[{}, "@brackets", "@pop"],
+			[{}, "delimiter.comma"],
+			{
+				"include": "@flowCollections"
+			},
+			{
+				"include": "@flowScalars"
+			},
+			{
+				"include": "@tagHandle"
+			},
+			{
+				"include": "@anchor"
+			},
+			{
+				"include": "@flowNumber"
+			},
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@default": "string"
+					}
+				}
+			]
+		],
+		"multiString": [[{}, "string", "@multiStringContinued.$1"]],
+		"multiStringContinued": [
+			[
+				{},
+				{
+					"cases": {
+						"$1==$S2": "string",
+						"@default": {
+							"token": "@rematch",
+							"next": "@popall"
+						}
+					}
+				}
+			]
+		],
+		"whitespace": [[{}, "white"]],
+		"comment": [[{}, "comment"]],
+		"flowCollections": [
+			[{}, "@brackets", "@array"],
+			[{}, "@brackets", "@object"]
+		],
+		"flowScalars": [
+			[{}, "string.invalid"],
+			[{}, "string.invalid"],
+			[{}, "string"],
+			[{}, "string", "@doubleQuotedString"]
+		],
+		"doubleQuotedString": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"]
+		],
+		"blockStyle": [[{}, "operators", "@multiString"]],
+		"flowNumber": [
+			[{}, "number"],
+			[{}, "number.float"],
+			[{}, "number.octal"],
+			[{}, "number.hex"],
+			[{}, "number.infinity"],
+			[{}, "number.nan"],
+			[{}, "number.date"]
+		],
+		"tagHandle": [[{}, "tag"]],
+		"anchor": [[{}, "namespace"]]
+	}
+}

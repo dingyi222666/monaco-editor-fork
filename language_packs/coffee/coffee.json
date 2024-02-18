@@ -1,0 +1,231 @@
+{
+	"defaultToken": "",
+	"ignoreCase": true,
+	"tokenPostfix": ".coffee",
+	"brackets": [
+		{
+			"open": "{",
+			"close": "}",
+			"token": "delimiter.curly"
+		},
+		{
+			"open": "[",
+			"close": "]",
+			"token": "delimiter.square"
+		},
+		{
+			"open": "(",
+			"close": ")",
+			"token": "delimiter.parenthesis"
+		}
+	],
+	"regEx": {},
+	"keywords": [
+		"and",
+		"or",
+		"is",
+		"isnt",
+		"not",
+		"on",
+		"yes",
+		"@",
+		"no",
+		"off",
+		"true",
+		"false",
+		"null",
+		"this",
+		"new",
+		"delete",
+		"typeof",
+		"in",
+		"instanceof",
+		"return",
+		"throw",
+		"break",
+		"continue",
+		"debugger",
+		"if",
+		"else",
+		"switch",
+		"for",
+		"while",
+		"do",
+		"try",
+		"catch",
+		"finally",
+		"class",
+		"extends",
+		"super",
+		"undefined",
+		"then",
+		"unless",
+		"until",
+		"loop",
+		"of",
+		"by",
+		"when"
+	],
+	"symbols": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			[{}, "variable.predefined"],
+			[
+				{},
+				{
+					"cases": {
+						"this": "variable.predefined",
+						"@keywords": {
+							"token": "keyword.$0"
+						},
+						"@default": ""
+					}
+				}
+			],
+			[{}, ""],
+			[{}, "comment", "@comment"],
+			[{}, "comment"],
+			[
+				"///",
+				{
+					"token": "regexp",
+					"next": "@hereregexp"
+				}
+			],
+			[{}, ["", "regexp"]],
+			[{}, ["@brackets", "", "regexp"]],
+			[{}, ["delimiter", "", "regexp"]],
+			[{}, ["delimiter", "", "regexp"]],
+			[{}, ["delimiter", "", "regexp"]],
+			[{}, ["@brackets", "", "regexp"]],
+			[{}, ["delimiter", "", "regexp"]],
+			[{}, ["delimiter", "", "regexp"]],
+			[{}, ["delimiter", "", "regexp"]],
+			[{}, ["delimiter", "", "regexp"]],
+			[{}, ["@brackets", "", "regexp"]],
+			[{}, ["", "", "regexp"]],
+			[
+				{},
+				{
+					"cases": {
+						"$S2==interpolatedstring": {
+							"token": "string",
+							"next": "@pop"
+						},
+						"@default": "@brackets"
+					}
+				}
+			],
+			[{}, "@brackets"],
+			[{}, "delimiter"],
+			[{}, "number.float"],
+			[{}, "number.float"],
+			[{}, "number.hex"],
+			[{}, "number.octal"],
+			[{}, "number"],
+			[{}, "delimiter"],
+			[{}, "string", "@herestring.\"\"\""],
+			[{}, "string", "@herestring.'''"],
+			[
+				{},
+				{
+					"cases": {
+						"@eos": "string",
+						"@default": {
+							"token": "string",
+							"next": "@string.\""
+						}
+					}
+				}
+			],
+			[
+				{},
+				{
+					"cases": {
+						"@eos": "string",
+						"@default": {
+							"token": "string",
+							"next": "@string.'"
+						}
+					}
+				}
+			]
+		],
+		"string": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string.escape.invalid"],
+			[
+				{},
+				{
+					"cases": {
+						"$S2==\"": {
+							"token": "string",
+							"next": "root.interpolatedstring"
+						},
+						"@default": "string"
+					}
+				}
+			],
+			[
+				{},
+				{
+					"cases": {
+						"$#==$S2": {
+							"token": "string",
+							"next": "@pop"
+						},
+						"@default": "string"
+					}
+				}
+			],
+			[{}, "string"]
+		],
+		"herestring": [
+			[
+				{},
+				{
+					"cases": {
+						"$1==$S2": {
+							"token": "string",
+							"next": "@pop"
+						},
+						"@default": "string"
+					}
+				}
+			],
+			[{}, "string"],
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"next": "root.interpolatedstring"
+				}
+			],
+			[{}, "string"]
+		],
+		"comment": [
+			[{}, "comment"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"]
+		],
+		"hereregexp": [
+			[{}, "regexp"],
+			[{}, "regexp"],
+			[{}, "comment"],
+			[
+				"///[igm]*",
+				{
+					"token": "regexp",
+					"next": "@pop"
+				}
+			],
+			[{}, "regexp"]
+		]
+	}
+}

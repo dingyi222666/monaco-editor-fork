@@ -1,0 +1,43 @@
+{
+	"keywords": [],
+	"typeKeywords": [],
+	"tokenPostfix": ".csp",
+	"operators": [],
+	"symbols": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"],
+			[{}, "string.quote"]
+		]
+	}
+}

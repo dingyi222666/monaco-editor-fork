@@ -1,0 +1,254 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".md",
+	"control": {},
+	"noncontrol": {},
+	"escapes": {},
+	"jsescapes": {},
+	"empty": [
+		"area",
+		"base",
+		"basefont",
+		"br",
+		"col",
+		"frame",
+		"hr",
+		"img",
+		"input",
+		"isindex",
+		"link",
+		"meta",
+		"param"
+	],
+	"tokenizer": {
+		"root": [
+			[{}, "@rematch", "@table_header"],
+			[{}, ["white", "keyword", "keyword", "keyword"]],
+			[{}, "keyword"],
+			[{}, "meta.separator"],
+			[{}, "comment"],
+			[{}, "keyword"],
+			[{}, "string"],
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@codeblock"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@codeblockgh",
+					"nextEmbedded": "$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@codeblock"
+				}
+			],
+			{
+				"include": "@linecontent"
+			}
+		],
+		"table_header": [
+			{
+				"include": "@table_common"
+			},
+			[{}, "keyword.table.header"]
+		],
+		"table_body": [
+			{
+				"include": "@table_common"
+			},
+			{
+				"include": "@linecontent"
+			}
+		],
+		"table_common": [
+			[
+				{},
+				{
+					"token": "keyword",
+					"switchTo": "table_body"
+				}
+			],
+			[{}, "keyword.table.left"],
+			[{}, "@rematch", "@pop"],
+			[{}, "@rematch", "@pop"],
+			[
+				{},
+				{
+					"cases": {
+						"@eos": "keyword.table.right",
+						"@default": "keyword.table.middle"
+					}
+				}
+			]
+		],
+		"codeblock": [
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@pop"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@pop"
+				}
+			],
+			[{}, "variable.source"]
+		],
+		"codeblockgh": [
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[{}, "variable.source"]
+		],
+		"linecontent": [
+			[{}, "string.escape"],
+			[{}, "escape"],
+			[{}, "strong"],
+			[{}, "strong"],
+			[{}, "emphasis"],
+			[{}, "emphasis"],
+			[{}, "variable"],
+			[{}, "string.target"],
+			[{}, ["string.link", "", "string.link"]],
+			[{}, "string.link"],
+			{
+				"include": "html"
+			}
+		],
+		"html": [
+			[{}, "tag"],
+			[
+				{},
+				{
+					"cases": {
+						"@empty": {
+							"token": "tag",
+							"next": "@tag.$1"
+						},
+						"@default": {
+							"token": "tag",
+							"next": "@tag.$1"
+						}
+					}
+				}
+			],
+			[
+				{},
+				{
+					"token": "tag"
+				}
+			],
+			[{}, "comment", "@comment"]
+		],
+		"comment": [
+			[{}, "comment.content"],
+			[{}, "comment", "@pop"],
+			[{}, "comment.content.invalid"],
+			[{}, "comment.content"]
+		],
+		"tag": [
+			[{}, "white"],
+			[
+				{},
+				[
+					"attribute.name.html",
+					"delimiter.html",
+					"string.html",
+					{
+						"token": "string.html",
+						"switchTo": "@tag.$S2.$4"
+					},
+					"string.html"
+				]
+			],
+			[
+				{},
+				[
+					"attribute.name.html",
+					"delimiter.html",
+					"string.html",
+					{
+						"token": "string.html",
+						"switchTo": "@tag.$S2.$4"
+					},
+					"string.html"
+				]
+			],
+			[{}, ["attribute.name.html", "delimiter.html", "string.html"]],
+			[{}, "attribute.name.html"],
+			[{}, "tag", "@pop"],
+			[
+				{},
+				{
+					"cases": {
+						"$S2==style": {
+							"token": "tag",
+							"switchTo": "embeddedStyle",
+							"nextEmbedded": "text/css"
+						},
+						"$S2==script": {
+							"cases": {
+								"$S3": {
+									"token": "tag",
+									"switchTo": "embeddedScript",
+									"nextEmbedded": "$S3"
+								},
+								"@default": {
+									"token": "tag",
+									"switchTo": "embeddedScript",
+									"nextEmbedded": "text/javascript"
+								}
+							}
+						},
+						"@default": {
+							"token": "tag",
+							"next": "@pop"
+						}
+					}
+				}
+			]
+		],
+		"embeddedStyle": [
+			[{}, ""],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[{}, ""]
+		],
+		"embeddedScript": [
+			[{}, ""],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[{}, ""]
+		]
+	}
+}

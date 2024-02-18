@@ -1,0 +1,217 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": "",
+	"builtinTags": [
+		"if",
+		"else",
+		"elseif",
+		"endif",
+		"render",
+		"assign",
+		"capture",
+		"endcapture",
+		"case",
+		"endcase",
+		"comment",
+		"endcomment",
+		"cycle",
+		"decrement",
+		"for",
+		"endfor",
+		"include",
+		"increment",
+		"layout",
+		"raw",
+		"endraw",
+		"render",
+		"tablerow",
+		"endtablerow",
+		"unless",
+		"endunless"
+	],
+	"builtinFilters": [
+		"abs",
+		"append",
+		"at_least",
+		"at_most",
+		"capitalize",
+		"ceil",
+		"compact",
+		"date",
+		"default",
+		"divided_by",
+		"downcase",
+		"escape",
+		"escape_once",
+		"first",
+		"floor",
+		"join",
+		"json",
+		"last",
+		"lstrip",
+		"map",
+		"minus",
+		"modulo",
+		"newline_to_br",
+		"plus",
+		"prepend",
+		"remove",
+		"remove_first",
+		"replace",
+		"replace_first",
+		"reverse",
+		"round",
+		"rstrip",
+		"size",
+		"slice",
+		"sort",
+		"sort_natural",
+		"split",
+		"strip",
+		"strip_html",
+		"strip_newlines",
+		"times",
+		"truncate",
+		"truncatewords",
+		"uniq",
+		"upcase",
+		"url_decode",
+		"url_encode",
+		"where"
+	],
+	"constants": ["true", "false"],
+	"operators": ["==", "!=", ">", "<", ">=", "<="],
+	"symbol": {},
+	"identifier": {},
+	"tokenizer": {
+		"root": [
+			[{}, "comment.start.liquid", "@comment"],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@liquidState.root"
+				}
+			],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@liquidState.root"
+				}
+			],
+			[{}, ["delimiter.html", "tag.html", "delimiter.html"]],
+			[
+				{},
+				[
+					"delimiter.html",
+					{
+						"token": "tag.html",
+						"next": "@otherTag"
+					}
+				]
+			],
+			[
+				{},
+				[
+					"delimiter.html",
+					{
+						"token": "tag.html",
+						"next": "@otherTag"
+					}
+				]
+			],
+			[{}, "delimiter.html"],
+			[{}, "delimiter.html"],
+			[{}]
+		],
+		"comment": [
+			[{}, "comment.end.liquid", "@pop"],
+			[{}, "comment.content.liquid"]
+		],
+		"otherTag": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@liquidState.otherTag"
+				}
+			],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@liquidState.otherTag"
+				}
+			],
+			[{}, "delimiter.html", "@pop"],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[{}]
+		],
+		"liquidState": [
+			[{}, "delimiter.output.liquid"],
+			[
+				{},
+				{
+					"token": "delimiter.output.liquid",
+					"switchTo": "@$S2.$S3"
+				}
+			],
+			[{}, "delimiter.tag.liquid"],
+			[{}, "delimiter.tag.liquid", "@liquidRaw"],
+			[
+				{},
+				{
+					"token": "delimiter.tag.liquid",
+					"switchTo": "@$S2.$S3"
+				}
+			],
+			{
+				"include": "liquidRoot"
+			}
+		],
+		"liquidRaw": [
+			[{}],
+			[{}, "delimiter.tag.liquid"],
+			[{}],
+			[
+				{},
+				{
+					"token": "delimiter.tag.liquid",
+					"next": "@root"
+				}
+			]
+		],
+		"liquidRoot": [
+			[{}, "number.liquid"],
+			[{}, "string.liquid"],
+			[{}, "string.liquid"],
+			[{}],
+			[
+				{},
+				{
+					"cases": {
+						"@operators": "operator.liquid",
+						"@default": ""
+					}
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"cases": {
+						"@constants": "keyword.liquid",
+						"@builtinFilters": "predefined.liquid",
+						"@builtinTags": "predefined.liquid",
+						"@default": "variable.liquid"
+					}
+				}
+			],
+			[{}, "variable.liquid"]
+		]
+	}
+}

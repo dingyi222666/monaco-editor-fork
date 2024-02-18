@@ -1,0 +1,149 @@
+{
+	"defaultToken": "invalid",
+	"tokenPostfix": ".gql",
+	"keywords": [
+		"null",
+		"true",
+		"false",
+		"query",
+		"mutation",
+		"subscription",
+		"extend",
+		"schema",
+		"directive",
+		"scalar",
+		"type",
+		"interface",
+		"union",
+		"enum",
+		"input",
+		"implements",
+		"fragment",
+		"on"
+	],
+	"typeKeywords": ["Int", "Float", "String", "Boolean", "ID"],
+	"directiveLocations": [
+		"SCHEMA",
+		"SCALAR",
+		"OBJECT",
+		"FIELD_DEFINITION",
+		"ARGUMENT_DEFINITION",
+		"INTERFACE",
+		"UNION",
+		"ENUM",
+		"ENUM_VALUE",
+		"INPUT_OBJECT",
+		"INPUT_FIELD_DEFINITION",
+		"QUERY",
+		"MUTATION",
+		"SUBSCRIPTION",
+		"FIELD",
+		"FRAGMENT_DEFINITION",
+		"FRAGMENT_SPREAD",
+		"INLINE_FRAGMENT",
+		"VARIABLE_DEFINITION"
+	],
+	"operators": ["=", "!", "?", ":", "&", "|"],
+	"symbols": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@default": "key.identifier"
+					}
+				}
+			],
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@default": "argument.identifier"
+					}
+				}
+			],
+			[
+				{},
+				{
+					"cases": {
+						"@typeKeywords": "keyword",
+						"@default": "type.identifier"
+					}
+				}
+			],
+			{
+				"include": "@whitespace"
+			},
+			[{}, "@brackets"],
+			[
+				{},
+				{
+					"cases": {
+						"@operators": "operator",
+						"@default": ""
+					}
+				}
+			],
+			[
+				{},
+				{
+					"token": "annotation",
+					"log": "annotation token: $0"
+				}
+			],
+			[{}, "number.float"],
+			[{}, "number.hex"],
+			[{}, "number"],
+			[{}, "delimiter"],
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@mlstring",
+					"nextEmbedded": "markdown"
+				}
+			],
+			[{}, "string.invalid"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@open",
+					"next": "@string"
+				}
+			]
+		],
+		"mlstring": [
+			[{}, "string"],
+			[
+				"\"\"\"",
+				{
+					"token": "string",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			]
+		],
+		"string": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@close",
+					"next": "@pop"
+				}
+			]
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment"]
+		]
+	}
+}

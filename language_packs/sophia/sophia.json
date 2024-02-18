@@ -1,0 +1,183 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".aes",
+	"brackets": [
+		{
+			"token": "delimiter.curly",
+			"open": "{",
+			"close": "}"
+		},
+		{
+			"token": "delimiter.parenthesis",
+			"open": "(",
+			"close": ")"
+		},
+		{
+			"token": "delimiter.square",
+			"open": "[",
+			"close": "]"
+		},
+		{
+			"token": "delimiter.angle",
+			"open": "<",
+			"close": ">"
+		}
+	],
+	"keywords": [
+		"contract",
+		"library",
+		"entrypoint",
+		"function",
+		"stateful",
+		"state",
+		"hash",
+		"signature",
+		"tuple",
+		"list",
+		"address",
+		"string",
+		"bool",
+		"int",
+		"record",
+		"datatype",
+		"type",
+		"option",
+		"oracle",
+		"oracle_query",
+		"Call",
+		"Bits",
+		"Bytes",
+		"Oracle",
+		"String",
+		"Crypto",
+		"Address",
+		"Auth",
+		"Chain",
+		"None",
+		"Some",
+		"bits",
+		"bytes",
+		"event",
+		"let",
+		"map",
+		"private",
+		"public",
+		"true",
+		"false",
+		"var",
+		"if",
+		"else",
+		"throw"
+	],
+	"operators": [
+		"=",
+		">",
+		"<",
+		"!",
+		"~",
+		"?",
+		"::",
+		":",
+		"==",
+		"<=",
+		">=",
+		"!=",
+		"&&",
+		"||",
+		"++",
+		"--",
+		"+",
+		"-",
+		"*",
+		"/",
+		"&",
+		"|",
+		"^",
+		"%",
+		"<<",
+		">>",
+		">>>",
+		"+=",
+		"-=",
+		"*=",
+		"/=",
+		"&=",
+		"|=",
+		"^=",
+		"%=",
+		"<<=",
+		">>=",
+		">>>="
+	],
+	"symbols": {},
+	"escapes": {},
+	"integersuffix": {},
+	"floatsuffix": {},
+	"tokenizer": {
+		"root": [
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": {
+							"token": "keyword.$0"
+						},
+						"@default": "identifier"
+					}
+				}
+			],
+			{
+				"include": "@whitespace"
+			},
+			[{}, "annotation"],
+			[{}, "keyword"],
+			[{}, "keyword"],
+			[{}, "@brackets"],
+			[{}, "@brackets"],
+			[
+				{},
+				{
+					"cases": {
+						"@operators": "delimiter",
+						"@default": ""
+					}
+				}
+			],
+			[{}, "number.float"],
+			[{}, "number.float"],
+			[{}, "number.hex"],
+			[{}, "number.octal"],
+			[{}, "number.binary"],
+			[{}, "number"],
+			[{}, "number"],
+			[{}, "delimiter"],
+			[{}, "string.invalid"],
+			[{}, "string", "@string"],
+			[{}, "string"],
+			[{}, ["string", "string.escape", "string"]],
+			[{}, "string.invalid"]
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment.doc", "@doccomment"],
+			[{}, "comment", "@comment"],
+			[{}, "comment"]
+		],
+		"comment": [
+			[{}, "comment"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"]
+		],
+		"doccomment": [
+			[{}, "comment.doc"],
+			[{}, "comment.doc", "@pop"],
+			[{}, "comment.doc"]
+		],
+		"string": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"]
+		]
+	}
+}

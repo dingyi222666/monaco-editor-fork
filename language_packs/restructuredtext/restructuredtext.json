@@ -1,0 +1,221 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".rst",
+	"control": {},
+	"escapes": {},
+	"empty": [
+		"area",
+		"base",
+		"basefont",
+		"br",
+		"col",
+		"frame",
+		"hr",
+		"img",
+		"input",
+		"isindex",
+		"link",
+		"meta",
+		"param"
+	],
+	"alphanumerics": {},
+	"simpleRefNameWithoutBq": {},
+	"simpleRefName": {},
+	"phrase": {},
+	"citationName": {},
+	"blockLiteralStart": {},
+	"precedingChars": {},
+	"followingChars": {},
+	"punctuation": {},
+	"tokenizer": {
+		"root": [
+			[{}, "keyword"],
+			[{}, "keyword"],
+			[{}, "keyword", "@blankLineOfLiteralBlocks"],
+			[{}, "keyword", "@blankLineOfLiteralBlocks"],
+			{
+				"include": "@tables"
+			},
+			{
+				"include": "@explicitMarkupBlocks"
+			},
+			{
+				"include": "@inlineMarkup"
+			}
+		],
+		"explicitMarkupBlocks": [
+			{
+				"include": "@citations"
+			},
+			{
+				"include": "@footnotes"
+			},
+			[
+				{},
+				[
+					{
+						"token": "",
+						"next": "subsequentLines"
+					},
+					"keyword",
+					"",
+					""
+				]
+			],
+			[
+				{},
+				[
+					{
+						"token": "",
+						"next": "hyperlinks"
+					},
+					"",
+					"",
+					"string.link",
+					"",
+					"",
+					"string.link"
+				]
+			],
+			[
+				{},
+				[
+					{
+						"token": "",
+						"next": "subsequentLines"
+					},
+					"",
+					"",
+					"",
+					"string.link"
+				]
+			],
+			[{}, ["", "string.link"]],
+			[
+				{},
+				[
+					{
+						"token": "",
+						"next": "subsequentLines"
+					},
+					"",
+					"string.link",
+					"",
+					"keyword",
+					""
+				],
+				"@rawBlocks"
+			],
+			[{}, ["", "string.link", ""]],
+			[
+				{},
+				[
+					{
+						"token": "",
+						"next": "@comments"
+					},
+					"comment"
+				]
+			]
+		],
+		"inlineMarkup": [
+			{
+				"include": "@citationsReference"
+			},
+			{
+				"include": "@footnotesReference"
+			},
+			[{}, ["string.link", ""]],
+			[{}, ["", "string.link", "", "string.link", "", "", ""]],
+			[{}, "strong"],
+			[{}, "emphasis"],
+			[{}, ["", "keyword", ""]],
+			[{}, ["", "keyword"]],
+			[{}, ["", "keyword", "", "", ""]],
+			[{}, ["", "", "", "keyword", ""]],
+			[{}, ""],
+			[{}, ["", "string.link", ""]]
+		],
+		"citations": [
+			[
+				{},
+				[
+					{
+						"token": "",
+						"next": "@subsequentLines"
+					},
+					"string.link",
+					"",
+					""
+				]
+			]
+		],
+		"citationsReference": [[{}, ["", "string.link", ""]]],
+		"footnotes": [
+			[
+				{},
+				[
+					{
+						"token": "",
+						"next": "@subsequentLines"
+					},
+					"string.link",
+					""
+				]
+			],
+			[
+				{},
+				[
+					{
+						"token": "",
+						"next": "@subsequentLines"
+					},
+					"string.link",
+					"",
+					""
+				]
+			],
+			[
+				{},
+				[
+					{
+						"token": "",
+						"next": "@subsequentLines"
+					},
+					"string.link",
+					"",
+					""
+				]
+			]
+		],
+		"footnotesReference": [
+			[{}, ["", "string.link", "", ""]],
+			[{}, ["", "string.link", "", ""]],
+			[{}, ["", "string.link", "", ""]]
+		],
+		"blankLineOfLiteralBlocks": [
+			[{}, "", "@subsequentLinesOfLiteralBlocks"],
+			[{}, "", "@pop"]
+		],
+		"subsequentLinesOfLiteralBlocks": [
+			[{}, ["keyword", ""]],
+			[{}, "", "@popall"]
+		],
+		"subsequentLines": [
+			[{}, ""],
+			[{}, "", "@pop"]
+		],
+		"hyperlinks": [
+			[{}, "string.link"],
+			[{}, "", "@pop"]
+		],
+		"comments": [
+			[{}, "comment"],
+			[{}, "", "@pop"]
+		],
+		"tables": [
+			[{}, "keyword"],
+			[{}, "keyword"]
+		]
+	}
+}

@@ -1,0 +1,315 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".mdx",
+	"control": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			[
+				{},
+				{
+					"token": "meta.content",
+					"next": "@frontmatter",
+					"nextEmbedded": "yaml"
+				}
+			],
+			[
+				{},
+				{
+					"token": "keyword",
+					"next": "@import",
+					"nextEmbedded": "js"
+				}
+			],
+			[
+				{},
+				{
+					"token": "keyword",
+					"next": "@export",
+					"nextEmbedded": "js"
+				}
+			],
+			[
+				{},
+				{
+					"token": "type.identifier",
+					"next": "@jsx"
+				}
+			],
+			[{}, "type.identifier"],
+			[
+				{},
+				[
+					{
+						"token": "white"
+					},
+					{
+						"token": "comment"
+					},
+					{
+						"token": "keyword",
+						"next": "@header"
+					}
+				]
+			],
+			[{}, ["white", "comment", "keyword", "white"]],
+			[{}, ["white", "comment", "number", "white"]],
+			[{}, ["white", "comment", "number", "white"]],
+			[{}, ["white", "comment", "keyword"]],
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@codeblock_backtick"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@codeblock_tilde"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@codeblock_highlight_backtick",
+					"nextEmbedded": "$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@codeblock_highlight_tilde",
+					"nextEmbedded": "$1"
+				}
+			],
+			[{}, ["white", "comment"]],
+			[{}, ["white", "comment"]],
+			{
+				"include": "content"
+			}
+		],
+		"content": [
+			[{}, ["", "string.link", "", "type.identifier", "string.link", ""]],
+			[{}, ["", "type.identifier", "", "string.link", ""]],
+			[{}, ["", "type.identifier", "", "type.identifier", ""]],
+			[{}, ["", "type.identifier", "", "string.link"]],
+			[{}, ["", "type.identifier", ""]],
+			[{}, "variable.source"],
+			[
+				{},
+				{
+					"token": "emphasis",
+					"next": "@emphasis_underscore"
+				}
+			],
+			[
+				{},
+				{
+					"token": "emphasis",
+					"next": "@emphasis_asterisk"
+				}
+			],
+			[
+				{},
+				{
+					"token": "strong",
+					"next": "@strong"
+				}
+			],
+			[
+				{},
+				{
+					"token": "delimiter.bracket",
+					"next": "@expression",
+					"nextEmbedded": "js"
+				}
+			]
+		],
+		"import": [
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			]
+		],
+		"expression": [
+			[
+				{},
+				{
+					"token": "delimiter.bracket",
+					"next": "@expression"
+				}
+			],
+			[
+				{},
+				{
+					"token": "delimiter.bracket",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			]
+		],
+		"export": [
+			[
+				{},
+				{
+					"token": "delimiter.bracket",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			]
+		],
+		"jsx": [
+			[{}, ""],
+			[{}, ["attribute.name", "operator", "string"]],
+			[{}, ["attribute.name", "operator", "string"]],
+			[{}, ["attribute.name"]],
+			[
+				{},
+				{
+					"token": "delimiter.bracket",
+					"next": "@expression",
+					"nextEmbedded": "js"
+				}
+			],
+			[
+				{},
+				{
+					"token": "type.identifier",
+					"next": "@pop"
+				}
+			]
+		],
+		"header": [
+			[
+				{},
+				{
+					"token": "keyword",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "content"
+			},
+			[
+				{},
+				{
+					"token": "keyword"
+				}
+			]
+		],
+		"strong": [
+			[
+				{},
+				{
+					"token": "strong",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "content"
+			},
+			[
+				{},
+				{
+					"token": "strong"
+				}
+			]
+		],
+		"emphasis_underscore": [
+			[
+				{},
+				{
+					"token": "emphasis",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "content"
+			},
+			[
+				{},
+				{
+					"token": "emphasis"
+				}
+			]
+		],
+		"emphasis_asterisk": [
+			[
+				{},
+				{
+					"token": "emphasis",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "content"
+			},
+			[
+				{},
+				{
+					"token": "emphasis"
+				}
+			]
+		],
+		"frontmatter": [
+			[
+				{},
+				{
+					"token": "meta.content",
+					"nextEmbedded": "@pop",
+					"next": "@pop"
+				}
+			]
+		],
+		"codeblock_highlight_backtick": [
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[{}, "variable.source"]
+		],
+		"codeblock_highlight_tilde": [
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[{}, "variable.source"]
+		],
+		"codeblock_backtick": [
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@pop"
+				}
+			],
+			[{}, "variable.source"]
+		],
+		"codeblock_tilde": [
+			[
+				{},
+				{
+					"token": "string",
+					"next": "@pop"
+				}
+			],
+			[{}, "variable.source"]
+		]
+	}
+}

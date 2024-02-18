@@ -1,0 +1,164 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".hcl",
+	"keywords": [
+		"var",
+		"local",
+		"path",
+		"for_each",
+		"any",
+		"string",
+		"number",
+		"bool",
+		"true",
+		"false",
+		"null",
+		"if ",
+		"else ",
+		"endif ",
+		"for ",
+		"in",
+		"endfor"
+	],
+	"operators": [
+		"=",
+		">=",
+		"<=",
+		"==",
+		"!=",
+		"+",
+		"-",
+		"*",
+		"/",
+		"%",
+		"&&",
+		"||",
+		"!",
+		"<",
+		">",
+		"?",
+		"...",
+		":"
+	],
+	"symbols": {},
+	"escapes": {},
+	"terraformFunctions": {},
+	"terraformMainBlocks": {},
+	"tokenizer": {
+		"root": [
+			[{}, ["type", "", "string", "", "string", "", "@brackets"]],
+			[{}, ["identifier", "", "string", "", "string", "", "@brackets"]],
+			[{}, ["identifier", "", "string", "", "operator", "", "@brackets"]],
+			{
+				"include": "@terraform"
+			}
+		],
+		"terraform": [
+			[{}, ["type", "@brackets"]],
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": {
+							"token": "keyword.$0"
+						},
+						"@default": "variable"
+					}
+				}
+			],
+			{
+				"include": "@whitespace"
+			},
+			{
+				"include": "@heredoc"
+			},
+			[{}, "@brackets"],
+			[{}, "@brackets"],
+			[
+				{},
+				{
+					"cases": {
+						"@operators": "operator",
+						"@default": ""
+					}
+				}
+			],
+			[{}, "number.float"],
+			[{}, "number.float"],
+			[{}, "number"],
+			[{}, "number"],
+			[{}, "delimiter"],
+			[{}, "string", "@string"],
+			[{}, "invalid"]
+		],
+		"heredoc": [
+			[
+				{},
+				{
+					"token": "string.heredoc.delimiter",
+					"next": "@heredocBody.$1"
+				}
+			]
+		],
+		"heredocBody": [
+			[
+				{},
+				{
+					"cases": {
+						"$1==$S2": [
+							{
+								"token": "string.heredoc.delimiter",
+								"next": "@popall"
+							}
+						],
+						"@default": "string.heredoc"
+					}
+				}
+			],
+			[{}, "string.heredoc"]
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment", "@comment"],
+			[{}, "comment"],
+			[{}, "comment"]
+		],
+		"comment": [
+			[{}, "comment"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"]
+		],
+		"string": [
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@stringExpression"
+				}
+			],
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@popall"]
+		],
+		"stringInsideExpression": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"]
+		],
+		"stringExpression": [
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@pop"
+				}
+			],
+			[{}, "string", "@stringInsideExpression"],
+			{
+				"include": "@terraform"
+			}
+		]
+	}
+}

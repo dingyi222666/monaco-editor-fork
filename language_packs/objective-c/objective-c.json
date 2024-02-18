@@ -1,0 +1,162 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".objective-c",
+	"keywords": [
+		"#import",
+		"#include",
+		"#define",
+		"#else",
+		"#endif",
+		"#if",
+		"#ifdef",
+		"#ifndef",
+		"#ident",
+		"#undef",
+		"@class",
+		"@defs",
+		"@dynamic",
+		"@encode",
+		"@end",
+		"@implementation",
+		"@interface",
+		"@package",
+		"@private",
+		"@protected",
+		"@property",
+		"@protocol",
+		"@public",
+		"@selector",
+		"@synthesize",
+		"__declspec",
+		"assign",
+		"auto",
+		"BOOL",
+		"break",
+		"bycopy",
+		"byref",
+		"case",
+		"char",
+		"Class",
+		"const",
+		"copy",
+		"continue",
+		"default",
+		"do",
+		"double",
+		"else",
+		"enum",
+		"extern",
+		"FALSE",
+		"false",
+		"float",
+		"for",
+		"goto",
+		"if",
+		"in",
+		"int",
+		"id",
+		"inout",
+		"IMP",
+		"long",
+		"nil",
+		"nonatomic",
+		"NULL",
+		"oneway",
+		"out",
+		"private",
+		"public",
+		"protected",
+		"readwrite",
+		"readonly",
+		"register",
+		"return",
+		"SEL",
+		"self",
+		"short",
+		"signed",
+		"sizeof",
+		"static",
+		"struct",
+		"super",
+		"switch",
+		"typedef",
+		"TRUE",
+		"true",
+		"union",
+		"unsigned",
+		"volatile",
+		"void",
+		"while"
+	],
+	"decpart": {},
+	"decimal": {},
+	"tokenizer": {
+		"root": [
+			{
+				"include": "@comments"
+			},
+			{
+				"include": "@whitespace"
+			},
+			{
+				"include": "@numbers"
+			},
+			{
+				"include": "@strings"
+			},
+			[{}, "delimiter"],
+			[{}, "@brackets"],
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@default": "identifier"
+					}
+				}
+			],
+			[{}, "operator"]
+		],
+		"whitespace": [[{}, "white"]],
+		"comments": [
+			["\\/\\*", "comment", "@comment"],
+			["\\/\\/+.*", "comment"]
+		],
+		"comment": [
+			["\\*\\/", "comment", "@pop"],
+			[".", "comment"]
+		],
+		"numbers": [
+			[{}, "number.hex"],
+			[
+				{},
+				{
+					"cases": {
+						"(\\d)*": "number",
+						"$0": "number.float"
+					}
+				}
+			]
+		],
+		"strings": [
+			[{}, "string.escape", "@popall"],
+			[{}, "string.escape", "@stringBody"],
+			[{}, "string.escape", "@popall"],
+			[{}, "string.escape", "@dblStringBody"]
+		],
+		"stringBody": [
+			[{}, "string", "@popall"],
+			[{}, "string"],
+			[{}, "string"],
+			[{}, "string.escape", "@popall"],
+			[{}, "string"]
+		],
+		"dblStringBody": [
+			[{}, "string", "@popall"],
+			[{}, "string"],
+			[{}, "string"],
+			[{}, "string.escape", "@popall"],
+			[{}, "string"]
+		]
+	}
+}

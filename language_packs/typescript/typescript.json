@@ -1,0 +1,285 @@
+{
+	"defaultToken": "invalid",
+	"tokenPostfix": ".ts",
+	"keywords": [
+		"abstract",
+		"any",
+		"as",
+		"asserts",
+		"bigint",
+		"boolean",
+		"break",
+		"case",
+		"catch",
+		"class",
+		"continue",
+		"const",
+		"constructor",
+		"debugger",
+		"declare",
+		"default",
+		"delete",
+		"do",
+		"else",
+		"enum",
+		"export",
+		"extends",
+		"false",
+		"finally",
+		"for",
+		"from",
+		"function",
+		"get",
+		"if",
+		"implements",
+		"import",
+		"in",
+		"infer",
+		"instanceof",
+		"interface",
+		"is",
+		"keyof",
+		"let",
+		"module",
+		"namespace",
+		"never",
+		"new",
+		"null",
+		"number",
+		"object",
+		"out",
+		"package",
+		"private",
+		"protected",
+		"public",
+		"override",
+		"readonly",
+		"require",
+		"global",
+		"return",
+		"satisfies",
+		"set",
+		"static",
+		"string",
+		"super",
+		"switch",
+		"symbol",
+		"this",
+		"throw",
+		"true",
+		"try",
+		"type",
+		"typeof",
+		"undefined",
+		"unique",
+		"unknown",
+		"var",
+		"void",
+		"while",
+		"with",
+		"yield",
+		"async",
+		"await",
+		"of"
+	],
+	"operators": [
+		"<=",
+		">=",
+		"==",
+		"!=",
+		"===",
+		"!==",
+		"=>",
+		"+",
+		"-",
+		"**",
+		"*",
+		"/",
+		"%",
+		"++",
+		"--",
+		"<<",
+		"</",
+		">>",
+		">>>",
+		"&",
+		"|",
+		"^",
+		"!",
+		"~",
+		"&&",
+		"||",
+		"??",
+		"?",
+		":",
+		"=",
+		"+=",
+		"-=",
+		"*=",
+		"**=",
+		"/=",
+		"%=",
+		"<<=",
+		">>=",
+		">>>=",
+		"&=",
+		"|=",
+		"^=",
+		"@"
+	],
+	"symbols": {},
+	"escapes": {},
+	"digits": {},
+	"octaldigits": {},
+	"binarydigits": {},
+	"hexdigits": {},
+	"regexpctl": {},
+	"regexpesc": {},
+	"tokenizer": {
+		"root": [
+			[{}, "delimiter.bracket"],
+			{
+				"include": "common"
+			}
+		],
+		"common": [
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@default": "identifier"
+					}
+				}
+			],
+			[{}, "type.identifier"],
+			{
+				"include": "@whitespace"
+			},
+			[
+				{},
+				{
+					"token": "regexp",
+					"bracket": "@open",
+					"next": "@regexp"
+				}
+			],
+			[{}, "@brackets"],
+			[{}, "@brackets"],
+			[{}, "delimiter"],
+			[
+				{},
+				{
+					"cases": {
+						"@operators": "delimiter",
+						"@default": ""
+					}
+				}
+			],
+			[{}, "number.float"],
+			[{}, "number.float"],
+			[{}, "number.hex"],
+			[{}, "number.octal"],
+			[{}, "number.binary"],
+			[{}, "number"],
+			[{}, "delimiter"],
+			[{}, "string.invalid"],
+			[{}, "string.invalid"],
+			[{}, "string", "@string_double"],
+			[{}, "string", "@string_single"],
+			[{}, "string", "@string_backtick"]
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment.doc", "@jsdoc"],
+			[{}, "comment", "@comment"],
+			[{}, "comment"]
+		],
+		"comment": [
+			[{}, "comment"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"]
+		],
+		"jsdoc": [
+			[{}, "comment.doc"],
+			[{}, "comment.doc", "@pop"],
+			[{}, "comment.doc"]
+		],
+		"regexp": [
+			[{}, ["regexp.escape.control", "regexp.escape.control", "regexp.escape.control"]],
+			[
+				{},
+				[
+					"regexp.escape.control",
+					{
+						"token": "regexp.escape.control",
+						"next": "@regexrange"
+					}
+				]
+			],
+			[{}, ["regexp.escape.control", "regexp.escape.control"]],
+			[{}, "regexp.escape.control"],
+			[{}, "regexp.escape.control"],
+			[{}, "regexp"],
+			[{}, "regexp.escape"],
+			[{}, "regexp.invalid"],
+			[
+				{},
+				[
+					{
+						"token": "regexp",
+						"bracket": "@close",
+						"next": "@pop"
+					},
+					"keyword.other"
+				]
+			]
+		],
+		"regexrange": [
+			[{}, "regexp.escape.control"],
+			[{}, "regexp.invalid"],
+			[{}, "regexp.escape"],
+			[{}, "regexp"],
+			[
+				{},
+				{
+					"token": "regexp.escape.control",
+					"next": "@pop",
+					"bracket": "@close"
+				}
+			]
+		],
+		"string_double": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"]
+		],
+		"string_single": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"]
+		],
+		"string_backtick": [
+			[
+				{},
+				{
+					"token": "delimiter.bracket",
+					"next": "@bracketCounting"
+				}
+			],
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"]
+		],
+		"bracketCounting": [
+			[{}, "delimiter.bracket", "@bracketCounting"],
+			[{}, "delimiter.bracket", "@pop"],
+			{
+				"include": "common"
+			}
+		]
+	}
+}

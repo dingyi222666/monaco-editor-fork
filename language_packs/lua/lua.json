@@ -1,0 +1,145 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".lua",
+	"keywords": [
+		"and",
+		"break",
+		"do",
+		"else",
+		"elseif",
+		"end",
+		"false",
+		"for",
+		"function",
+		"goto",
+		"if",
+		"in",
+		"local",
+		"nil",
+		"not",
+		"or",
+		"repeat",
+		"return",
+		"then",
+		"true",
+		"until",
+		"while"
+	],
+	"brackets": [
+		{
+			"token": "delimiter.bracket",
+			"open": "{",
+			"close": "}"
+		},
+		{
+			"token": "delimiter.array",
+			"open": "[",
+			"close": "]"
+		},
+		{
+			"token": "delimiter.parenthesis",
+			"open": "(",
+			"close": ")"
+		}
+	],
+	"operators": [
+		"+",
+		"-",
+		"*",
+		"/",
+		"%",
+		"^",
+		"#",
+		"==",
+		"~=",
+		"<=",
+		">=",
+		"<",
+		">",
+		"=",
+		";",
+		":",
+		",",
+		".",
+		"..",
+		"..."
+	],
+	"symbols": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": {
+							"token": "keyword.$0"
+						},
+						"@default": "identifier"
+					}
+				}
+			],
+			{
+				"include": "@whitespace"
+			},
+			[{}, ["delimiter", "", "key", "", "delimiter"]],
+			[{}, ["@brackets", "", "key", "", "delimiter"]],
+			[{}, "@brackets"],
+			[
+				{},
+				{
+					"cases": {
+						"@operators": "delimiter",
+						"@default": ""
+					}
+				}
+			],
+			[{}, "number.float"],
+			[{}, "number.hex"],
+			[{}, "number"],
+			[{}, "delimiter"],
+			[{}, "string.invalid"],
+			[{}, "string.invalid"],
+			[{}, "string", "@string.\""],
+			[{}, "string", "@string.'"]
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment", "@comment.$1"],
+			[{}, "comment"]
+		],
+		"comment": [
+			[{}, "comment"],
+			[
+				{},
+				{
+					"cases": {
+						"$1==$S2": {
+							"token": "comment",
+							"next": "@pop"
+						},
+						"@default": "comment"
+					}
+				}
+			],
+			[{}, "comment"]
+		],
+		"string": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[
+				{},
+				{
+					"cases": {
+						"$#==$S2": {
+							"token": "string",
+							"next": "@pop"
+						},
+						"@default": "string"
+					}
+				}
+			]
+		]
+	}
+}

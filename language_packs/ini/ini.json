@@ -1,0 +1,40 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".ini",
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			[{}, "metatag"],
+			[{}, ["key", "", "delimiter"]],
+			{
+				"include": "@whitespace"
+			},
+			[{}, "number"],
+			[{}, "string.invalid"],
+			[{}, "string.invalid"],
+			[{}, "string", "@string.\""],
+			[{}, "string", "@string.'"]
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment"]
+		],
+		"string": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[
+				{},
+				{
+					"cases": {
+						"$#==$S2": {
+							"token": "string",
+							"next": "@pop"
+						},
+						"@default": "string"
+					}
+				}
+			]
+		]
+	}
+}

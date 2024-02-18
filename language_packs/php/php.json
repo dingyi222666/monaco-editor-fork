@@ -1,0 +1,593 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": "",
+	"tokenizer": {
+		"root": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.root"
+				}
+			],
+			[{}, "metatag.html", "@doctype"],
+			[{}, "comment.html", "@comment"],
+			[{}, ["delimiter.html", "tag.html", "delimiter.html"]],
+			[
+				{},
+				[
+					"delimiter.html",
+					{
+						"token": "tag.html",
+						"next": "@script"
+					}
+				]
+			],
+			[
+				{},
+				[
+					"delimiter.html",
+					{
+						"token": "tag.html",
+						"next": "@style"
+					}
+				]
+			],
+			[
+				{},
+				[
+					"delimiter.html",
+					{
+						"token": "tag.html",
+						"next": "@otherTag"
+					}
+				]
+			],
+			[
+				{},
+				[
+					"delimiter.html",
+					{
+						"token": "tag.html",
+						"next": "@otherTag"
+					}
+				]
+			],
+			[{}, "delimiter.html"],
+			[{}]
+		],
+		"doctype": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.comment"
+				}
+			],
+			[{}, "metatag.content.html"],
+			[{}, "metatag.html", "@pop"]
+		],
+		"comment": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.comment"
+				}
+			],
+			[{}, "comment.html", "@pop"],
+			[{}, "comment.content.html"],
+			[{}, "comment.content.html"]
+		],
+		"otherTag": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.otherTag"
+				}
+			],
+			[{}, "delimiter.html", "@pop"],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[{}]
+		],
+		"script": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.script"
+				}
+			],
+			[{}, "attribute.name", "@scriptAfterType"],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@scriptEmbedded.text/javascript",
+					"nextEmbedded": "text/javascript"
+				}
+			],
+			[{}],
+			[
+				{},
+				[
+					"delimiter.html",
+					"tag.html",
+					{
+						"token": "delimiter.html",
+						"next": "@pop"
+					}
+				]
+			]
+		],
+		"scriptAfterType": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.scriptAfterType"
+				}
+			],
+			[{}, "delimiter", "@scriptAfterTypeEquals"],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@scriptEmbedded.text/javascript",
+					"nextEmbedded": "text/javascript"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"scriptAfterTypeEquals": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.scriptAfterTypeEquals"
+				}
+			],
+			[
+				{},
+				{
+					"token": "attribute.value",
+					"switchTo": "@scriptWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "attribute.value",
+					"switchTo": "@scriptWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@scriptEmbedded.text/javascript",
+					"nextEmbedded": "text/javascript"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"scriptWithCustomType": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.scriptWithCustomType.$S2"
+				}
+			],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@scriptEmbedded.$S2",
+					"nextEmbedded": "$S2"
+				}
+			],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"scriptEmbedded": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInEmbeddedState.scriptEmbedded.$S2",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			]
+		],
+		"style": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.style"
+				}
+			],
+			[{}, "attribute.name", "@styleAfterType"],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@styleEmbedded.text/css",
+					"nextEmbedded": "text/css"
+				}
+			],
+			[{}],
+			[
+				{},
+				[
+					"delimiter.html",
+					"tag.html",
+					{
+						"token": "delimiter.html",
+						"next": "@pop"
+					}
+				]
+			]
+		],
+		"styleAfterType": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.styleAfterType"
+				}
+			],
+			[{}, "delimiter", "@styleAfterTypeEquals"],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@styleEmbedded.text/css",
+					"nextEmbedded": "text/css"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"styleAfterTypeEquals": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.styleAfterTypeEquals"
+				}
+			],
+			[
+				{},
+				{
+					"token": "attribute.value",
+					"switchTo": "@styleWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "attribute.value",
+					"switchTo": "@styleWithCustomType.$1"
+				}
+			],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@styleEmbedded.text/css",
+					"nextEmbedded": "text/css"
+				}
+			],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"styleWithCustomType": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInSimpleState.styleWithCustomType.$S2"
+				}
+			],
+			[
+				{},
+				{
+					"token": "delimiter.html",
+					"next": "@styleEmbedded.$S2",
+					"nextEmbedded": "$S2"
+				}
+			],
+			[{}, "attribute.value"],
+			[{}, "attribute.value"],
+			[{}, "attribute.name"],
+			[{}, "delimiter"],
+			[{}],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			]
+		],
+		"styleEmbedded": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"switchTo": "@phpInEmbeddedState.styleEmbedded.$S2",
+					"nextEmbedded": "@pop"
+				}
+			],
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop",
+					"nextEmbedded": "@pop"
+				}
+			]
+		],
+		"phpInSimpleState": [
+			[{}, "metatag.php"],
+			[
+				{},
+				{
+					"token": "metatag.php",
+					"switchTo": "@$S2.$S3"
+				}
+			],
+			{
+				"include": "phpRoot"
+			}
+		],
+		"phpInEmbeddedState": [
+			[{}, "metatag.php"],
+			[
+				{},
+				{
+					"token": "metatag.php",
+					"switchTo": "@$S2.$S3",
+					"nextEmbedded": "$S3"
+				}
+			],
+			{
+				"include": "phpRoot"
+			}
+		],
+		"phpRoot": [
+			[
+				{},
+				{
+					"cases": {
+						"@phpKeywords": {
+							"token": "keyword.php"
+						},
+						"@phpCompileTimeConstants": {
+							"token": "constant.php"
+						},
+						"@default": "identifier.php"
+					}
+				}
+			],
+			[
+				{},
+				{
+					"cases": {
+						"@phpPreDefinedVariables": {
+							"token": "variable.predefined.php"
+						},
+						"@default": "variable.php"
+					}
+				}
+			],
+			[{}, "delimiter.bracket.php"],
+			[{}, "delimiter.array.php"],
+			[{}, "delimiter.parenthesis.php"],
+			[{}],
+			[{}, "comment.php"],
+			[{}, "comment.php", "@phpLineComment"],
+			[{}, "comment.php", "@phpComment"],
+			[{}, "string.php", "@phpDoubleQuoteString"],
+			[{}, "string.php", "@phpSingleQuoteString"],
+			[{}, "delimiter.php"],
+			[{}, "number.float.php"],
+			[{}, "number.float.php"],
+			[{}, "number.hex.php"],
+			[{}, "number.octal.php"],
+			[{}, "number.binary.php"],
+			[{}, "number.php"],
+			[{}, "number.php"]
+		],
+		"phpComment": [
+			[{}, "comment.php", "@pop"],
+			[{}, "comment.php"],
+			[{}, "comment.php"]
+		],
+		"phpLineComment": [
+			[
+				{},
+				{
+					"token": "@rematch",
+					"next": "@pop"
+				}
+			],
+			[{}, "comment.php", "@pop"],
+			[{}, "comment.php", "@pop"],
+			[{}, "comment.php"],
+			[{}, "comment.php"]
+		],
+		"phpDoubleQuoteString": [
+			[{}, "string.php"],
+			[{}, "string.escape.php"],
+			[{}, "string.escape.invalid.php"],
+			[{}, "string.php", "@pop"]
+		],
+		"phpSingleQuoteString": [
+			[{}, "string.php"],
+			[{}, "string.escape.php"],
+			[{}, "string.escape.invalid.php"],
+			[{}, "string.php", "@pop"]
+		]
+	},
+	"phpKeywords": [
+		"abstract",
+		"and",
+		"array",
+		"as",
+		"break",
+		"callable",
+		"case",
+		"catch",
+		"cfunction",
+		"class",
+		"clone",
+		"const",
+		"continue",
+		"declare",
+		"default",
+		"do",
+		"else",
+		"elseif",
+		"enddeclare",
+		"endfor",
+		"endforeach",
+		"endif",
+		"endswitch",
+		"endwhile",
+		"extends",
+		"false",
+		"final",
+		"for",
+		"foreach",
+		"function",
+		"global",
+		"goto",
+		"if",
+		"implements",
+		"interface",
+		"instanceof",
+		"insteadof",
+		"namespace",
+		"new",
+		"null",
+		"object",
+		"old_function",
+		"or",
+		"private",
+		"protected",
+		"public",
+		"resource",
+		"static",
+		"switch",
+		"throw",
+		"trait",
+		"try",
+		"true",
+		"use",
+		"var",
+		"while",
+		"xor",
+		"die",
+		"echo",
+		"empty",
+		"exit",
+		"eval",
+		"include",
+		"include_once",
+		"isset",
+		"list",
+		"require",
+		"require_once",
+		"return",
+		"print",
+		"unset",
+		"yield",
+		"__construct"
+	],
+	"phpCompileTimeConstants": [
+		"__CLASS__",
+		"__DIR__",
+		"__FILE__",
+		"__LINE__",
+		"__NAMESPACE__",
+		"__METHOD__",
+		"__FUNCTION__",
+		"__TRAIT__"
+	],
+	"phpPreDefinedVariables": [
+		"$GLOBALS",
+		"$_SERVER",
+		"$_GET",
+		"$_POST",
+		"$_FILES",
+		"$_REQUEST",
+		"$_SESSION",
+		"$_ENV",
+		"$_COOKIE",
+		"$php_errormsg",
+		"$HTTP_RAW_POST_DATA",
+		"$http_response_header",
+		"$argc",
+		"$argv"
+	],
+	"escapes": {}
+}

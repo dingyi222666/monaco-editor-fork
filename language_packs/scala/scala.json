@@ -1,0 +1,399 @@
+{
+	"tokenPostfix": ".scala",
+	"keywords": [
+		"asInstanceOf",
+		"catch",
+		"class",
+		"classOf",
+		"def",
+		"do",
+		"else",
+		"extends",
+		"finally",
+		"for",
+		"foreach",
+		"forSome",
+		"if",
+		"import",
+		"isInstanceOf",
+		"macro",
+		"match",
+		"new",
+		"object",
+		"package",
+		"return",
+		"throw",
+		"trait",
+		"try",
+		"type",
+		"until",
+		"val",
+		"var",
+		"while",
+		"with",
+		"yield",
+		"given",
+		"enum",
+		"then"
+	],
+	"softKeywords": ["as", "export", "extension", "end", "derives", "on"],
+	"constants": ["true", "false", "null", "this", "super"],
+	"modifiers": [
+		"abstract",
+		"final",
+		"implicit",
+		"lazy",
+		"override",
+		"private",
+		"protected",
+		"sealed"
+	],
+	"softModifiers": ["inline", "opaque", "open", "transparent", "using"],
+	"name": {},
+	"type": {},
+	"symbols": {},
+	"digits": {},
+	"hexdigits": {},
+	"escapes": {},
+	"fstring_conv": {},
+	"tokenizer": {
+		"root": [
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@open",
+					"next": "@rawstringt"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@open",
+					"next": "@rawstring"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@open",
+					"next": "@sstringt"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@open",
+					"next": "@sstring"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@open",
+					"next": "@fstringt"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@open",
+					"next": "@fstring"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@open",
+					"next": "@stringt"
+				}
+			],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@open",
+					"next": "@string"
+				}
+			],
+			[{}, "number.float", "@allowMethod"],
+			[{}, "number.float", "@allowMethod"],
+			[{}, "number.hex", "@allowMethod"],
+			[{}, "number.float", "@allowMethod"],
+			[{}, "number", "@allowMethod"],
+			[{}, "key"],
+			[{}, "keyword", "@allowMethod"],
+			[{}, "keyword", "@import"],
+			[{}, ["keyword.modifier", "white", "keyword"]],
+			[{}, "keyword", "@case"],
+			[{}, "keyword", "@vardef"],
+			[{}, ["keyword", "white", "identifier"]],
+			[{}, "variable"],
+			[
+				{},
+				[
+					"operator",
+					{
+						"token": "@rematch",
+						"next": "@allowMethod"
+					}
+				]
+			],
+			[{}, ["@brackets", "white", "variable"]],
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@softKeywords": "keyword",
+						"@modifiers": "keyword.modifier",
+						"@softModifiers": "keyword.modifier",
+						"@constants": {
+							"token": "constant",
+							"next": "@allowMethod"
+						},
+						"@default": {
+							"token": "identifier",
+							"next": "@allowMethod"
+						}
+					}
+				}
+			],
+			[{}, "type", "@allowMethod"],
+			{
+				"include": "@whitespace"
+			},
+			[{}, "annotation"],
+			[{}, "@brackets"],
+			[{}, "@brackets", "@allowMethod"],
+			[{}, "operator.square"],
+			[{}, "operator.square", "@allowMethod"],
+			[{}, "operator.square"],
+			[{}, "keyword"],
+			[{}, "operator"],
+			[{}, "delimiter"],
+			[{}, "attribute.name"],
+			[{}, "string", "@allowMethod"],
+			[
+				{},
+				[
+					"string",
+					"string.escape",
+					{
+						"token": "string",
+						"next": "@allowMethod"
+					}
+				]
+			],
+			[{}, "string.invalid"]
+		],
+		"import": [
+			[{}, "delimiter", "@pop"],
+			[{}, "", "@pop"],
+			[{}, "white"],
+			[{}, "white", "@pop"],
+			[{}, "comment", "@comment"],
+			[{}, "type"],
+			[{}, "@brackets"],
+			[{}, "operator.square"],
+			[{}, "delimiter"]
+		],
+		"allowMethod": [
+			[{}, "", "@pop"],
+			[{}, "white"],
+			[{}, "white", "@pop"],
+			[{}, "comment", "@comment"],
+			[{}, "keyword", "@pop"],
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": {
+							"token": "keyword",
+							"next": "@pop"
+						},
+						"->|<-|>:|<:|<%": {
+							"token": "keyword",
+							"next": "@pop"
+						},
+						"@default": {
+							"token": "@rematch",
+							"next": "@pop"
+						}
+					}
+				}
+			],
+			["", "", "@pop"]
+		],
+		"comment": [
+			[{}, "comment"],
+			[{}, "comment", "@push"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"]
+		],
+		"case": [
+			[{}, "key"],
+			[{}, "keyword", "@allowMethod"],
+			[{}, "keyword", "@pop"],
+			[{}, "identifier", "@allowMethod"],
+			[{}, "variable", "@allowMethod"],
+			[{}, "keyword"],
+			{
+				"include": "@root"
+			}
+		],
+		"vardef": [
+			[{}, "key"],
+			[{}, "keyword"],
+			[{}, "variable"],
+			[{}, "keyword"],
+			[{}, "operator", "@pop"],
+			[{}, "white", "@pop"],
+			{
+				"include": "@root"
+			}
+		],
+		"string": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@close",
+					"switchTo": "@allowMethod"
+				}
+			]
+		],
+		"stringt": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@close",
+					"switchTo": "@allowMethod"
+				}
+			],
+			[{}, "string"]
+		],
+		"fstring": [
+			[{}, "string.escape"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@close",
+					"switchTo": "@allowMethod"
+				}
+			],
+			[{}, "string"],
+			[{}, ["operator", "identifier"]],
+			[{}, "operator", "@interp"],
+			[{}, "string"],
+			[{}, ["metatag", "keyword.modifier", "number", "metatag"]],
+			[{}, ["metatag", "number", "metatag"]],
+			[{}, ["metatag", "keyword.modifier", "metatag"]],
+			[{}, ["metatag", "metatag"]],
+			[{}, "string"]
+		],
+		"fstringt": [
+			[{}, "string.escape"],
+			[{}, "string"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@close",
+					"switchTo": "@allowMethod"
+				}
+			],
+			[{}, "string"],
+			[{}, ["operator", "identifier"]],
+			[{}, "operator", "@interp"],
+			[{}, "string"],
+			[{}, ["metatag", "keyword.modifier", "number", "metatag"]],
+			[{}, ["metatag", "number", "metatag"]],
+			[{}, ["metatag", "keyword.modifier", "metatag"]],
+			[{}, ["metatag", "metatag"]],
+			[{}, "string"]
+		],
+		"sstring": [
+			[{}, "string.escape"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@close",
+					"switchTo": "@allowMethod"
+				}
+			],
+			[{}, "string"],
+			[{}, ["operator", "identifier"]],
+			[{}, "operator", "@interp"],
+			[{}, "string"]
+		],
+		"sstringt": [
+			[{}, "string.escape"],
+			[{}, "string"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@close",
+					"switchTo": "@allowMethod"
+				}
+			],
+			[{}, "string"],
+			[{}, ["operator", "identifier"]],
+			[{}, "operator", "@interp"],
+			[{}, "string"]
+		],
+		"interp": [
+			[{}, "operator", "@push"],
+			[{}, "operator", "@pop"],
+			{
+				"include": "@root"
+			}
+		],
+		"rawstring": [
+			[{}, "string"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@close",
+					"switchTo": "@allowMethod"
+				}
+			]
+		],
+		"rawstringt": [
+			[{}, "string"],
+			[{}, "string"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"bracket": "@close",
+					"switchTo": "@allowMethod"
+				}
+			],
+			[{}, "string"]
+		],
+		"whitespace": [
+			[{}, "white"],
+			[{}, "comment", "@comment"],
+			[{}, "comment"]
+		]
+	}
+}

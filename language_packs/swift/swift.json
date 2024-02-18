@@ -1,0 +1,338 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".swift",
+	"identifier": {},
+	"attributes": [
+		"@GKInspectable",
+		"@IBAction",
+		"@IBDesignable",
+		"@IBInspectable",
+		"@IBOutlet",
+		"@IBSegueAction",
+		"@NSApplicationMain",
+		"@NSCopying",
+		"@NSManaged",
+		"@Sendable",
+		"@UIApplicationMain",
+		"@autoclosure",
+		"@actorIndependent",
+		"@asyncHandler",
+		"@available",
+		"@convention",
+		"@derivative",
+		"@differentiable",
+		"@discardableResult",
+		"@dynamicCallable",
+		"@dynamicMemberLookup",
+		"@escaping",
+		"@frozen",
+		"@globalActor",
+		"@inlinable",
+		"@inline",
+		"@main",
+		"@noDerivative",
+		"@nonobjc",
+		"@noreturn",
+		"@objc",
+		"@objcMembers",
+		"@preconcurrency",
+		"@propertyWrapper",
+		"@requires_stored_property_inits",
+		"@resultBuilder",
+		"@testable",
+		"@unchecked",
+		"@unknown",
+		"@usableFromInline",
+		"@warn_unqualified_access"
+	],
+	"accessmodifiers": ["open", "public", "internal", "fileprivate", "private"],
+	"keywords": [
+		"#available",
+		"#colorLiteral",
+		"#column",
+		"#dsohandle",
+		"#else",
+		"#elseif",
+		"#endif",
+		"#error",
+		"#file",
+		"#fileID",
+		"#fileLiteral",
+		"#filePath",
+		"#function",
+		"#if",
+		"#imageLiteral",
+		"#keyPath",
+		"#line",
+		"#selector",
+		"#sourceLocation",
+		"#warning",
+		"Any",
+		"Protocol",
+		"Self",
+		"Type",
+		"actor",
+		"as",
+		"assignment",
+		"associatedtype",
+		"associativity",
+		"async",
+		"await",
+		"break",
+		"case",
+		"catch",
+		"class",
+		"continue",
+		"convenience",
+		"default",
+		"defer",
+		"deinit",
+		"didSet",
+		"do",
+		"dynamic",
+		"dynamicType",
+		"else",
+		"enum",
+		"extension",
+		"fallthrough",
+		"false",
+		"fileprivate",
+		"final",
+		"for",
+		"func",
+		"get",
+		"guard",
+		"higherThan",
+		"if",
+		"import",
+		"in",
+		"indirect",
+		"infix",
+		"init",
+		"inout",
+		"internal",
+		"is",
+		"isolated",
+		"lazy",
+		"left",
+		"let",
+		"lowerThan",
+		"mutating",
+		"nil",
+		"none",
+		"nonisolated",
+		"nonmutating",
+		"open",
+		"operator",
+		"optional",
+		"override",
+		"postfix",
+		"precedence",
+		"precedencegroup",
+		"prefix",
+		"private",
+		"protocol",
+		"public",
+		"repeat",
+		"required",
+		"rethrows",
+		"return",
+		"right",
+		"safe",
+		"self",
+		"set",
+		"some",
+		"static",
+		"struct",
+		"subscript",
+		"super",
+		"switch",
+		"throw",
+		"throws",
+		"true",
+		"try",
+		"typealias",
+		"unowned",
+		"unsafe",
+		"var",
+		"weak",
+		"where",
+		"while",
+		"willSet",
+		"__consuming",
+		"__owned"
+	],
+	"symbols": {},
+	"operatorstart": {},
+	"operatorend": {},
+	"operators": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			{
+				"include": "@whitespace"
+			},
+			{
+				"include": "@comment"
+			},
+			{
+				"include": "@attribute"
+			},
+			{
+				"include": "@literal"
+			},
+			{
+				"include": "@keyword"
+			},
+			{
+				"include": "@invokedmethod"
+			},
+			{
+				"include": "@symbol"
+			}
+		],
+		"whitespace": [
+			[{}, "white"],
+			[{}, "string.quote", "@endDblDocString"]
+		],
+		"endDblDocString": [
+			[{}, "string"],
+			[{}, "string"],
+			[{}, "string.quote", "@popall"],
+			[{}, "string"]
+		],
+		"symbol": [
+			[{}, "@brackets"],
+			[{}, "@brackets"],
+			[{}, "delimiter"],
+			[{}, "operator"],
+			[{}, "operator"]
+		],
+		"comment": [
+			[{}, "comment.doc"],
+			[{}, "comment.doc", "@commentdocbody"],
+			[{}, "comment"],
+			[{}, "comment", "@commentbody"]
+		],
+		"commentdocbody": [
+			[{}, "comment", "@commentbody"],
+			[{}, "comment.doc", "@pop"],
+			[{}, "comment.doc.param"],
+			[{}, "comment.doc"]
+		],
+		"commentbody": [
+			[{}, "comment", "@commentbody"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"]
+		],
+		"attribute": [
+			[
+				{},
+				{
+					"cases": {
+						"@attributes": "keyword.control",
+						"@default": ""
+					}
+				}
+			]
+		],
+		"literal": [
+			[
+				{},
+				{
+					"token": "string.quote",
+					"next": "@stringlit"
+				}
+			],
+			[{}, "number.binary"],
+			[{}, "number.octal"],
+			[{}, "number.hex"],
+			[{}, "number.float"],
+			[{}, "number"]
+		],
+		"stringlit": [
+			[
+				{},
+				{
+					"token": "operator",
+					"next": "@interpolatedexpression"
+				}
+			],
+			[{}, "string"],
+			[{}, "string.escape.invalid"],
+			[
+				{},
+				{
+					"token": "string.quote",
+					"next": "@pop"
+				}
+			],
+			[{}, "string"]
+		],
+		"interpolatedexpression": [
+			[
+				{},
+				{
+					"token": "operator",
+					"next": "@interpolatedexpression"
+				}
+			],
+			[
+				{},
+				{
+					"token": "operator",
+					"next": "@pop"
+				}
+			],
+			{
+				"include": "@literal"
+			},
+			{
+				"include": "@keyword"
+			},
+			{
+				"include": "@symbol"
+			}
+		],
+		"keyword": [
+			[
+				{},
+				{
+					"token": "operator",
+					"next": "@escapedkeyword"
+				}
+			],
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"[A-Z][a-zA-Z0-9$]*": "type.identifier",
+						"@default": "identifier"
+					}
+				}
+			]
+		],
+		"escapedkeyword": [
+			[
+				{},
+				{
+					"token": "operator",
+					"next": "@pop"
+				}
+			],
+			[{}, "identifier"]
+		],
+		"invokedmethod": [
+			[
+				{},
+				{
+					"cases": {
+						"$2": ["delimeter", "type.identifier"],
+						"@default": ""
+					}
+				}
+			]
+		]
+	}
+}

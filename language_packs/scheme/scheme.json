@@ -1,0 +1,95 @@
+{
+	"defaultToken": "",
+	"ignoreCase": true,
+	"tokenPostfix": ".scheme",
+	"brackets": [
+		{
+			"open": "(",
+			"close": ")",
+			"token": "delimiter.parenthesis"
+		},
+		{
+			"open": "{",
+			"close": "}",
+			"token": "delimiter.curly"
+		},
+		{
+			"open": "[",
+			"close": "]",
+			"token": "delimiter.square"
+		}
+	],
+	"keywords": [
+		"case",
+		"do",
+		"let",
+		"loop",
+		"if",
+		"else",
+		"when",
+		"cons",
+		"car",
+		"cdr",
+		"cond",
+		"lambda",
+		"lambda*",
+		"syntax-rules",
+		"format",
+		"set!",
+		"quote",
+		"eval",
+		"append",
+		"list",
+		"list?",
+		"member?",
+		"load"
+	],
+	"constants": ["#t", "#f"],
+	"operators": ["eq?", "eqv?", "equal?", "and", "or", "not", "null?"],
+	"tokenizer": {
+		"root": [
+			[{}, "number.hex"],
+			[{}, "number.float"],
+			[{}, ["keyword", "white", "variable"]],
+			{
+				"include": "@whitespace"
+			},
+			{
+				"include": "@strings"
+			},
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@constants": "constant",
+						"@operators": "operators",
+						"@default": "identifier"
+					}
+				}
+			]
+		],
+		"comment": [
+			[{}, "comment"],
+			[{}, "comment", "@push"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"]
+		],
+		"whitespace": [
+			[{}, "white"],
+			[{}, "comment", "@comment"],
+			[{}, "comment"]
+		],
+		"strings": [
+			[{}, "string", "@popall"],
+			[{}, "string", "@multiLineString"]
+		],
+		"multiLineString": [
+			[{}, "string", "@popall"],
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string", "@popall"],
+			[{}, "string"]
+		]
+	}
+}

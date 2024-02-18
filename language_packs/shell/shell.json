@@ -1,0 +1,211 @@
+{
+	"defaultToken": "",
+	"ignoreCase": true,
+	"tokenPostfix": ".shell",
+	"brackets": [
+		{
+			"token": "delimiter.bracket",
+			"open": "{",
+			"close": "}"
+		},
+		{
+			"token": "delimiter.parenthesis",
+			"open": "(",
+			"close": ")"
+		},
+		{
+			"token": "delimiter.square",
+			"open": "[",
+			"close": "]"
+		}
+	],
+	"keywords": [
+		"if",
+		"then",
+		"do",
+		"else",
+		"elif",
+		"while",
+		"until",
+		"for",
+		"in",
+		"esac",
+		"fi",
+		"fin",
+		"fil",
+		"done",
+		"exit",
+		"set",
+		"unset",
+		"export",
+		"function"
+	],
+	"builtins": [
+		"ab",
+		"awk",
+		"bash",
+		"beep",
+		"cat",
+		"cc",
+		"cd",
+		"chown",
+		"chmod",
+		"chroot",
+		"clear",
+		"cp",
+		"curl",
+		"cut",
+		"diff",
+		"echo",
+		"find",
+		"gawk",
+		"gcc",
+		"get",
+		"git",
+		"grep",
+		"hg",
+		"kill",
+		"killall",
+		"ln",
+		"ls",
+		"make",
+		"mkdir",
+		"openssl",
+		"mv",
+		"nc",
+		"node",
+		"npm",
+		"ping",
+		"ps",
+		"restart",
+		"rm",
+		"rmdir",
+		"sed",
+		"service",
+		"sh",
+		"shopt",
+		"shred",
+		"source",
+		"sort",
+		"sleep",
+		"ssh",
+		"start",
+		"stop",
+		"su",
+		"sudo",
+		"svn",
+		"tee",
+		"telnet",
+		"top",
+		"touch",
+		"vi",
+		"vim",
+		"wall",
+		"wc",
+		"wget",
+		"who",
+		"write",
+		"yes",
+		"zsh"
+	],
+	"startingWithDash": {},
+	"identifiersWithDashes": {},
+	"symbols": {},
+	"tokenizer": {
+		"root": [
+			[{}, ""],
+			[{}, ["white", "attribute.name"]],
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@builtins": "type.identifier",
+						"@default": ""
+					}
+				}
+			],
+			{
+				"include": "@whitespace"
+			},
+			{
+				"include": "@strings"
+			},
+			{
+				"include": "@parameters"
+			},
+			{
+				"include": "@heredoc"
+			},
+			[{}, "@brackets"],
+			[{}, "delimiter"],
+			{
+				"include": "@numbers"
+			},
+			[{}, "delimiter"]
+		],
+		"whitespace": [
+			[{}, "white"],
+			[{}, "metatag"],
+			[{}, "comment"]
+		],
+		"numbers": [
+			[{}, "number.float"],
+			[{}, "number.hex"],
+			[{}, "number"]
+		],
+		"strings": [
+			[{}, "string", "@stringBody"],
+			[{}, "string", "@dblStringBody"]
+		],
+		"stringBody": [
+			[{}, "string", "@popall"],
+			[{}, "string"]
+		],
+		"dblStringBody": [
+			[{}, "string", "@popall"],
+			[{}, "string"]
+		],
+		"heredoc": [
+			[
+				{},
+				[
+					"constants",
+					"white",
+					"string.heredoc.delimiter",
+					"string.heredoc",
+					"string.heredoc.delimiter"
+				]
+			]
+		],
+		"parameters": [
+			[{}, "variable.predefined"],
+			[{}, "variable"],
+			[{}, "variable"],
+			[{}, "variable", "@parameterBodyQuote"],
+			[{}, "variable", "@parameterBodyDoubleQuote"],
+			[{}, "variable", "@parameterBodyParen"],
+			[{}, "variable", "@parameterBodyCurlyBrace"]
+		],
+		"parameterBodyQuote": [
+			[{}, "variable"],
+			[{}, "delimiter"],
+			[{}, "variable", "@pop"]
+		],
+		"parameterBodyDoubleQuote": [
+			[{}, "variable"],
+			[{}, "delimiter"],
+			[{}, "variable", "@pop"]
+		],
+		"parameterBodyParen": [
+			[{}, "variable"],
+			[{}, "delimiter"],
+			[{}, "variable", "@pop"]
+		],
+		"parameterBodyCurlyBrace": [
+			[{}, "variable"],
+			[{}, "delimiter"],
+			[{}, "variable", "@pop"]
+		]
+	}
+}

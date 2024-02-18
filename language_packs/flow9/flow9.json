@@ -1,0 +1,108 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".flow",
+	"keywords": [
+		"import",
+		"require",
+		"export",
+		"forbid",
+		"native",
+		"if",
+		"else",
+		"cast",
+		"unsafe",
+		"switch",
+		"default"
+	],
+	"types": [
+		"io",
+		"mutable",
+		"bool",
+		"int",
+		"double",
+		"string",
+		"flow",
+		"void",
+		"ref",
+		"true",
+		"false",
+		"with"
+	],
+	"operators": [
+		"=",
+		">",
+		"<",
+		"<=",
+		">=",
+		"==",
+		"!",
+		"!=",
+		":=",
+		"::=",
+		"&&",
+		"||",
+		"+",
+		"-",
+		"*",
+		"/",
+		"@",
+		"&",
+		"%",
+		":",
+		"->",
+		"\\",
+		"$",
+		"??",
+		"^"
+	],
+	"symbols": {},
+	"escapes": {},
+	"tokenizer": {
+		"root": [
+			[
+				{},
+				{
+					"cases": {
+						"@keywords": "keyword",
+						"@types": "type",
+						"@default": "identifier"
+					}
+				}
+			],
+			{
+				"include": "@whitespace"
+			},
+			[{}, "delimiter"],
+			[{}, "delimiter"],
+			[
+				{},
+				{
+					"cases": {
+						"@operators": "delimiter",
+						"@default": ""
+					}
+				}
+			],
+			[{}, "number"],
+			[{}, "delimiter"],
+			[{}, "string.invalid"],
+			[{}, "string", "@string"]
+		],
+		"whitespace": [
+			[{}, ""],
+			[{}, "comment", "@comment"],
+			[{}, "comment"]
+		],
+		"comment": [
+			[{}, "comment"],
+			[{}, "comment", "@pop"],
+			[{}, "comment"]
+		],
+		"string": [
+			[{}, "string"],
+			[{}, "string.escape"],
+			[{}, "string.escape.invalid"],
+			[{}, "string", "@pop"]
+		]
+	}
+}

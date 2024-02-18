@@ -1,0 +1,139 @@
+{
+	"defaultToken": "",
+	"tokenPostfix": ".xml",
+	"ignoreCase": true,
+	"qualifiedName": {},
+	"tokenizer": {
+		"root": [
+			[{}, ""],
+			{
+				"include": "@whitespace"
+			},
+			[
+				{},
+				[
+					{
+						"token": "delimiter"
+					},
+					{
+						"token": "tag",
+						"next": "@tag"
+					}
+				]
+			],
+			[
+				{},
+				[
+					{
+						"token": "delimiter"
+					},
+					{
+						"token": "tag"
+					},
+					"",
+					{
+						"token": "delimiter"
+					}
+				]
+			],
+			[
+				{},
+				[
+					{
+						"token": "delimiter"
+					},
+					{
+						"token": "metatag",
+						"next": "@tag"
+					}
+				]
+			],
+			[
+				{},
+				[
+					{
+						"token": "delimiter"
+					},
+					{
+						"token": "metatag",
+						"next": "@tag"
+					}
+				]
+			],
+			[
+				{},
+				{
+					"token": "delimiter.cdata",
+					"next": "@cdata"
+				}
+			],
+			[{}, "string.escape"]
+		],
+		"cdata": [
+			[{}, ""],
+			[
+				{},
+				{
+					"token": "delimiter.cdata",
+					"next": "@pop"
+				}
+			],
+			[{}, ""]
+		],
+		"tag": [
+			[{}, ""],
+			[{}, ["attribute.name", "", "attribute.value"]],
+			[{}, ["attribute.name", "", "attribute.value"]],
+			[{}, ["attribute.name", "", "attribute.value"]],
+			[{}, "attribute.name"],
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@pop"
+				}
+			],
+			[
+				{},
+				[
+					{
+						"token": "tag"
+					},
+					{
+						"token": "delimiter",
+						"next": "@pop"
+					}
+				]
+			],
+			[
+				{},
+				{
+					"token": "delimiter",
+					"next": "@pop"
+				}
+			]
+		],
+		"whitespace": [
+			[{}, ""],
+			[
+				{},
+				{
+					"token": "comment",
+					"next": "@comment"
+				}
+			]
+		],
+		"comment": [
+			[{}, "comment.content"],
+			[
+				{},
+				{
+					"token": "comment",
+					"next": "@pop"
+				}
+			],
+			[{}, "comment.content.invalid"],
+			[{}, "comment.content"]
+		]
+	}
+}
