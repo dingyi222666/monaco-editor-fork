@@ -65,7 +65,7 @@ global.callOnTest = (language, tests) => {
 				languages: typeof language === 'string' ? [language] : language
 			},
 			null,
-			2
+			'  '
 		)
 	);
 
@@ -144,7 +144,7 @@ requirejs(
 						}
 						fs.writeFileSync(
 							path.join(outputDir, outputFileName),
-							JSON.stringify(exports.language, null, 2)
+							JSON.stringify(exports.language, null, '  ')
 						);
 					});
 				}
