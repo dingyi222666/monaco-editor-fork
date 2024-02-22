@@ -39,17 +39,30 @@ global.window = {
 	}
 };
 
+/**
+ * @type {string[]}
+ */
 const excludeLanguages = ['freemarker2'];
 
-const languages = [];
+/**
+ * @type {Set<string>}
+ */
+const languages = new Set();
 // add to global
 global.callOnTest = (language, tests) => {
 	const mainLanguage = typeof language === 'string' ? language : language[0];
-	if (excludeLanguages.indexOf(mainLanguage) > -1) {
+
+	for (language of excludeLanguages) {
+		if (mainLanguage.startsWith(language)) {
+			return;
+		}
+	}
+
+	if (languages.has(mainLanguage)) {
 		return;
 	}
 
-	languages.push(mainLanguage);
+	languages.add(mainLanguage);
 
 	const outputDir = path.join(__dirname, '../..', 'language_packs', language);
 
@@ -70,13 +83,17 @@ global.callOnTest = (language, tests) => {
 	);
 
 	// kotlin
-	let buffer = `class MonarchFullTest {`;
+	let buffer = `
+import kotlin.test.Test
+
+class MonarchFullTest {
+	`;
 
 	for (let language of languages) {
 		buffer += `
 	@Test
 	fun \`tokenization${language}\`() {
-		runTests('${language}')
+		runTests("${language}")
 	}\n\n`;
 	}
 
