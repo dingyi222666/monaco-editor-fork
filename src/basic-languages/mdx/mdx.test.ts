@@ -6,7 +6,7 @@
 import { testTokenization } from '../test/testRunner';
 
 testTokenization(
-	['mdx', 'yaml'],
+	['mdx', 'yaml', 'javascript'],
 	[
 		// headers
 		[

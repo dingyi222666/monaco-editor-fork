@@ -42,7 +42,12 @@ global.window = {
 /**
  * @type {string[]}
  */
-const excludeLanguages = ['freemarker2'];
+const excludeLanguages = ['freemarker2', 'aes', 'sol'];
+
+const renameLanguages = {
+	coffee: 'coffeescript',
+	proto: 'protobuf'
+};
 
 /**
  * @type {Set<string>}
@@ -50,7 +55,7 @@ const excludeLanguages = ['freemarker2'];
 const languages = new Set();
 // add to global
 global.callOnTest = (language, tests) => {
-	const mainLanguage = typeof language === 'string' ? language : language[0];
+	let mainLanguage = typeof language === 'string' ? language : language[0];
 
 	for (const language of excludeLanguages) {
 		if (mainLanguage.startsWith(language)) {
@@ -61,6 +66,8 @@ global.callOnTest = (language, tests) => {
 	if (languages.has(mainLanguage)) {
 		return;
 	}
+
+	mainLanguage = renameLanguages[mainLanguage] ?? mainLanguage;
 
 	const outputDir = path.join(__dirname, '../..', 'language_packs', mainLanguage);
 
@@ -147,7 +154,8 @@ requirejs(
 				for (let languagePath of mappedFiles) {
 					requirejs([languagePath], function (exports) {
 						const splits = languagePath.split('/');
-						const languageName = splits[splits.length - 1];
+						let languageName = splits[splits.length - 1];
+						languageName = renameLanguages[languageName] ?? languageName;
 						const outputDir = path.join(__dirname, '../..', 'language_packs', languageName);
 
 						const outputFileName = `${languageName}.json`;
