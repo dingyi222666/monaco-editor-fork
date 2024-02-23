@@ -32,11 +32,10 @@ export function testTokenization(_language: string | string[], tests: ITestItem[
 		languages = _language;
 	}
 	let mainLanguage = languages[0];
-
+	global['callOnTest']?.(_language, tests);
 	test(mainLanguage + ' tokenization', async () => {
 		await Promise.all(languages.map((l) => loadLanguage(l)));
 		await timeout(0);
-		global['callOnTest']?.(mainLanguage, tests);
 		runTests(mainLanguage, tests);
 	});
 }

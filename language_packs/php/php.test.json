@@ -5472,5 +5472,5 @@
 			}
 		]
 	],
-	"languages": ["php"]
+	"languages": ["php", "css", "javascript"]
 }

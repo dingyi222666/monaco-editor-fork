@@ -1595,5 +1595,5 @@
 			}
 		]
 	],
-	"languages": ["html"]
+	"languages": ["html", "css", "javascript"]
 }

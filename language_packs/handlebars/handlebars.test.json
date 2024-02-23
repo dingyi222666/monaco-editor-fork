@@ -805,5 +805,5 @@
 			}
 		]
 	],
-	"languages": ["handlebars"]
+	"languages": ["handlebars", "css"]
 }

@@ -52,7 +52,7 @@ const languages = new Set();
 global.callOnTest = (language, tests) => {
 	const mainLanguage = typeof language === 'string' ? language : language[0];
 
-	for (language of excludeLanguages) {
+	for (const language of excludeLanguages) {
 		if (mainLanguage.startsWith(language)) {
 			return;
 		}
@@ -62,16 +62,14 @@ global.callOnTest = (language, tests) => {
 		return;
 	}
 
-	languages.add(mainLanguage);
-
-	const outputDir = path.join(__dirname, '../..', 'language_packs', language);
+	const outputDir = path.join(__dirname, '../..', 'language_packs', mainLanguage);
 
 	if (!fs.existsSync(outputDir)) {
 		fs.mkdirSync(outputDir, { recursive: true });
 	}
 
 	fs.writeFileSync(
-		path.join(outputDir, `${language}.test.json`),
+		path.join(outputDir, `${mainLanguage}.test.json`),
 		JSON.stringify(
 			{
 				tests,
@@ -81,6 +79,8 @@ global.callOnTest = (language, tests) => {
 			'  '
 		)
 	);
+
+	languages.add(mainLanguage);
 
 	// kotlin
 	let buffer = `
@@ -176,11 +176,12 @@ requirejs(
 
 function replaceRegex(obj) {
 	for (let key in obj) {
-		if (obj[key] instanceof RegExp) {
-			obj[key] = obj[key].source;
-		} else if (typeof obj[key] === 'object') {
-			obj[key] = replaceRegex(obj[key]);
-		} else if (typeof obj[key] === 'array') {
+		const value = obj[key];
+		if (value instanceof RegExp) {
+			obj[key] = value.source;
+		} else if (typeof value === 'object') {
+			obj[key] = replaceRegex(value);
+		} else if (typeof value === 'array') {
 			replaceRegex(obj[key]);
 		}
 	}

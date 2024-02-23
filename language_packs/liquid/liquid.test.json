@@ -561,5 +561,5 @@
 			}
 		]
 	],
-	"languages": ["liquid"]
+	"languages": ["liquid", "css"]
 }

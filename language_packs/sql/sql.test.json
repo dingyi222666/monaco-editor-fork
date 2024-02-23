@@ -93,7 +93,7 @@
 		],
 		[
 			{
-				"line": "declare @x int = /* a simple comment */ 1;",
+				"line": "declare _x int = /* a simple comment */ 1;",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -156,7 +156,7 @@
 		],
 		[
 			{
-				"line": "@x=/* a /* nested comment  1*/;",
+				"line": "_x=/* a /* nested comment  1*/;",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -187,7 +187,7 @@
 		],
 		[
 			{
-				"line": "@x=/* another comment */ 1*/;",
+				"line": "_x=/* another comment */ 1*/;",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -230,7 +230,7 @@
 		],
 		[
 			{
-				"line": "@x=/*/;",
+				"line": "_x=/*/;",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -657,33 +657,11 @@
 		],
 		[
 			{
-				"line": "$action",
-				"tokens": [
-					{
-						"startIndex": 0,
-						"type": "predefined.sql"
-					}
-				]
-			}
-		],
-		[
-			{
 				"line": "$nonexistent",
 				"tokens": [
 					{
 						"startIndex": 0,
 						"type": "identifier.sql"
-					}
-				]
-			}
-		],
-		[
-			{
-				"line": "@@DBTS",
-				"tokens": [
-					{
-						"startIndex": 0,
-						"type": "predefined.sql"
 					}
 				]
 			}
@@ -701,7 +679,7 @@
 		],
 		[
 			{
-				"line": "declare [abc 321];",
+				"line": "declare \"abc 321\";",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -732,7 +710,7 @@
 		],
 		[
 			{
-				"line": "[abc[[ 321 ]] xyz]",
+				"line": "\"abc\"\" 321 \"\" xyz\"",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -751,7 +729,7 @@
 		],
 		[
 			{
-				"line": "[abc",
+				"line": "\"abc",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -842,7 +820,7 @@
 		],
 		[
 			{
-				"line": "[int]",
+				"line": "\"int\"",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -861,7 +839,7 @@
 		],
 		[
 			{
-				"line": "declare @x='a string';",
+				"line": "declare _x='a string';",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -903,29 +881,7 @@
 		],
 		[
 			{
-				"line": "'a \" string with quotes'",
-				"tokens": [
-					{
-						"startIndex": 0,
-						"type": "string.sql"
-					}
-				]
-			}
-		],
-		[
-			{
 				"line": "'a -- string with comment'",
-				"tokens": [
-					{
-						"startIndex": 0,
-						"type": "string.sql"
-					}
-				]
-			}
-		],
-		[
-			{
-				"line": "N'a unicode string'",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -947,34 +903,26 @@
 		],
 		[
 			{
-				"line": "SET @x=@x+1",
+				"line": "x=x+1",
 				"tokens": [
 					{
 						"startIndex": 0,
-						"type": "keyword.sql"
+						"type": "identifier.sql"
+					},
+					{
+						"startIndex": 1,
+						"type": "operator.sql"
+					},
+					{
+						"startIndex": 2,
+						"type": "identifier.sql"
 					},
 					{
 						"startIndex": 3,
-						"type": "white.sql"
+						"type": "operator.sql"
 					},
 					{
 						"startIndex": 4,
-						"type": "identifier.sql"
-					},
-					{
-						"startIndex": 6,
-						"type": "operator.sql"
-					},
-					{
-						"startIndex": 7,
-						"type": "identifier.sql"
-					},
-					{
-						"startIndex": 9,
-						"type": "operator.sql"
-					},
-					{
-						"startIndex": 10,
 						"type": "number.sql"
 					}
 				]
@@ -982,7 +930,7 @@
 		],
 		[
 			{
-				"line": "@x^=@x",
+				"line": "_x^=_x",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -1044,7 +992,7 @@
 		],
 		[
 			{
-				"line": "SELECT * FROM dbo.MyTable WHERE MyColumn IN (1,2)",
+				"line": "SELECT * FROM sch.MyTable WHERE MyColumn IN (1,2)",
 				"tokens": [
 					{
 						"startIndex": 0,
@@ -1129,195 +1077,6 @@
 					{
 						"startIndex": 48,
 						"type": "delimiter.parenthesis.sql"
-					}
-				]
-			}
-		],
-		[
-			{
-				"line": "WHILE() BEGIN END",
-				"tokens": [
-					{
-						"startIndex": 0,
-						"type": "keyword.sql"
-					},
-					{
-						"startIndex": 5,
-						"type": "delimiter.parenthesis.sql"
-					},
-					{
-						"startIndex": 7,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 8,
-						"type": "keyword.block.sql"
-					},
-					{
-						"startIndex": 13,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 14,
-						"type": "keyword.block.sql"
-					}
-				]
-			}
-		],
-		[
-			{
-				"line": "BEGIN TRAN BEGIN TRY SELECT $ COMMIT END TRY BEGIN CATCH ROLLBACK END CATCH",
-				"tokens": [
-					{
-						"startIndex": 0,
-						"type": "keyword.sql"
-					},
-					{
-						"startIndex": 10,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 11,
-						"type": "keyword.try.sql"
-					},
-					{
-						"startIndex": 20,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 21,
-						"type": "keyword.sql"
-					},
-					{
-						"startIndex": 27,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 28,
-						"type": "number.sql"
-					},
-					{
-						"startIndex": 29,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 30,
-						"type": "keyword.sql"
-					},
-					{
-						"startIndex": 36,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 37,
-						"type": "keyword.try.sql"
-					},
-					{
-						"startIndex": 44,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 45,
-						"type": "keyword.catch.sql"
-					},
-					{
-						"startIndex": 56,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 57,
-						"type": "keyword.sql"
-					},
-					{
-						"startIndex": 65,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 66,
-						"type": "keyword.catch.sql"
-					}
-				]
-			}
-		],
-		[
-			{
-				"line": "SELECT CASE $ WHEN 3 THEN 4 ELSE 5 END",
-				"tokens": [
-					{
-						"startIndex": 0,
-						"type": "keyword.sql"
-					},
-					{
-						"startIndex": 6,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 7,
-						"type": "keyword.block.sql"
-					},
-					{
-						"startIndex": 11,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 12,
-						"type": "number.sql"
-					},
-					{
-						"startIndex": 13,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 14,
-						"type": "keyword.choice.sql"
-					},
-					{
-						"startIndex": 18,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 19,
-						"type": "number.sql"
-					},
-					{
-						"startIndex": 20,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 21,
-						"type": "keyword.choice.sql"
-					},
-					{
-						"startIndex": 25,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 26,
-						"type": "number.sql"
-					},
-					{
-						"startIndex": 27,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 28,
-						"type": "keyword.sql"
-					},
-					{
-						"startIndex": 32,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 33,
-						"type": "number.sql"
-					},
-					{
-						"startIndex": 34,
-						"type": "white.sql"
-					},
-					{
-						"startIndex": 35,
-						"type": "keyword.block.sql"
 					}
 				]
 			}
